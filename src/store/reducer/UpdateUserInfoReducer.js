@@ -4,29 +4,26 @@ const initialState = {
     loading: false,
     error: ""
 };
-export const ConfirmCodeReducer = (state = initialState, action) => {
+export const UpdateUserInfoReducer = (state = initialState, action) => {
     let temp = { ...state }
     switch (action.type) {
-        case 'StartConfrimCode':
+        case 'StartUpdateProfil':
             temp.data = []
             temp.status = false
             temp.loading = true
             temp.error = ''
             break;
-        case 'SuccessConfirmCode':
+        case 'SuccessUpdateUser':
             temp.data = action.data
             temp.status = true
             temp.loading = false
             temp.error = ''
             break
-        case 'ErrorConfirmCode':
+        case 'ErrorUpdateUser':
             temp.data = ''
             temp.status = false
             temp.loading = false
-            temp.error = 'رمز خاطئ'
-            break
-        case 'ClearConfirmCode':
-            temp.status = false
+            temp.error = 'error'
             break
         default:
             return temp;

@@ -15,3 +15,9 @@ export const StartGetUser = () => {
         type: 'StartGetUser'
     }
 }
+
+export const StartUpdateProfil = () => {
+    return {
+        type: 'StartUpdateProfil'
+    }
+}

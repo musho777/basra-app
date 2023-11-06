@@ -3,21 +3,14 @@ import { View, StyleSheet, Text, BackHandler, Alert } from "react-native";
 import ButtonPrimary from "../components/ButtonPrimary";
 import WelcomeClose from "../icons/WelcomeClose";
 import WelcomeCoin from "../icons/WelcomeCoin";
+import { useDispatch } from "react-redux";
+import { ClearConfirmCode } from "../store/action/errorAction";
 
 export default function WelcomeScreen(props) {
-  // useEffect(() => {
-  //   const backAction = () => {
-  //     return true;
-  //   };
-
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     backAction
-  //   );
-
-  //   return () => backHandler.remove();
-  // }, []);
-
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(ClearConfirmCode())
+  }, [])
   return (
     <View style={styles.container}>
       <View style={styles.top}>

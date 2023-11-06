@@ -9,10 +9,11 @@ import {
 import ButtonPrimary from "../components/ButtonPrimary";
 import InputPrimary from "../components/InputPrimary";
 import BackIcon from "../icons/BackIcon";
-import NavigationBottom from "../components/NavigationBottom";
 import { useState } from "react";
 import { useUserStore } from "../store/user";
 import { useDispatch, useSelector } from "react-redux";
+import { UpdateData } from "../store/action/action";
+import { useEffect } from "react";
 
 export default function PersonalScreen(props) {
   const userStore = useUserStore();
@@ -23,13 +24,53 @@ export default function PersonalScreen(props) {
   const [birthday, setBirthday] = useState("");
   const getUser = useSelector((st) => st.getUser)
   const { token } = useSelector((st) => st.static)
+  const updateUser = useSelector((st) => st.updateUser)
   const dispatch = useDispatch()
-  console.log(getUser, 'token')
+  const [error, setError] = useState('')
+
+  console.log(updateUser.loading, 'ww')
+  useEffect(() => {
+    setName(getUser.data.user.name)
+    setEmail(getUser.data.user.email)
+    setSurname(getUser.data.user.surname)
+    setBirthday(getUser.data.user.date_of_birth)
+  }, [getUser.data.user])
+
+  console.log(email)
+
+  function ValidateEmail(mail) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      return (true)
+    }
+    alert("You have entered an invalid email address!")
+    return (false)
+  }
+
+
+  const update = () => {
+    let error = ''
+    if (email) {
+      if (!ValidateEmail(email)) {
+        error = 'email  is not valid'
+      }
+    }
+    if (error === '') {
+      dispatch(UpdateData({
+        name,
+        email,
+        birthday,
+        surname
+      },
+        token
+      ))
+    }
+  }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View>
         <View style={styles.navBtm}>
-          <NavigationBottom active="profile"></NavigationBottom>
+          {/* <NavigationBottom active="profile"></NavigationBottom> */}
         </View>
         <View style={styles.container}>
           <View style={styles.main}>
@@ -47,7 +88,7 @@ export default function PersonalScreen(props) {
                 backgroundColor="#F2F2F4"
                 placeholder="اسم"
                 textAlign="right"
-                value={userStore.user?.name}
+                value={name}
                 onChangeText={(text) => setName(text)}
               ></InputPrimary>
             </View>
@@ -56,7 +97,7 @@ export default function PersonalScreen(props) {
                 backgroundColor="#F2F2F4"
                 placeholder="اسم العائلة"
                 textAlign="right"
-                value={userStore.user?.surname}
+                value={surname}
                 onChangeText={(text) => setSurname(text)}
               ></InputPrimary>
             </View>
@@ -65,7 +106,7 @@ export default function PersonalScreen(props) {
                 backgroundColor="#F2F2F4"
                 placeholder="بريد إلكتروني"
                 textAlign="right"
-                value={userStore.user?.email}
+                value={email}
                 onChangeText={(text) => setEmail(text)}
               ></InputPrimary>
             </View>
@@ -81,13 +122,9 @@ export default function PersonalScreen(props) {
           </View>
           <View style={styles.btm}>
             <ButtonPrimary
+              loading={updateUser.loading}
               onPress={() => {
-                console.log({
-                  name,
-                  surname,
-                  email,
-                  birthday,
-                });
+                update()
               }}
             >
               يحفظ

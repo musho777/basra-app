@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ErrorConfirmCode, ErrorGetUser, ErrorLogin } from "./errorAction";
-import { StartConfrimCode, StartGetUser, StartLogin } from "./startAction";
-import { SetToken, SuccessConfirmCode, SuccessGetUser, SuccessLogin } from "./successAction";
+import { ErrorConfirmCode, ErrorGetUser, ErrorLogin, ErrorUpdateUser } from "./errorAction";
+import { StartConfrimCode, StartGetUser, StartLogin, StartUpdateProfil } from "./startAction";
+import { SetToken, SuccessConfirmCode, SuccessGetUser, SuccessLogin, SuccessUpdateUser } from "./successAction";
 
 let api = 'https://basrabackend.justcode.am/api/app'
 export const LoginAction = (data) => {
@@ -81,6 +81,34 @@ export const GetAuthUser = (token) => {
             })
             .catch((error) => {
                 dispatch(ErrorGetUser())
+            });
+    }
+}
+
+export const UpdateData = (data, token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        dispatch(StartUpdateProfil())
+        fetch(`${api}/update_user_info`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+                console.log(r)
+                if (r.status) {
+                    dispatch(SuccessUpdateUser(r))
+                }
+                else {
+                    dispatch(ErrorUpdateUser())
+                }
+            })
+            .catch((error) => {
+                dispatch(ErrorUpdateUser())
             });
     }
 }

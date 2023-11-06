@@ -7,22 +7,18 @@ import {
   Linking,
   Image,
 } from "react-native";
-import ProfileAvatar from "../icons/ProfileAvatar";
 import ProfileItem from "../components/ProfileItem";
 import ProfileMail from "../icons/ProfileMail";
 import ProfileWa from "../icons/ProfileWa";
 import ProfileTg from "../icons/ProfileTg";
 import NavigationBottom from "../components/NavigationBottom";
 import { useState } from "react";
-import { useUserStore } from "../store/user";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { GetAuthUser } from "../store/action/action";
-// https://basrabackend.justcode.am/uploads/${e?.sender?.avatar}
 
 export default function ProfileScreen(props) {
   const [logoutShown, setLogoutShown] = useState(false);
-  const userStore = useUserStore();
   const getUser = useSelector((st) => st.getUser)
   const { token } = useSelector((st) => st.static)
   const dispatch = useDispatch()
@@ -68,7 +64,6 @@ export default function ProfileScreen(props) {
       <ScrollView>
         <View style={styles.container}>
           <Text style={styles.title}>حساب تعريفي</Text>
-          {/* <ProfileAvatar  style={styles.avatar}></ProfileAvatar> */}
           <Image style={{ width: 100, height: 100, borderRadius: 100 }} source={{ uri: `https://basrabackend.justcode.am/uploads/default.png` }} />
           <Text style={styles.phoneNumber}>{getUser.data.user?.phone}</Text>
           <Text style={styles.fio}>مريم عبد</Text>

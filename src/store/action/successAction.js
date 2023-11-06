@@ -23,3 +23,9 @@ export const SetToken = (data) => {
         data
     }
 }
+
+export const SuccessUpdateUser = () => {
+    return {
+        type: 'SuccessUpdateUser'
+    }
+}

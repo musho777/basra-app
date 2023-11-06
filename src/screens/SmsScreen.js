@@ -11,7 +11,6 @@ import InputPrimary from "../components/InputPrimary";
 import { useUserStore } from "../store/user";
 import { useDispatch, useSelector } from "react-redux";
 import { ConfrimCode } from "../store/action/action";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SmsScreen(props) {
   const userStore = useUserStore();
@@ -43,7 +42,7 @@ export default function SmsScreen(props) {
 
   useEffect(() => {
     if (confirmCode.status) {
-      props.navigation.navigate("Welcome");
+      props.navigation.navigate("ProfileTab");
     }
 
   }, [confirmCode])

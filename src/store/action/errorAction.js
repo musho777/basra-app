@@ -15,3 +15,15 @@ export const ErrorGetUser = () => {
         type: 'ErrorGetUser'
     }
 }
+
+export const ErrorUpdateUser = () => {
+    return {
+        type: "ErrorUpdateUser"
+    }
+}
+
+export const ClearConfirmCode = () => {
+    return {
+        type: 'ClearConfirmCode'
+    }
+}
