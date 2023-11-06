@@ -2,12 +2,16 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 
 export default function ButtonPrimary(props) {
   return (
-    <TouchableOpacity onPress={props.onPress} style={styles.buttonPrimary}>
-      <Text style={styles.buttonText}>{props.children}</Text>
+    <TouchableOpacity onPress={props.onPress} style={styles.buttonPrimary} disabled={props.disabled}>
+      {!props.loading ?
+        <Text style={styles.buttonText}>{props.children}</Text> :
+        <ActivityIndicator color={'white'} />
+      }
     </TouchableOpacity>
   );
 }

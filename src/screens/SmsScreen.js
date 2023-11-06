@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -9,33 +9,44 @@ import {
 import ButtonPrimary from "../components/ButtonPrimary";
 import InputPrimary from "../components/InputPrimary";
 import { useUserStore } from "../store/user";
-import { createUser } from "../api";
+import { useDispatch, useSelector } from "react-redux";
+import { ConfrimCode } from "../store/action/action";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SmsScreen(props) {
   const userStore = useUserStore();
-
   const firstInput = useRef();
   const secondInput = useRef();
   const thirdInput = useRef();
   const fourthInput = useRef();
 
   const inputs = [firstInput, secondInput, thirdInput, fourthInput];
-  const code = [];
+  const [code, setCode] = useState([]);
 
-  function handleChange(index) {
+  const confirmCode = useSelector((st) => st.confirmCode)
+  function handleChange(index, e) {
+    let item = [...code]
+    item[index - 1] = e
+    setCode(item)
     inputs[index].current.focus();
   }
 
+  const dispatch = useDispatch()
+
   async function handleSubmit() {
-    if (code.join("") !== "0000") {
-      return false;
-    }
-    const user = await createUser(userStore.phone);
-    await AsyncStorage.setItem("phone", user.phone);
-    userStore.user = user;
-    props.navigation.navigate("Welcome");
+    let textCode = ''
+    code.map((elm, i) => {
+      textCode = textCode + elm
+    })
+    dispatch(ConfrimCode({ phone: props?.route?.params?.phone, code: textCode }))
   }
+
+  useEffect(() => {
+    if (confirmCode.status) {
+      props.navigation.navigate("Welcome");
+    }
+
+  }, [confirmCode])
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -50,8 +61,7 @@ export default function SmsScreen(props) {
               <InputPrimary
                 innerRef={firstInput}
                 onChangeText={(text) => {
-                  code[0] = text;
-                  handleChange(1);
+                  handleChange(1, text);
                 }}
                 // autoFocus={true}
                 keyboardType="phone-pad"
@@ -63,8 +73,7 @@ export default function SmsScreen(props) {
               <InputPrimary
                 innerRef={secondInput}
                 onChangeText={(text) => {
-                  code[1] = text;
-                  handleChange(2);
+                  handleChange(2, text);
                 }}
                 keyboardType="phone-pad"
                 textAlign="center"
@@ -75,8 +84,7 @@ export default function SmsScreen(props) {
               <InputPrimary
                 innerRef={thirdInput}
                 onChangeText={(text) => {
-                  code[2] = text;
-                  handleChange(3);
+                  handleChange(3, text);
                 }}
                 keyboardType="phone-pad"
                 textAlign="center"
@@ -88,18 +96,22 @@ export default function SmsScreen(props) {
                 innerRef={fourthInput}
                 keyboardType="phone-pad"
                 onChangeText={(text) => {
-                  code[3] = text;
+                  let item = [...code]
+                  item[3] = text
+                  setCode(item)
+                  // handleChange(4, text);
                 }}
                 textAlign="center"
                 maxLength={1}
               ></InputPrimary>
             </View>
           </View>
+          <Text style={styles.wrongCode}>{confirmCode.error}</Text>
         </View>
         <View style={styles.bottom}>
           <Text style={styles.bottomText}>ارسل الرمز مجددا</Text>
           <View style={styles.bottomBtn}>
-            <ButtonPrimary onPress={handleSubmit}>يكمل</ButtonPrimary>
+            <ButtonPrimary loading={confirmCode.loading} onPress={handleSubmit}>يكمل</ButtonPrimary>
           </View>
         </View>
       </View>
@@ -165,4 +177,9 @@ const styles = StyleSheet.create({
   bottom: {
     width: "100%",
   },
+  wrongCode: {
+    textAlign: 'center',
+    marginVertical: 10,
+    color: 'red'
+  }
 });

@@ -6,7 +6,6 @@ import WelcomeScreen from "../screens/WelcomeScreen";
 const Stack = createNativeStackNavigator();
 
 export default function RegisterTab() {
-  console.log('21')
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Register" component={RegisterScreen}></Stack.Screen>

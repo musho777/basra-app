@@ -18,6 +18,8 @@ import { useNavigation } from "@react-navigation/native";
 import { Video, AVPlaybackStatus } from "expo-av";
 import { useEffect, useRef, useState } from "react";
 import { fetchCollections } from "../api";
+import { useDispatch, useSelector } from "react-redux";
+import { GetAuthUser } from "../store/action/action";
 
 const storiesData = {
   1: {
@@ -32,20 +34,20 @@ const storiesData = {
 };
 
 export default function HomeScreen(props) {
-  console.log('oi3wj')
   const navigation = useNavigation();
   const video = useRef(null);
   const [compilations, setCompilations] = useState([]);
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    video.current.playAsync();
+    // video.current.playAsync();
+    // dispatch(GetAuthUser(token))
+    // async function fetchData() {
+    //   const data = await fetchCollections();
+    //   setCompilations(data);
+    // }
 
-    async function fetchData() {
-      const data = await fetchCollections();
-      setCompilations(data);
-    }
-
-    fetchData();
+    // fetchData();
   }, []);
 
   return (

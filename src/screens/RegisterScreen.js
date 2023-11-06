@@ -8,11 +8,29 @@ import {
 import InputPrimary from "../components/InputPrimary";
 import ButtonPrimary from "../components/ButtonPrimary";
 import { useUserStore } from "../store/user";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux'
+import { LoginAction } from "../store/action/action";
+import { useNavigation } from "@react-navigation/native";
 
 export default function RegisterScreen(props) {
   const [phone, setPhone] = useState("");
-  const userStore = useUserStore();
+  const dispatch = useDispatch()
+  const login = useSelector((st) => st.login)
+  const navigation = useNavigation();
+
+  const Login = () => {
+    if (phone.length > 5) {
+      dispatch(LoginAction({ phone }))
+    }
+  }
+
+
+  useEffect(() => {
+    if (login.status) {
+      navigation.navigate('Sms', { phone })
+    }
+  }, [login])
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -35,12 +53,9 @@ export default function RegisterScreen(props) {
           </View>
           <View style={styles.button}>
             <ButtonPrimary
-              onPress={() => {
-                if (phone.length > 5) {
-                  userStore.phone = phone;
-                  props.navigation.navigate("Sms");
-                }
-              }}
+              disabled={phone.length < 5}
+              onPress={() => { Login() }}
+              loading={login.loading}
             >
               اختر وسيلة الدفع
             </ButtonPrimary>

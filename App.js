@@ -24,6 +24,8 @@ import StoryScreen from "./src/components/Stories/StoryScreen";
 import { fetchCurrentUser } from "./src/api";
 import { useUserStore } from "./src/store/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Provider } from 'react-redux';
+import { store } from "./src/store/configStore";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -89,86 +91,88 @@ export default function App() {
   // }
 
   return (
-    <SafeAreaProvider>
-      <StatusBar style="auto"></StatusBar>
-      <SafeAreaView edges={["top", "right", "left"]}>
-        <View onLayout={onLayoutRootView} style={styles.container}>
-          <NavigationContainer theme={{ colors: { background: "white" } }}>
-            <Tab.Navigator
-              screenOptions={{
-                headerShown: false,
-                tabBarShowLabel: false,
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <StatusBar style="auto"></StatusBar>
+        <SafeAreaView edges={["top", "right", "left"]}>
+          <View onLayout={onLayoutRootView} style={styles.container}>
+            <NavigationContainer theme={{ colors: { background: "white" } }}>
+              <Tab.Navigator
+                screenOptions={{
+                  headerShown: false,
+                  tabBarShowLabel: false,
+                }}
+                initialRouteName={initialScreen}
+                backBehavior="none"
+              >
+                <Tab.Screen
+                  options={{ tabBarStyle: { display: "none" } }}
+                  name="Home"
+                  children={() => (
+                    <HomeScreen
+                      showStories={() => {
+                        setStoriesVisible(true);
+                      }}
+                    ></HomeScreen>
+                  )}
+                // component={HomeScreen}
+                ></Tab.Screen>
+                <Tab.Screen
+                  options={{ tabBarStyle: { display: "none" } }}
+                  name="ProfileTab"
+                  component={ProfileTab}
+                ></Tab.Screen>
+                <Tab.Screen
+                  options={{ tabBarStyle: { display: "none" } }}
+                  name="CartTab"
+                  component={CartTab}
+                ></Tab.Screen>
+                <Tab.Screen
+                  options={{ tabBarStyle: { display: "none" } }}
+                  name="CatalogTab"
+                  component={CatalogTab}
+                ></Tab.Screen>
+                <Tab.Screen
+                  options={{ tabBarStyle: { display: "none" } }}
+                  name="Favorite"
+                  component={FavoriteScreen}
+                ></Tab.Screen>
+                <Tab.Screen
+                  options={{ tabBarStyle: { display: "none" } }}
+                  name="RegisterTab"
+                  component={RegisterTab}
+                ></Tab.Screen>
+              </Tab.Navigator>
+            </NavigationContainer>
+          </View>
+
+          {storiesVisible && (
+            <StoryScreen
+              storiesCount={3}
+              hideStories={() => {
+                setStoriesVisible(false);
               }}
-              initialRouteName={initialScreen}
-              backBehavior="none"
-            >
-              <Tab.Screen
-                options={{ tabBarStyle: { display: "none" } }}
-                name="Home"
-                children={() => (
-                  <HomeScreen
-                    showStories={() => {
-                      setStoriesVisible(true);
-                    }}
-                  ></HomeScreen>
-                )}
-              // component={HomeScreen}
-              ></Tab.Screen>
-              <Tab.Screen
-                options={{ tabBarStyle: { display: "none" } }}
-                name="ProfileTab"
-                component={ProfileTab}
-              ></Tab.Screen>
-              <Tab.Screen
-                options={{ tabBarStyle: { display: "none" } }}
-                name="CartTab"
-                component={CartTab}
-              ></Tab.Screen>
-              <Tab.Screen
-                options={{ tabBarStyle: { display: "none" } }}
-                name="CatalogTab"
-                component={CatalogTab}
-              ></Tab.Screen>
-              <Tab.Screen
-                options={{ tabBarStyle: { display: "none" } }}
-                name="Favorite"
-                component={FavoriteScreen}
-              ></Tab.Screen>
-              <Tab.Screen
-                options={{ tabBarStyle: { display: "none" } }}
-                name="RegisterTab"
-                component={RegisterTab}
-              ></Tab.Screen>
-            </Tab.Navigator>
-          </NavigationContainer>
-        </View>
+            ></StoryScreen>
+          )}
 
-        {storiesVisible && (
-          <StoryScreen
-            storiesCount={3}
-            hideStories={() => {
-              setStoriesVisible(false);
+          <TouchableOpacity
+            style={styles.chatIcon}
+            onPress={() => {
+              setChatVisible(true);
             }}
-          ></StoryScreen>
-        )}
-
-        <TouchableOpacity
-          style={styles.chatIcon}
-          onPress={() => {
-            setChatVisible(true);
-          }}
-        >
-          <ChatIcon></ChatIcon>
-        </TouchableOpacity>
-        {chatVisible && (
-          <ChatScreen
-            onClose={() => {
-              setChatVisible(false);
-            }}
-          ></ChatScreen>
-        )}
-      </SafeAreaView>
-    </SafeAreaProvider>
+          >
+            <ChatIcon></ChatIcon>
+          </TouchableOpacity>
+          {chatVisible && (
+            <ChatScreen
+              onClose={() => {
+                setChatVisible(false);
+              }}
+            ></ChatScreen>
+          )}
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
 

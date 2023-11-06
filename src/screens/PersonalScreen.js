@@ -12,6 +12,7 @@ import BackIcon from "../icons/BackIcon";
 import NavigationBottom from "../components/NavigationBottom";
 import { useState } from "react";
 import { useUserStore } from "../store/user";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function PersonalScreen(props) {
   const userStore = useUserStore();
@@ -20,7 +21,10 @@ export default function PersonalScreen(props) {
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [birthday, setBirthday] = useState("");
-
+  const getUser = useSelector((st) => st.getUser)
+  const { token } = useSelector((st) => st.static)
+  const dispatch = useDispatch()
+  console.log(getUser, 'token')
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View>

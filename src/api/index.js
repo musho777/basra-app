@@ -37,7 +37,6 @@ export async function fetchCurrentUser(phone) {
     }),
     { headers: { "Content-Type": "application/json" } },
   );
-  console.log(response.data, 'response.data')
   return response.data;
 }
 
