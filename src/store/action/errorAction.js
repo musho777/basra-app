@@ -27,3 +27,15 @@ export const ClearConfirmCode = () => {
         type: 'ClearConfirmCode'
     }
 }
+
+export const ErrorUpdateUserAvatar = () => {
+    return {
+        type: 'ErrorUpdateUserAvatar'
+    }
+}
+
+export const ErrorGetstoryes = () => {
+    return {
+        type: "ErrorGetstoryes"
+    }
+}

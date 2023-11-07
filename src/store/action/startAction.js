@@ -21,3 +21,15 @@ export const StartUpdateProfil = () => {
         type: 'StartUpdateProfil'
     }
 }
+
+export const StartUpdateUserAvatar = () => {
+    return {
+        type: 'StartUpdateUserAvatar'
+    }
+}
+
+export const StartGetStoryes = () => {
+    return {
+        type: 'StartGetStoryes'
+    }
+}

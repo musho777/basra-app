@@ -86,7 +86,6 @@ export default function App() {
   }
 
   // if (!isUserLoaded) {
-  //   console.log('2')
   //   return null;
   // }
 

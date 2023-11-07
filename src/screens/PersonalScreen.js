@@ -25,10 +25,12 @@ export default function PersonalScreen(props) {
   const getUser = useSelector((st) => st.getUser)
   const { token } = useSelector((st) => st.static)
   const updateUser = useSelector((st) => st.updateUser)
+
   const dispatch = useDispatch()
   const [error, setError] = useState('')
 
-  console.log(updateUser.loading, 'ww')
+
+
   useEffect(() => {
     setName(getUser.data.user.name)
     setEmail(getUser.data.user.email)
@@ -36,7 +38,6 @@ export default function PersonalScreen(props) {
     setBirthday(getUser.data.user.date_of_birth)
   }, [getUser.data.user])
 
-  console.log(email)
 
   function ValidateEmail(mail) {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
@@ -65,6 +66,9 @@ export default function PersonalScreen(props) {
       ))
     }
   }
+
+
+
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>

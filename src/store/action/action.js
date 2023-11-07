@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ErrorConfirmCode, ErrorGetUser, ErrorLogin, ErrorUpdateUser } from "./errorAction";
-import { StartConfrimCode, StartGetUser, StartLogin, StartUpdateProfil } from "./startAction";
-import { SetToken, SuccessConfirmCode, SuccessGetUser, SuccessLogin, SuccessUpdateUser } from "./successAction";
+import { ErrorConfirmCode, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorUpdateUser, ErrorUpdateUserAvatar } from "./errorAction";
+import { StartConfrimCode, StartGetStoryes, StartGetUser, StartLogin, StartUpdateProfil, StartUpdateUserAvatar } from "./startAction";
+import { SetToken, SuccessConfirmCode, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
 
 let api = 'https://basrabackend.justcode.am/api/app'
 export const LoginAction = (data) => {
@@ -99,7 +99,6 @@ export const UpdateData = (data, token) => {
         fetch(`${api}/update_user_info`, requestOptions)
             .then(response => response.json())
             .then(r => {
-                console.log(r)
                 if (r.status) {
                     dispatch(SuccessUpdateUser(r))
                 }
@@ -109,6 +108,69 @@ export const UpdateData = (data, token) => {
             })
             .catch((error) => {
                 dispatch(ErrorUpdateUser())
+            });
+    }
+}
+
+export const UpdateUserAvatar = (url, token) => {
+    var myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'multipart/form-data');
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    let body = new FormData();
+    body.append('avatar', {
+        uri: url,
+        name: 'avatar.png',
+        filename: 'imageName.png',
+        type: 'image/png',
+    });
+    body.append('Content-Type', 'image/png');
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: body,
+    };
+    return (dispatch) => {
+        dispatch(StartUpdateUserAvatar())
+        fetch(`${api}/update_user_avatar`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(GetAuthUser(token))
+                    dispatch(SuccessUpdateUserAvatar(r))
+                }
+                else {
+                    dispatch(ErrorUpdateUserAvatar())
+                }
+            })
+            .catch((error) => {
+                dispatch(ErrorUpdateUserAvatar())
+            });
+    }
+}
+
+export const GetStoryes = (token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Authorization', `Bearer ${token}`);
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+    };
+    return (dispatch) => {
+        dispatch(StartGetStoryes())
+        fetch(`${api}/get_story`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessGetStoryes(r))
+                }
+                else {
+                    dispatch(ErrorGetstoryes())
+                }
+            })
+            .catch((error) => {
+                dispatch(ErrorGetstoryes())
             });
     }
 }

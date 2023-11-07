@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Linking,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import ProfileItem from "../components/ProfileItem";
 import ProfileMail from "../icons/ProfileMail";
@@ -15,18 +16,37 @@ import NavigationBottom from "../components/NavigationBottom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { GetAuthUser } from "../store/action/action";
+import { GetAuthUser, UpdateUserAvatar } from "../store/action/action";
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
+
 
 export default function ProfileScreen(props) {
   const [logoutShown, setLogoutShown] = useState(false);
   const getUser = useSelector((st) => st.getUser)
   const { token } = useSelector((st) => st.static)
   const dispatch = useDispatch()
+  const updatePhoto = useSelector((st) => st.updatePhoto)
+  const uniqueID = Constants.installationId;
+
+
+  const changeImg = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+
+    if (!result.canceled) {
+      dispatch(UpdateUserAvatar(result.assets[0].uri, token))
+    }
+  };
 
   useEffect(() => {
     dispatch(GetAuthUser(token))
   }, [])
-
   return (
     <View>
       <View
@@ -64,7 +84,15 @@ export default function ProfileScreen(props) {
       <ScrollView>
         <View style={styles.container}>
           <Text style={styles.title}>حساب تعريفي</Text>
-          <Image style={{ width: 100, height: 100, borderRadius: 100 }} source={{ uri: `https://basrabackend.justcode.am/uploads/default.png` }} />
+          {!updatePhoto.loading ?
+
+            <TouchableOpacity onPress={() => changeImg()}>
+              <Image style={{ width: 100, height: 100, borderRadius: 100 }} source={{ uri: `https://basrabackend.justcode.am/uploads/${getUser.data.user?.avatar}` }} />
+            </TouchableOpacity> :
+            <View style={{ width: 100, height: 100 }}>
+              <ActivityIndicator style={{ width: 100, height: 100 }} color={'white'} />
+            </View>
+          }
           <Text style={styles.phoneNumber}>{getUser.data.user?.phone}</Text>
           <Text style={styles.fio}>مريم عبد</Text>
           <View style={styles.profileItems}>

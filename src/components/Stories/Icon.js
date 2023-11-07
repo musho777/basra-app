@@ -4,9 +4,9 @@ export default function StoryIcon(props) {
   return (
     <TouchableOpacity style={styles.storyWrap} onPress={props.onPress}>
       <View style={styles.story}>
-        <Image style={styles.storyImg} source={props.image}></Image>
+        <Image style={styles.storyImg} source={{ url: props.image }}></Image>
       </View>
-      <Text style={styles.storyText}>يضرب</Text>
+      <Text style={styles.storyText}>{props.text}</Text>
     </TouchableOpacity>
   );
 }
@@ -39,8 +39,9 @@ const styles = StyleSheet.create({
   storyImg: {
     width: 62,
     height: 62,
-    marginRight: 1,
-    marginBottom: 1,
+    // marginRight: 1,
+    // marginBottom: 1,
+    borderRadius: 63
   },
   stories: {
     flex: 1,

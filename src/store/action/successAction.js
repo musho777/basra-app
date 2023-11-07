@@ -29,3 +29,17 @@ export const SuccessUpdateUser = () => {
         type: 'SuccessUpdateUser'
     }
 }
+
+export const SuccessUpdateUserAvatar = (data) => {
+    return {
+        type: 'SuccessUpdateUserAvatar',
+        data
+    }
+}
+
+export const SuccessGetStoryes = (data) => {
+    return {
+        type: 'SuccessGetStoryes',
+        data
+    }
+}
