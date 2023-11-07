@@ -43,3 +43,16 @@ export const SuccessGetStoryes = (data) => {
         data
     }
 }
+
+export const SuccessGetBaners = (data) => {
+    return {
+        type: "SuccessGetBaners",
+        data
+    }
+}
+export const SuccessGetFirstBaners = (data) => {
+    return {
+        type: 'SuccessGetFirstBaners',
+        data
+    }
+}

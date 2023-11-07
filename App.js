@@ -24,7 +24,7 @@ import StoryScreen from "./src/components/Stories/StoryScreen";
 import { fetchCurrentUser } from "./src/api";
 import { useUserStore } from "./src/store/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import { store } from "./src/store/configStore";
 
 SplashScreen.preventAutoHideAsync();
@@ -52,28 +52,16 @@ export default function App() {
   const cartStore = useCartStore();
 
   useEffect(() => {
-    async function fetchUser() {
-      const phone = await AsyncStorage.getItem("phone");
-      if (!phone) {
-        return false;
-      }
-
-      const user = await fetchCurrentUser(phone);
-      if (user) {
-        setInitialScreen("Home");
-        userStore.user = user;
-      }
-
-      setUserLoaded(true);
-    }
-    async function fetchCollections() {
-      favoritesStore.items = await fetchCollection("favorite");
-      cartStore.items = await fetchCollection("cart");
-    }
-
-    fetchUser();
-    fetchCollections();
+    GetUser()
   }, []);
+
+  const GetUser = async () => {
+    let token = await AsyncStorage.getItem('token')
+    if (token) {
+
+      setInitialScreen('ProfileTab')
+    }
+  }
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -85,9 +73,7 @@ export default function App() {
     return null;
   }
 
-  // if (!isUserLoaded) {
-  //   return null;
-  // }
+
 
   return (
     <Provider store={store}>

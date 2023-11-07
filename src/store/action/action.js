@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ErrorConfirmCode, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorUpdateUser, ErrorUpdateUserAvatar } from "./errorAction";
-import { StartConfrimCode, StartGetStoryes, StartGetUser, StartLogin, StartUpdateProfil, StartUpdateUserAvatar } from "./startAction";
-import { SetToken, SuccessConfirmCode, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
+import { ErrorConfirmCode, ErrorGetBaners, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorUpdateUser, ErrorUpdateUserAvatar } from "./errorAction";
+import { StartConfrimCode, StartGetBaners, StartGetStoryes, StartGetUser, StartLogin, StartUpdateProfil, StartUpdateUserAvatar } from "./startAction";
+import { SetToken, SuccessConfirmCode, SuccessGetBaners, SuccessGetFirstBaners, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
 
 let api = 'https://basrabackend.justcode.am/api/app'
 export const LoginAction = (data) => {
@@ -173,4 +173,40 @@ export const GetStoryes = (token) => {
                 dispatch(ErrorGetstoryes())
             });
     }
+}
+
+export const GetBaners = (type, token) => {
+
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    var formdata = new FormData();
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: formdata,
+        redirect: 'follow'
+    };
+    return (dispatch) => {
+        dispatch(StartGetBaners())
+        fetch(`https://basrabackend.justcode.am/api/app/get_banner?slider=${type}`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+                if (r.status) {
+                    if (type === 'first') {
+                        dispatch(SuccessGetFirstBaners(r))
+                    }
+                    else {
+                        dispatch(SuccessGetBaners(r))
+                    }
+                }
+                else {
+                    dispatch(ErrorGetBaners())
+                }
+            })
+            .catch(error => {
+                dispatch(ErrorGetBaners())
+            });
+    }
+
 }

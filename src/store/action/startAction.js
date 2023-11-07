@@ -33,3 +33,9 @@ export const StartGetStoryes = () => {
         type: 'StartGetStoryes'
     }
 }
+
+export const StartGetBaners = () => {
+    return {
+        type: "StartGetBaners"
+    }
+}

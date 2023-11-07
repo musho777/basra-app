@@ -15,23 +15,11 @@ import StoryScreen from "../components/Stories/StoryScreen";
 import Swiper from "react-native-swiper";
 
 import { useNavigation } from "@react-navigation/native";
-import { Video, AVPlaybackStatus } from "expo-av";
+import { Video, } from "expo-av";
 import { useEffect, useRef, useState } from "react";
-import { fetchCollections } from "../api";
 import { useDispatch, useSelector } from "react-redux";
-import { GetAuthUser, GetStoryes } from "../store/action/action";
+import { GetBaners, GetStoryes } from "../store/action/action";
 
-const storiesData = {
-    1: {
-        images: [
-            "https://img1.akspic.ru/previews/7/4/7/9/6/169747/169747-ikanvas-art-pechat_na_holste-poster-oblako-500x.jpg",
-        ],
-        title: "Hello",
-        preview: "",
-    },
-    2: {},
-    3: {},
-};
 
 export default function HomeScreen(props) {
     const navigation = useNavigation();
@@ -41,8 +29,11 @@ export default function HomeScreen(props) {
     const { token } = useSelector((st) => st.static)
     const getStorys = useSelector((st) => st.getStoryes)
     useEffect(() => {
+        dispatch(GetBaners('first', token))
+        dispatch(GetBaners('last', token))
         dispatch(GetStoryes(token))
     }, []);
+    const getBaner = useSelector((st) => st.getBaner)
     return (
         <View>
             <View style={styles.navBtm}>
@@ -82,7 +73,6 @@ export default function HomeScreen(props) {
                         }}
                     >
                         {getStorys.data.data?.map((elm, i) => {
-                            //   <Image style={{ width: 100, height: 100, borderRadius: 100 }} source={{ uri: `https://basrabackend.justcode.am/uploads/default.png` }} />
 
                             return <StoryIcon
                                 key={i}

@@ -18,8 +18,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { GetAuthUser, UpdateUserAvatar } from "../store/action/action";
 import * as ImagePicker from 'expo-image-picker';
-import Constants from 'expo-constants';
-
 
 export default function ProfileScreen(props) {
   const [logoutShown, setLogoutShown] = useState(false);
@@ -27,8 +25,6 @@ export default function ProfileScreen(props) {
   const { token } = useSelector((st) => st.static)
   const dispatch = useDispatch()
   const updatePhoto = useSelector((st) => st.updatePhoto)
-  const uniqueID = Constants.installationId;
-
 
   const changeImg = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -38,15 +34,23 @@ export default function ProfileScreen(props) {
       quality: 1,
     });
 
-
     if (!result.canceled) {
       dispatch(UpdateUserAvatar(result.assets[0].uri, token))
     }
   };
-
   useEffect(() => {
     dispatch(GetAuthUser(token))
-  }, [])
+  }, [token])
+
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener('focus', async () => {
+      if (token) {
+        dispatch(GetAuthUser(token))
+      }
+    });
+    return unsubscribe;
+  }, [props.navigation]);
+
   return (
     <View>
       <View
@@ -89,9 +93,7 @@ export default function ProfileScreen(props) {
             <TouchableOpacity onPress={() => changeImg()}>
               <Image style={{ width: 100, height: 100, borderRadius: 100 }} source={{ uri: `https://basrabackend.justcode.am/uploads/${getUser.data.user?.avatar}` }} />
             </TouchableOpacity> :
-            <View style={{ width: 100, height: 100 }}>
-              <ActivityIndicator style={{ width: 100, height: 100 }} color={'white'} />
-            </View>
+            <ActivityIndicator style={{ width: 100, height: 100 }} color={'red'} />
           }
           <Text style={styles.phoneNumber}>{getUser.data.user?.phone}</Text>
           <Text style={styles.fio}>مريم عبد</Text>

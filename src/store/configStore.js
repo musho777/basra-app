@@ -7,6 +7,7 @@ import { GetUserReducer } from './reducer/getUserReducer';
 import { UpdateUserInfoReducer } from './reducer/UpdateUserInfoReducer';
 import { UpdatePhotoReducer } from './reducer/UpdatePhotoReducer';
 import { GetStoryesReducer } from './reducer/getStoryesReducer';
+import { GetBanersReducer } from './reducer/getBanersReducer';
 
 const rootReducer = combineReducers({
     login: AutReducer,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
     updateUser: UpdateUserInfoReducer,
     updatePhoto: UpdatePhotoReducer,
     getStoryes: GetStoryesReducer,
+    getBaner: GetBanersReducer,
 });
 
 export const store = createStore(rootReducer, applyMiddleware(thunk));
