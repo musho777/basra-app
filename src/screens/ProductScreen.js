@@ -17,7 +17,9 @@ import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import { fetchProduct, baseUrl } from "../api";
 import { useDispatch, useSelector } from "react-redux";
-import { GetSinglProduct } from "../store/action/action";
+import { AddDelateFavorite, GetSinglProduct } from "../store/action/action";
+import ProductHeart from "../icons/ProductHeart";
+
 
 export default function ProductScreen(props) {
   const navigation = useNavigation();
@@ -26,17 +28,32 @@ export default function ProductScreen(props) {
   const [shownSpecs, setShownSpecs] = useState(false);
   const [shownComposition, setShownComposition] = useState(false);
 
+  const [favorite, setFavorite] = useState()
+
+
   const productId = props.route.params.productId;
   const getSinglProduct = useSelector((st) => st.getSinglProduct)
   const { token } = useSelector((st) => st.static)
   const dispatch = useDispatch()
   useEffect(() => {
-    setProduct(getSinglProduct.data)
+    if (getSinglProduct.data) {
+      setProduct(getSinglProduct.data)
+      setFavorite(getSinglProduct.data?.favorit_auth?.length > 0)
+    }
+
   }, [getSinglProduct]);
 
   useEffect(() => {
     dispatch(GetSinglProduct({ product_id: productId }, token))
   }, [productId])
+
+
+  const addFavorite = () => {
+    setFavorite(!favorite)
+    dispatch(AddDelateFavorite({ product_id: productId }, token))
+  }
+
+
   if (getSinglProduct.loading) {
     return <View style={styles.loading}>
       <ActivityIndicator color={'black'} />
@@ -59,7 +76,14 @@ export default function ProductScreen(props) {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.heart}>
-              <HertIconProduct></HertIconProduct>
+              <ProductHeart
+                onPress={() => addFavorite()}
+                style={styles.productHeart}
+                opacity={favorite ? 1 : 0.8}
+                fill={
+                  favorite ? "#1F2024" : "transparent"
+                }
+              ></ProductHeart>
             </TouchableOpacity>
             {!!product.photos && (
               <Swiper
@@ -179,8 +203,8 @@ export default function ProductScreen(props) {
             </View>
           </View>
         </View>
-      </ScrollView>
-    </View>
+      </ScrollView >
+    </View >
   );
 }
 

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ErrorConfirmCode, ErrorGetBaners, ErrorGetFavorites, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetSinglPorduct, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorUpdateUser, ErrorUpdateUserAvatar } from "./errorAction";
-import { StartConfrimCode, StartGetBaners, StartGetFavorites, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetSinglProduct, StartGetStoryes, StartGetUser, StartLogin, StartUpdateProfil, StartUpdateUserAvatar } from "./startAction";
-import { SetToken, SuccessConfirmCode, SuccessGetBaners, SuccessGetFavorites, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetSinglProduct, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
+import { ErrorConfirmCode, ErrorGetBaners, ErrorGetBasket, ErrorGetFavorites, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetSinglPorduct, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorUpdateUser, ErrorUpdateUserAvatar } from "./errorAction";
+import { StartConfrimCode, StartGetBaners, StartGetBasket, StartGetFavorites, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetSinglProduct, StartGetStoryes, StartGetUser, StartLogin, StartUpdateProfil, StartUpdateUserAvatar } from "./startAction";
+import { SetToken, SuccessConfirmCode, SuccessGetBaners, SuccessGetBasket, SuccessGetFavorites, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetSinglProduct, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
 
 let api = 'https://basrabackend.justcode.am/api/app'
 export const LoginAction = (data) => {
@@ -381,6 +381,92 @@ export const GetAllFavorites = (token, page) => {
             })
             .catch((error) => {
                 dispatch(ErrorGetFavorites())
+            });
+    }
+}
+
+export const AddToBasketAction = (data, token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        fetch(`${api}/add_product_in_basket`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+            })
+            .catch(error => {
+            });
+    }
+}
+
+export const RemoveFromBasketAction = (data, token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        fetch(`${api}/delete_one_product_in_basket`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+            })
+            .catch(error => {
+            });
+    }
+}
+
+
+
+export const GetBasketAction = (token, page = 1) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Authorization', `Bearer ${token}`);
+
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+    };
+    return (dispatch) => {
+        dispatch(StartGetBasket())
+        fetch(`${api}/get_basket?page=${page}`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessGetBasket(r))
+                }
+                else {
+                    dispatch(ErrorGetBasket())
+                }
+            })
+            .catch((error) => {
+                dispatch(ErrorGetBasket())
+            });
+    }
+}
+
+export const MinusFromBassket = (data, token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        fetch(`${api}/minus_product_in_basket`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+            })
+            .catch(error => {
             });
     }
 }

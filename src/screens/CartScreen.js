@@ -4,29 +4,86 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  Image,
+  ActivityIndicator,
 } from "react-native";
 import NavigationBottom from "../components/NavigationBottom";
 import BackIcon from "../icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
 import ButtonPrimary from "../components/ButtonPrimary";
 import ProductCart from "../components/ProductCart";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EmptyOrders from "../icons/EmptyOrders";
 import { useCartStore } from "../store/cartStore";
+import { useDispatch, useSelector } from "react-redux";
+import { AddToBasketAction, GetBasketAction, MinusFromBassket, RemoveFromBasketAction } from '../store/action/action'
 
 export default function CartScreen(props) {
-  const cartStore = useCartStore();
   const navigation = useNavigation();
-
+  const dispatch = useDispatch()
+  const { token } = useSelector((st) => st.static)
+  const getBasket = useSelector((st) => st.getBasket)
+  const [basket, setBasket] = useState({})
   function totalCost() {
     let sum = 0;
-    Object.values(cartStore.items).forEach((product) => {
+    basket?.data.forEach((product) => {
       const productPrice =
-        product.price - product.price * (product.discount / 100);
-      sum += product.count * productPrice;
+        product.product.price - product.product.price * (product.product.discount / 100);
+      sum += product.product_count * productPrice;
     });
     return sum;
+  }
+
+
+  const addProductCount = (id) => {
+    let item = { ...basket }
+    let index = item.data.findIndex((elm) => elm.product.id === id)
+    item.data[index].product_count = +item.data[index].product_count + 1
+    dispatch(AddToBasketAction({ product_id: id }, token))
+    setBasket(item)
+  }
+
+  const MinusProductCount = (id) => {
+    let item = { ...basket }
+    let index = item.data.findIndex((elm) => elm.product.id === id)
+    item.data[index].product_count = +item.data[index].product_count - 1
+    if (!item.data[index].product_count) {
+      item.data.splice(index, 1)
+      dispatch(RemoveFromBasketAction({ product_id: id }, token))
+    }
+    else {
+      dispatch(MinusFromBassket({ product_id: id }, token))
+    }
+    setBasket(item)
+  }
+
+  const RemoveFromBasket = (id, index) => {
+    let item = { ...basket }
+    item.data.splice(index, 1)
+    dispatch(RemoveFromBasketAction({ product_id: id }, token))
+    setBasket(item)
+  }
+
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', async () => {
+      dispatch(GetBasketAction(token))
+
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+
+  useEffect(() => {
+    if (getBasket.data) {
+      setBasket(getBasket.data)
+    }
+  }, [getBasket])
+
+
+  if (getBasket.loading) {
+    return <View style={styles.loading}>
+      <ActivityIndicator color={'black'} />
+    </View >
   }
 
   return (
@@ -45,12 +102,12 @@ export default function CartScreen(props) {
               <BackIcon></BackIcon>
             </TouchableOpacity>
           </View>
-          {Object.values(cartStore.items).length > 0 ? (
+          {basket?.data?.length > 0 ? (
             <View style={{ width: "100%" }}>
               <View style={styles.products}>
-                {Object.values(cartStore.items).map((product, index) => (
-                  <ProductCart key={index} product={product}></ProductCart>
-                ))}
+                {basket.data.map((product, index) => {
+                  return <ProductCart RemoveFromBasket={(e) => RemoveFromBasket(e, index)} MinusProductCount={(e) => MinusProductCount(e)} addProductCount={(e) => addProductCount(e)} count={product.product_count} key={index} product={product.product}></ProductCart>
+                })}
               </View>
               <View style={styles.btmTextWrap}>
                 <Text style={styles.btmText}>{totalCost()} د.ع</Text>
@@ -173,4 +230,9 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
   },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });

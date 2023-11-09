@@ -48,8 +48,15 @@ export default function CategoryScreen(props) {
   };
 
   useEffect(() => {
-    dispatch(GetProductsByCategory({ category_id: categoryId }, token, page))
-  }, []);
+    const unsubscribe = navigation.addListener('focus', async () => {
+      if (page == 1) {
+        setProducts([])
+        dispatch(GetProductsByCategory({ category_id: categoryId }, token, 1))
+      }
+    });
+    return unsubscribe;
+  }, [navigation]);
+
 
   useEffect(() => {
     if (getPorduct.data.data) {

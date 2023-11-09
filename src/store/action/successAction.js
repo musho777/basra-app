@@ -90,3 +90,10 @@ export const SuccessGetFavorites = (data) => {
         data
     }
 }
+
+export const SuccessGetBasket = (data) => {
+    return {
+        type: 'SuccessGetBasket',
+        data
+    }
+}

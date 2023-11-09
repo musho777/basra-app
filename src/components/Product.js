@@ -3,17 +3,17 @@ import { useNavigation } from "@react-navigation/native";
 import ProductCart from "../icons/ProductCart";
 import ProductHeart from "../icons/ProductHeart";
 import { baseUrl } from "../api";
-import { useFavoriteStore } from "../store/favoriteStore";
-import { useCartStore } from "../store/cartStore";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AddDelateFavorite } from "../store/action/action";
+import { AddDelateFavorite, AddToBasketAction, RemoveFromBasketAction } from "../store/action/action";
+import AddProductCart from "../icons/AddProductCard";
 
 export default function Product(props) {
   const navigation = useNavigation();
   const [favorite, setFavorite] = useState(props.product?.favorit_auth?.length)
+  const [basket, setBasket] = useState(props.product?.basket_auth_user?.length)
   const { token } = useSelector((st) => st.static)
-  const cartStore = useCartStore();
+  // const cartStore = useCartStore();
   const TruncatedText = (texts) => {
     let text = JSON.stringify(texts)
     const truncatedText = text.length > 5 ? `...${text.substring(0, 5)}` : text;
@@ -24,6 +24,18 @@ export default function Product(props) {
     setFavorite(!favorite)
     dispatch(AddDelateFavorite({ product_id: props.product.id }, token))
   }
+
+  const AddRevoeBasket = () => {
+    if (basket) {
+      dispatch(RemoveFromBasketAction({ product_id: props.product.id }, token))
+    }
+    else {
+      dispatch(AddToBasketAction({ product_id: props.product.id }, token))
+    }
+    setBasket(!basket)
+
+  }
+
   return (
     <TouchableOpacity
       onPress={() =>
@@ -55,8 +67,11 @@ export default function Product(props) {
       ></Image>
       <Text style={styles.productTitle}>{props.product.name}</Text>
       <View style={styles.productBtm}>
-        <TouchableOpacity onPress={() => cartStore.addItem(props.product)}>
-          <ProductCart></ProductCart>
+        <TouchableOpacity onPress={() => AddRevoeBasket()}>
+          {!basket ?
+            <ProductCart /> :
+            <AddProductCart />
+          }
         </TouchableOpacity>
         <View style={styles.productsBtmRight}>
           <Text style={styles.productPrice}>

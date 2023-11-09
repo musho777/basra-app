@@ -68,3 +68,9 @@ export const StartGetFavorites = () => {
         type: 'StartGetFavorites'
     }
 }
+
+export const StartGetBasket = () => {
+    return {
+        type: 'StartGetBasket'
+    }
+}

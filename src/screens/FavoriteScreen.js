@@ -27,8 +27,21 @@ export default function FavoriteScreen(props) {
   const { token } = useSelector((st) => st.static)
   const [page, setPage] = useState(1)
 
+
   useEffect(() => {
-    dispatch(GetAllFavorites(token, page))
+    const unsubscribe = navigation.addListener('focus', async () => {
+      if (page == 1) {
+        setFavorites([])
+        dispatch(GetAllFavorites(token, 1))
+      }
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
+    if (page != 1) {
+      dispatch(GetAllFavorites(token, page))
+    }
   }, [page])
 
   useEffect(() => {

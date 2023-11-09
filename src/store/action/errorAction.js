@@ -76,3 +76,9 @@ export const ErrorGetFavorites = () => {
         type: 'ErrorGetFavorites'
     }
 }
+
+export const ErrorGetBasket = () => {
+    return {
+        type: 'ErrorGetBasket'
+    }
+}

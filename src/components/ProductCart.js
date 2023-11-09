@@ -12,14 +12,14 @@ export default function ProductCart(props) {
     <View style={styles.product}>
       <TouchableOpacity
         style={styles.productTrash}
-        onPress={() => cartStore.removeItem(props.product._id)}
+        onPress={() => props.RemoveFromBasket(props.product.id)}
       >
         <TrashIcon></TrashIcon>
       </TouchableOpacity>
       <View style={styles.productLeft}>
         <Text style={styles.productTitle}>{props.product.name}</Text>
         <Text style={styles.productSubtitle}>
-          {props.product.category.name}
+          {props.product?.category?.name}
         </Text>
         <View style={styles.productBtm}>
           <Text style={styles.productPrice}>
@@ -29,13 +29,16 @@ export default function ProductCart(props) {
           </Text>
           <View style={styles.productNav}>
             <TouchableOpacity
-              onPress={() => cartStore.increment(props.product._id)}
+
+              onPress={() =>
+                props.addProductCount(props.product.id)
+              }
             >
               <ProductPlus></ProductPlus>
             </TouchableOpacity>
-            <Text style={styles.productCount}>{props.product.count}</Text>
+            <Text style={styles.productCount}>{props.count}</Text>
             <TouchableOpacity
-              onPress={() => cartStore.decrement(props.product._id)}
+              onPress={() => props.MinusProductCount(props.product.id)}
             >
               <ProductMinus></ProductMinus>
             </TouchableOpacity>
@@ -45,7 +48,7 @@ export default function ProductCart(props) {
       <View style={styles.productRight}>
         <Image
           style={{ width: 57, height: 122 }}
-          source={{ uri: baseUrl + props.product.images[0] }}
+          source={{ uri: baseUrl + props.product.photos[0].photo }}
         ></Image>
       </View>
     </View>
