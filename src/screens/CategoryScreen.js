@@ -4,6 +4,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import NavigationBottom from "../components/NavigationBottom";
 import BackIcon from "../icons/BackIcon";
@@ -12,24 +13,36 @@ import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import Product from "../components/Product";
 import { fetchProductsSelection, baseUrl } from "../api";
+import { useDispatch, useSelector } from "react-redux";
+import { GetProductsByCategory } from "../store/action/action";
 
 export default function CategoryScreen(props) {
   const navigation = useNavigation();
-  console.log(props, 'pro ')
 
   const [products, setProducts] = useState([]);
 
+  const dispatch = useDispatch()
+
   const categoryId = props.route.params.categoryId;
   const categoryName = props.route.params.categoryName;
+  const { token } = useSelector((st) => st.static)
+  const getPorduct = useSelector((st) => st.getPorductByCategoy)
 
   useEffect(() => {
-    async function fetchData() {
-      const data = await fetchProductsSelection("category", categoryId);
-      setProducts(data);
-    }
-    fetchData();
+    dispatch(GetProductsByCategory({ category_id: categoryId }, token))
   }, []);
 
+  useEffect(() => {
+    if (getPorduct.data) {
+      setProducts(getPorduct.data)
+    }
+  }, [getPorduct])
+
+  if (getPorduct.loading) {
+    return <View style={styles.loading}>
+      <ActivityIndicator color={'black'} />
+    </View >
+  }
   return (
     <View>
       <View style={styles.navBtm}>
@@ -122,4 +135,9 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
   },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });

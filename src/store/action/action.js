@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ErrorConfirmCode, ErrorGetBaners, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorUpdateUser, ErrorUpdateUserAvatar } from "./errorAction";
 import { StartConfrimCode, StartGetBaners, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetStoryes, StartGetUser, StartLogin, StartUpdateProfil, StartUpdateUserAvatar } from "./startAction";
-import { SetToken, SuccessConfirmCode, SuccessGetBaners, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetSearchHistory, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
+import { SetToken, SuccessConfirmCode, SuccessGetBaners, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
 
 let api = 'https://basrabackend.justcode.am/api/app'
 export const LoginAction = (data) => {
@@ -233,7 +233,6 @@ export const GetProducts = (data, token) => {
                 }
             })
             .catch((error) => {
-                console.log(error, 'error')
                 dispatch(ErrorGetProducts())
             });
     }
@@ -268,6 +267,7 @@ export const GetSearchHistory = (token, page) => {
 
 export const GetProductsByCategory = (data, token) => {
     var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", `Bearer ${token}`);
     var requestOptions = {
         method: 'POST',
@@ -280,7 +280,7 @@ export const GetProductsByCategory = (data, token) => {
             .then(response => response.json())
             .then(r => {
                 if (r.status) {
-                    dispatch(SuccessGetProductByCateogy(r))
+                    dispatch(SuccessGetProductByCateogy(r.data.data))
                 }
                 else {
                     dispatch(ErrorGetProductByCategory())

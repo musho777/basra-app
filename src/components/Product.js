@@ -10,7 +10,11 @@ export default function Product(props) {
   const navigation = useNavigation();
   const favoriteStore = useFavoriteStore();
   const cartStore = useCartStore();
-
+  const TruncatedText = (texts) => {
+    let text = JSON.stringify(texts)
+    const truncatedText = text.length > 5 ? `...${text.substring(0, 5)}` : text;
+    return truncatedText
+  };
   return (
     <TouchableOpacity
       onPress={() =>
@@ -38,7 +42,7 @@ export default function Product(props) {
       )}
       <Image
         style={styles.productImg}
-        source={{ uri: baseUrl + props.product.images[0] }}
+        source={{ uri: baseUrl + props.product.photos[0].photo }}
       ></Image>
       <Text style={styles.productTitle}>{props.product.name}</Text>
       <View style={styles.productBtm}>
@@ -47,8 +51,11 @@ export default function Product(props) {
         </TouchableOpacity>
         <View style={styles.productsBtmRight}>
           <Text style={styles.productPrice}>
-            {props.product.price -
-              props.product.price * (props.product.discount / 100)}{" "}
+            {
+
+              TruncatedText(props.product.price -
+                props.product.price * (props.product.discount / 100))
+            }{" "}
             د.ع
           </Text>
           {!!props.product.discount && (
@@ -85,6 +92,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    zIndex: 2,
   },
   productImg: {
     width: 80,

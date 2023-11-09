@@ -26,7 +26,6 @@ export default function CatalogScreen(props) {
   }, []);
 
   useEffect(() => {
-    console.log(getProducets.data, 'data')
     if (getProducets.data?.length) {
       setCategories(getProducets.data)
     }
@@ -54,7 +53,6 @@ export default function CatalogScreen(props) {
           <Text style={styles.catalogTitle}>فهرس</Text>
           <View style={styles.catalogItems}>
             {categories.map((item, index) => {
-              console.log(item, 'item')
               return <TouchableOpacity
                 key={index}
                 onPress={() =>

@@ -2,7 +2,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // export const baseUrl = "https://www.dicaficu.beget.app";
-export const baseUrl = "http://192.168.0.10:5000";
+export const baseUrl = "https://basrabackend.justcode.am/uploads/";
 
 export async function fetchCategories() {
   const response = await axios.get(`${baseUrl}/categories`);
