@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ErrorConfirmCode, ErrorGetBaners, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorUpdateUser, ErrorUpdateUserAvatar } from "./errorAction";
-import { StartConfrimCode, StartGetBaners, StartGetStoryes, StartGetUser, StartLogin, StartUpdateProfil, StartUpdateUserAvatar } from "./startAction";
-import { SetToken, SuccessConfirmCode, SuccessGetBaners, SuccessGetFirstBaners, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
+import { ErrorConfirmCode, ErrorGetBaners, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorUpdateUser, ErrorUpdateUserAvatar } from "./errorAction";
+import { StartConfrimCode, StartGetBaners, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetStoryes, StartGetUser, StartLogin, StartUpdateProfil, StartUpdateUserAvatar } from "./startAction";
+import { SetToken, SuccessConfirmCode, SuccessGetBaners, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetSearchHistory, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
 
 let api = 'https://basrabackend.justcode.am/api/app'
 export const LoginAction = (data) => {
@@ -206,6 +206,88 @@ export const GetBaners = (type, token) => {
             })
             .catch(error => {
                 dispatch(ErrorGetBaners())
+            });
+    }
+}
+
+export const GetProducts = (data, token) => {
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        // body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        dispatch(StartGetProducets())
+        fetch(`${api}/get_category`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessGetProducets(r.data))
+                }
+                else {
+                    dispatch(ErrorGetProducts())
+                }
+            })
+            .catch((error) => {
+                console.log(error, 'error')
+                dispatch(ErrorGetProducts())
+            });
+    }
+}
+
+export const GetSearchHistory = (token, page) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Authorization', `Bearer ${token}`);
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+    };
+    return (dispatch) => {
+        dispatch(StartGetSearchHistory())
+        fetch(`${api}/get_history_search?page=${page}`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessGetSearchHistory(r))
+                }
+                else {
+                    dispatch(ErrorGetSearchHistory())
+                }
+            })
+            .catch((error) => {
+                dispatch(ErrorGetSearchHistory())
+            });
+    }
+}
+
+export const GetProductsByCategory = (data, token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        dispatch(StartGetProductByCategory())
+        fetch(`${api}/products`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessGetProductByCateogy(r))
+                }
+                else {
+                    dispatch(ErrorGetProductByCategory())
+                }
+            })
+            .catch(error => {
+                dispatch(ErrorGetProductByCategory())
             });
     }
 

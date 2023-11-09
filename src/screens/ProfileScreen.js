@@ -39,7 +39,9 @@ export default function ProfileScreen(props) {
     }
   };
   useEffect(() => {
-    dispatch(GetAuthUser(token))
+    if (token) {
+      dispatch(GetAuthUser(token))
+    }
   }, [token])
 
   useEffect(() => {

@@ -10,16 +10,59 @@ import NavigationBottom from "../components/NavigationBottom";
 import BackIcon from "../icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
 import SearchInput from "../components/SearchInput";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { GetSearchHistory } from "../store/action/action";
+import { useState } from "react";
 
 export default function SearchScreen(props) {
   const navigation = useNavigation();
+  const dispatch = useDispatch()
+  const { token } = useSelector((st) => st.static)
+  const getSearchHistory = useSelector((st) => st.getSearchHistory)
+  const [page, setPage] = useState(1)
+  const [searchData, setSearchData] = useState([])
 
+
+  const handleScroll = (event) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const isEndOfList =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
+
+    if (isEndOfList) {
+      loadMoreData();
+    }
+  };
+
+
+  const loadMoreData = () => {
+    if (getSearchHistory.data.data?.next_page_url) {
+      setPage(page + 1)
+    }
+  };
+
+  useEffect(() => {
+    dispatch(GetSearchHistory(token, page))
+  }, [page])
+
+  useEffect(() => {
+    let item = [...searchData]
+    let combinedArray = item
+    if (getSearchHistory.data?.data?.data.length) {
+      combinedArray = item.concat(getSearchHistory.data?.data?.data.length);
+    }
+    setSearchData(combinedArray)
+  }, [getSearchHistory])
   return (
     <View>
       <View style={styles.navBtm}>
         <NavigationBottom active="catalog"></NavigationBottom>
       </View>
-      <ScrollView style={styles.scroll}>
+      <ScrollView
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+
+        style={styles.scroll}>
         <View style={styles.container}>
           <View style={styles.top}>
             <BackIcon style={{ opacity: 0 }}></BackIcon>
@@ -35,12 +78,9 @@ export default function SearchScreen(props) {
               onSubmitEditing={() => navigation.navigate("SearchResult")}
             ></SearchInput>
           </View>
-          <Text style={[styles.searchItem, styles.searchItemGray]}>
-            كثيرا ما بحثت
-          </Text>
-          <Text style={styles.searchItem}>من التجاعيد</Text>
-          <Text style={styles.searchItem}>مصل الوجه</Text>
-          <Text style={styles.searchItem}>رعاية ليلية</Text>
+          {searchData.map((elm, i) => {
+            return <Text key={i} style={styles.searchItem}>{elm.text}</Text>
+          })}
         </View>
       </ScrollView>
     </View>

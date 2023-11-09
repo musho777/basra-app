@@ -56,3 +56,23 @@ export const SuccessGetFirstBaners = (data) => {
         data
     }
 }
+
+export const SuccessGetProducets = (data) => {
+    return {
+        type: 'SuccessGetProducets',
+        data
+    }
+}
+
+export const SuccessGetSearchHistory = (data) => {
+    return {
+        type: 'SuccessGetSearchHistory',
+        data
+    }
+}
+export const SuccessGetProductByCateogy = (data) => {
+    return {
+        type: 'SuccessGetProductByCateogy',
+        data
+    }
+}

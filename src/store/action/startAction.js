@@ -39,3 +39,20 @@ export const StartGetBaners = () => {
         type: "StartGetBaners"
     }
 }
+
+export const StartGetProducets = () => {
+    return {
+        type: 'StartGetProducets'
+    }
+}
+export const StartGetSearchHistory = () => {
+    return {
+        type: "StartGetSearchHistory"
+    }
+}
+
+export const StartGetProductByCategory = () => {
+    return {
+        type: 'StartGetProductByCategory'
+    }
+}

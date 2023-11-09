@@ -5,26 +5,39 @@ import {
   Text,
   TouchableOpacity,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import NavigationBottom from "../components/NavigationBottom";
 import SearchButton from "../components/SearchButton";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { fetchCategories, baseUrl } from "../api";
+import { baseUrl } from "../api";
+import { useDispatch, useSelector } from "react-redux";
+import { GetProducts } from "../store/action/action";
 
 export default function CatalogScreen(props) {
   const [categories, setCategories] = useState([]);
-
+  const dispatch = useDispatch()
+  const { token } = useSelector((st) => st.static)
+  const getProducets = useSelector((st) => st.getProducets)
   useEffect(() => {
-    async function fetchData() {
-      const data = await fetchCategories();
-      setCategories(data);
-    }
-    fetchData();
+    dispatch(GetProducts({}, token))
   }, []);
 
+  useEffect(() => {
+    console.log(getProducets.data, 'data')
+    if (getProducets.data?.length) {
+      setCategories(getProducets.data)
+    }
+  }, [getProducets])
+
   const navigation = useNavigation();
+  if (getProducets.loading) {
+    return <View style={styles.loading}>
+      <ActivityIndicator color={'black'} />
+    </View >
+  }
 
   return (
     <View>
@@ -40,11 +53,13 @@ export default function CatalogScreen(props) {
           </View>
           <Text style={styles.catalogTitle}>فهرس</Text>
           <View style={styles.catalogItems}>
-            {categories.map((item, index) => (
-              <TouchableOpacity
+            {categories.map((item, index) => {
+              console.log(item, 'item')
+              return <TouchableOpacity
+                key={index}
                 onPress={() =>
                   navigation.navigate("Category", {
-                    categoryId: item._id,
+                    categoryId: item.id,
                     categoryName: item.name,
                   })
                 }
@@ -52,12 +67,11 @@ export default function CatalogScreen(props) {
                   styles.catlaogItem,
                   { marginRight: index % 2 == 1 ? 0 : 10 },
                 ]}
-                key={item._id}
               >
                 <ImageBackground
                   style={styles.catalogItemBg}
                   resizeMode="cover"
-                  source={{ uri: `${baseUrl}${item.image}` }}
+                  source={{ uri: `https://basrabackend.justcode.am/uploads/${item.photo}` }}
                 ></ImageBackground>
                 <Text style={styles.catalogItemText}>{item.name}</Text>
                 <LinearGradient
@@ -66,7 +80,7 @@ export default function CatalogScreen(props) {
                   style={styles.catalogItemGradient}
                 ></LinearGradient>
               </TouchableOpacity>
-            ))}
+            })}
           </View>
         </View>
       </ScrollView>
@@ -153,4 +167,9 @@ const styles = StyleSheet.create({
     width: "100%",
     marginBottom: 20,
   },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });

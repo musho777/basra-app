@@ -15,6 +15,7 @@ import { fetchProductsSelection, baseUrl } from "../api";
 
 export default function CategoryScreen(props) {
   const navigation = useNavigation();
+  console.log(props, 'pro ')
 
   const [products, setProducts] = useState([]);
 

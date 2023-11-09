@@ -45,3 +45,22 @@ export const ErrorGetBaners = () => {
         type: 'ErrorGetBaners'
     }
 }
+
+
+export const ErrorGetProducts = () => {
+    return {
+        type: 'ErrorGetProducts'
+    }
+}
+
+export const ErrorGetSearchHistory = () => {
+    return {
+        type: 'ErrorGetSearchHistory'
+    }
+}
+
+export const ErrorGetProductByCategory = () => {
+    return {
+        type: "ErrorGetProductByCategory"
+    }
+}

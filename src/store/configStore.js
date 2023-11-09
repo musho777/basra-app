@@ -8,6 +8,9 @@ import { UpdateUserInfoReducer } from './reducer/UpdateUserInfoReducer';
 import { UpdatePhotoReducer } from './reducer/UpdatePhotoReducer';
 import { GetStoryesReducer } from './reducer/getStoryesReducer';
 import { GetBanersReducer } from './reducer/getBanersReducer';
+import { GetProductsReducer } from './reducer/GetProducetsReducer';
+import { getSearchHistoryReducer } from './reducer/getSearchHistoryReducer';
+import { GetProductByCategoryReducer } from './reducer/GetProductByCategoryReducer';
 
 const rootReducer = combineReducers({
     login: AutReducer,
@@ -18,6 +21,9 @@ const rootReducer = combineReducers({
     updatePhoto: UpdatePhotoReducer,
     getStoryes: GetStoryesReducer,
     getBaner: GetBanersReducer,
+    getProducets: GetProductsReducer,
+    getSearchHistory: getSearchHistoryReducer,
+    getPorductByCategoy: GetProductByCategoryReducer
 });
 
 export const store = createStore(rootReducer, applyMiddleware(thunk));
