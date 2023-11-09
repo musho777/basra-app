@@ -5,6 +5,7 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import NavigationBottom from "../components/NavigationBottom";
 import Swiper from "react-native-swiper";
@@ -15,6 +16,8 @@ import HertIconProduct from "../icons/HeartIconProduct";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import { fetchProduct, baseUrl } from "../api";
+import { useDispatch, useSelector } from "react-redux";
+import { GetSinglProduct } from "../store/action/action";
 
 export default function ProductScreen(props) {
   const navigation = useNavigation();
@@ -24,16 +27,21 @@ export default function ProductScreen(props) {
   const [shownComposition, setShownComposition] = useState(false);
 
   const productId = props.route.params.productId;
+  const getSinglProduct = useSelector((st) => st.getSinglProduct)
+  const { token } = useSelector((st) => st.static)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    setProduct(getSinglProduct.data)
+  }, [getSinglProduct]);
 
   useEffect(() => {
-    async function fetchData() {
-      const data = await fetchProduct(productId);
-      setProduct(data);
-    }
-
-    fetchData();
-  }, [productId]);
-
+    dispatch(GetSinglProduct({ product_id: productId }, token))
+  }, [productId])
+  if (getSinglProduct.loading) {
+    return <View style={styles.loading}>
+      <ActivityIndicator color={'black'} />
+    </View >
+  }
   return (
     <View>
       <View style={styles.navBtm}>
@@ -47,11 +55,13 @@ export default function ProductScreen(props) {
               style={styles.back}
             >
               <BackIcon></BackIcon>
+
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.heart}>
               <HertIconProduct></HertIconProduct>
             </TouchableOpacity>
-            {!!product.images && (
+            {!!product.photos && (
               <Swiper
                 style={{ height: 280 }}
                 showsPagination={true}
@@ -78,16 +88,16 @@ export default function ProductScreen(props) {
                   ></View>
                 }
               >
-                {product.images.map((image, index) => (
-                  <View style={styles.slide} key={index}>
+                {product.photos.map((image, index) => {
+                  return <View style={styles.slide} key={index}>
                     <Image
                       width={200}
                       height={218}
                       style={styles.slideImg}
-                      source={{ uri: baseUrl + image }}
+                      source={{ uri: baseUrl + image.photo }}
                     ></Image>
                   </View>
-                ))}
+                })}
               </Swiper>
             )}
           </View>
@@ -98,10 +108,10 @@ export default function ProductScreen(props) {
           >
             <Text style={styles.title}>{product.name}</Text>
             <View style={styles.prices}>
-              <Text style={styles.price}>{product.price} د.ع</Text>
+              <Text style={styles.price}>{product.price - product.price * (product.discount / 100)} د.ع</Text>
               {!!product.discount && (
                 <Text style={styles.priceOld}>
-                  {product.price - product.price * (product.discount / 100)} د.ع
+                  {product.price} د.ع
                 </Text>
               )}
             </View>
@@ -295,4 +305,9 @@ const styles = StyleSheet.create({
   rotate: {
     transform: [{ rotate: "180deg" }],
   },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });

@@ -56,3 +56,9 @@ export const StartGetProductByCategory = () => {
         type: 'StartGetProductByCategory'
     }
 }
+
+export const StartGetSinglProduct = () => {
+    return {
+        type: 'StartGetSinglProduct'
+    }
+}

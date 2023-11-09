@@ -12,7 +12,6 @@ import SearchIconCategory from "../icons/SearchIconCategory";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import Product from "../components/Product";
-import { fetchProductsSelection, baseUrl } from "../api";
 import { useDispatch, useSelector } from "react-redux";
 import { GetProductsByCategory } from "../store/action/action";
 
@@ -27,14 +26,38 @@ export default function CategoryScreen(props) {
   const categoryName = props.route.params.categoryName;
   const { token } = useSelector((st) => st.static)
   const getPorduct = useSelector((st) => st.getPorductByCategoy)
+  const [page, setPage] = useState(1)
+
+
+
+  const handleScroll = (event) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const isEndOfList =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
+
+    if (isEndOfList) {
+      loadMoreData();
+    }
+  };
+
+
+  const loadMoreData = () => {
+    if (getPorduct?.data?.next_page_ur) {
+      setPage(page + 1)
+    }
+  };
 
   useEffect(() => {
-    dispatch(GetProductsByCategory({ category_id: categoryId }, token))
+    dispatch(GetProductsByCategory({ category_id: categoryId }, token, page))
   }, []);
 
   useEffect(() => {
-    if (getPorduct.data) {
-      setProducts(getPorduct.data)
+    if (getPorduct.data.data) {
+      let item = [...products]
+      let combinedArray = item
+      combinedArray = item.concat(getPorduct.data.data);
+      // setSearchData(combinedArray)
+      setProducts(combinedArray)
     }
   }, [getPorduct])
 
@@ -48,7 +71,11 @@ export default function CategoryScreen(props) {
       <View style={styles.navBtm}>
         <NavigationBottom active="catalog"></NavigationBottom>
       </View>
-      <ScrollView style={styles.scroll}>
+      <ScrollView style={styles.scroll}
+
+        scrollEventThrottle={16}
+
+        onScroll={handleScroll}>
         <View style={styles.container}>
           <View style={styles.top}>
             <TouchableOpacity onPress={() => navigation.navigate("Search")}>

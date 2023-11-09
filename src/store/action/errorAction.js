@@ -64,3 +64,9 @@ export const ErrorGetProductByCategory = () => {
         type: "ErrorGetProductByCategory"
     }
 }
+
+export const ErrorGetSinglPorduct = () => {
+    return {
+        type: 'ErrorGetSinglPorduct'
+    }
+}

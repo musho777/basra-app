@@ -76,3 +76,10 @@ export const SuccessGetProductByCateogy = (data) => {
         data
     }
 }
+
+export const SuccessGetSinglProduct = (data) => {
+    return {
+        type: 'SuccessGetSinglProduct',
+        data
+    }
+}

@@ -21,7 +21,7 @@ export default function Product(props) {
         navigation.navigate("CatalogTab", {
           screen: "Product",
           params: {
-            productId: props.product._id,
+            productId: props.product.id,
           },
         })
       }

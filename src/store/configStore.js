@@ -11,6 +11,7 @@ import { GetBanersReducer } from './reducer/getBanersReducer';
 import { GetProductsReducer } from './reducer/GetProducetsReducer';
 import { getSearchHistoryReducer } from './reducer/getSearchHistoryReducer';
 import { GetProductByCategoryReducer } from './reducer/GetProductByCategoryReducer';
+import { GetSinglProductReduer } from './reducer/getSinglPorductReducer';
 
 const rootReducer = combineReducers({
     login: AutReducer,
@@ -23,7 +24,8 @@ const rootReducer = combineReducers({
     getBaner: GetBanersReducer,
     getProducets: GetProductsReducer,
     getSearchHistory: getSearchHistoryReducer,
-    getPorductByCategoy: GetProductByCategoryReducer
+    getPorductByCategoy: GetProductByCategoryReducer,
+    getSinglProduct: GetSinglProductReduer
 });
 
 export const store = createStore(rootReducer, applyMiddleware(thunk));

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ErrorConfirmCode, ErrorGetBaners, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorUpdateUser, ErrorUpdateUserAvatar } from "./errorAction";
-import { StartConfrimCode, StartGetBaners, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetStoryes, StartGetUser, StartLogin, StartUpdateProfil, StartUpdateUserAvatar } from "./startAction";
-import { SetToken, SuccessConfirmCode, SuccessGetBaners, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
+import { ErrorConfirmCode, ErrorGetBaners, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetSinglPorduct, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorUpdateUser, ErrorUpdateUserAvatar } from "./errorAction";
+import { StartConfrimCode, StartGetBaners, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetSinglProduct, StartGetStoryes, StartGetUser, StartLogin, StartUpdateProfil, StartUpdateUserAvatar } from "./startAction";
+import { SetToken, SuccessConfirmCode, SuccessGetBaners, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetSinglProduct, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
 
 let api = 'https://basrabackend.justcode.am/api/app'
 export const LoginAction = (data) => {
@@ -265,7 +265,7 @@ export const GetSearchHistory = (token, page) => {
     }
 }
 
-export const GetProductsByCategory = (data, token) => {
+export const GetProductsByCategory = (data, token, page = 1) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", `Bearer ${token}`);
@@ -276,11 +276,11 @@ export const GetProductsByCategory = (data, token) => {
     };
     return (dispatch) => {
         dispatch(StartGetProductByCategory())
-        fetch(`${api}/products`, requestOptions)
+        fetch(`${api}/products?page=${page}`, requestOptions)
             .then(response => response.json())
             .then(r => {
                 if (r.status) {
-                    dispatch(SuccessGetProductByCateogy(r.data.data))
+                    dispatch(SuccessGetProductByCateogy(r.data))
                 }
                 else {
                     dispatch(ErrorGetProductByCategory())
@@ -291,4 +291,31 @@ export const GetProductsByCategory = (data, token) => {
             });
     }
 
+}
+
+export const GetSinglProduct = (data, token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        dispatch(StartGetSinglProduct())
+        fetch(`${api}/single_page_product`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessGetSinglProduct(r.data))
+                }
+                else {
+                    dispatch(ErrorGetSinglPorduct())
+                }
+            })
+            .catch(error => {
+                dispatch(ErrorGetSinglPorduct())
+            });
+    }
 }
