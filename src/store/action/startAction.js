@@ -62,3 +62,9 @@ export const StartGetSinglProduct = () => {
         type: 'StartGetSinglProduct'
     }
 }
+
+export const StartGetFavorites = () => {
+    return {
+        type: 'StartGetFavorites'
+    }
+}

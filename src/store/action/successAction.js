@@ -83,3 +83,10 @@ export const SuccessGetSinglProduct = (data) => {
         data
     }
 }
+
+export const SuccessGetFavorites = (data) => {
+    return {
+        type: 'SuccessGetFavorites',
+        data
+    }
+}

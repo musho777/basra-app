@@ -70,3 +70,9 @@ export const ErrorGetSinglPorduct = () => {
         type: 'ErrorGetSinglPorduct'
     }
 }
+
+export const ErrorGetFavorites = () => {
+    return {
+        type: 'ErrorGetFavorites'
+    }
+}

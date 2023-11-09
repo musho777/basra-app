@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ErrorConfirmCode, ErrorGetBaners, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetSinglPorduct, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorUpdateUser, ErrorUpdateUserAvatar } from "./errorAction";
-import { StartConfrimCode, StartGetBaners, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetSinglProduct, StartGetStoryes, StartGetUser, StartLogin, StartUpdateProfil, StartUpdateUserAvatar } from "./startAction";
-import { SetToken, SuccessConfirmCode, SuccessGetBaners, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetSinglProduct, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
+import { ErrorConfirmCode, ErrorGetBaners, ErrorGetFavorites, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetSinglPorduct, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorUpdateUser, ErrorUpdateUserAvatar } from "./errorAction";
+import { StartConfrimCode, StartGetBaners, StartGetFavorites, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetSinglProduct, StartGetStoryes, StartGetUser, StartLogin, StartUpdateProfil, StartUpdateUserAvatar } from "./startAction";
+import { SetToken, SuccessConfirmCode, SuccessGetBaners, SuccessGetFavorites, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetSinglProduct, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
 
 let api = 'https://basrabackend.justcode.am/api/app'
 export const LoginAction = (data) => {
@@ -316,6 +316,71 @@ export const GetSinglProduct = (data, token) => {
             })
             .catch(error => {
                 dispatch(ErrorGetSinglPorduct())
+            });
+    }
+}
+
+export const AddDelateFavorite = (data, token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        fetch(`${api}/add_or_delete_in_favorite`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+            })
+            .catch(error => {
+            });
+    }
+}
+
+export const GetFavorites = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        fetch(`${api}/add_or_delete_in_favorite`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+            })
+            .catch(error => {
+            });
+    }
+}
+
+export const GetAllFavorites = (token, page) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Authorization', `Bearer ${token}`);
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+    };
+    return (dispatch) => {
+        dispatch(StartGetFavorites())
+        fetch(`${api}/get_my_favorite?page=${page}`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessGetFavorites(r.data))
+                }
+                else {
+                    dispatch(ErrorGetFavorites)
+                }
+            })
+            .catch((error) => {
+                dispatch(ErrorGetFavorites())
             });
     }
 }

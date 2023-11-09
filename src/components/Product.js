@@ -5,16 +5,25 @@ import ProductHeart from "../icons/ProductHeart";
 import { baseUrl } from "../api";
 import { useFavoriteStore } from "../store/favoriteStore";
 import { useCartStore } from "../store/cartStore";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AddDelateFavorite } from "../store/action/action";
 
 export default function Product(props) {
   const navigation = useNavigation();
-  const favoriteStore = useFavoriteStore();
+  const [favorite, setFavorite] = useState(props.product?.favorit_auth?.length)
+  const { token } = useSelector((st) => st.static)
   const cartStore = useCartStore();
   const TruncatedText = (texts) => {
     let text = JSON.stringify(texts)
     const truncatedText = text.length > 5 ? `...${text.substring(0, 5)}` : text;
     return truncatedText
   };
+  const dispatch = useDispatch()
+  const addFavorite = () => {
+    setFavorite(!favorite)
+    dispatch(AddDelateFavorite({ product_id: props.product.id }, token))
+  }
   return (
     <TouchableOpacity
       onPress={() =>
@@ -28,11 +37,11 @@ export default function Product(props) {
       style={styles.product}
     >
       <ProductHeart
-        onPress={() => favoriteStore.toggleItem(props.product)}
+        onPress={() => addFavorite()}
         style={styles.productHeart}
-        opacity={favoriteStore.items[props.product._id] ? 1 : 0.8}
+        opacity={favorite ? 1 : 0.8}
         fill={
-          favoriteStore.items[props.product._id] ? "#1F2024" : "transparent"
+          favorite ? "#1F2024" : "transparent"
         }
       ></ProductHeart>
       {!!props.product.discount && (

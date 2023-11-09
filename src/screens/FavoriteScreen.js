@@ -4,6 +4,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import NavigationBottom from "../components/NavigationBottom";
 import BackIcon from "../icons/BackIcon";
@@ -13,17 +14,63 @@ import Product from "../components/Product";
 import EmptyOrders from "../icons/EmptyOrders";
 import ButtonPrimary from "../components/ButtonPrimary";
 import { useFavoriteStore } from "../store/favoriteStore";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { GetAllFavorites } from "../store/action/action";
+import { useState } from "react";
 
 export default function FavoriteScreen(props) {
   const navigation = useNavigation();
-  const favoritesStore = useFavoriteStore();
+  const [favorites, setFavorites] = useState([])
+  const getFavorites = useSelector((st) => st.getFavorites)
+  const dispatch = useDispatch()
+  const { token } = useSelector((st) => st.static)
+  const [page, setPage] = useState(1)
 
+  useEffect(() => {
+    dispatch(GetAllFavorites(token, page))
+  }, [page])
+
+  useEffect(() => {
+    if (getFavorites.data?.data) {
+      let item = [...favorites]
+      let combinedArray = item.concat(getFavorites.data.data);
+      setFavorites(combinedArray)
+    }
+  }, [getFavorites])
+
+
+  const handleScroll = (event) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const isEndOfList =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
+
+    if (isEndOfList) {
+      loadMoreData();
+    }
+  };
+
+
+  const loadMoreData = () => {
+    if (getFavorites?.data?.next_page_url) {
+      setPage(page + 1)
+    }
+  };
+
+  if (getFavorites.loading) {
+    return <View style={styles.loading}>
+      <ActivityIndicator color={'black'} />
+    </View >
+  }
   return (
     <View>
       <View style={styles.navBtm}>
         <NavigationBottom active="favorite"></NavigationBottom>
       </View>
-      <ScrollView style={styles.scroll}>
+      <ScrollView
+        scrollEventThrottle={16}
+        onScroll={handleScroll}
+        style={styles.scroll}>
         <View style={styles.container}>
           <View style={styles.top}>
             <TouchableOpacity onPress={() => navigation.navigate("Search")}>
@@ -36,19 +83,21 @@ export default function FavoriteScreen(props) {
               <BackIcon></BackIcon>
             </TouchableOpacity>
           </View>
-          {Object.values(favoritesStore.items).length > 0 ? (
+          {favorites.length > 0 ? (
             <View style={styles.products}>
-              {Object.values(favoritesStore.items).map((product, index) => (
-                <View
+              {favorites?.map((product, index) => {
+                let fvProduct = product.product
+                fvProduct.favorit_auth = [1]
+                return <View
                   style={[
                     styles.product,
                     { marginRight: index % 2 == 1 ? 0 : 10 },
                   ]}
                   key={index}
                 >
-                  <Product favorite={true} product={product}></Product>
+                  <Product favorite={true} product={product.product}></Product>
                 </View>
-              ))}
+              })}
             </View>
           ) : (
             <View style={styles.emptyOrdersContainer}>
@@ -150,4 +199,9 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 12,
   },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });

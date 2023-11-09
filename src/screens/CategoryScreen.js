@@ -42,7 +42,7 @@ export default function CategoryScreen(props) {
 
 
   const loadMoreData = () => {
-    if (getPorduct?.data?.next_page_ur) {
+    if (getPorduct?.data?.next_page_url) {
       setPage(page + 1)
     }
   };
@@ -56,7 +56,6 @@ export default function CategoryScreen(props) {
       let item = [...products]
       let combinedArray = item
       combinedArray = item.concat(getPorduct.data.data);
-      // setSearchData(combinedArray)
       setProducts(combinedArray)
     }
   }, [getPorduct])
@@ -92,8 +91,8 @@ export default function CategoryScreen(props) {
             </TouchableOpacity>
           </View>
           <View style={styles.products}>
-            {products.map((product, index) => (
-              <View
+            {products.map((product, index) => {
+              return <View
                 style={[
                   styles.product,
                   { marginRight: index % 2 == 1 ? 0 : 10 },
@@ -102,7 +101,7 @@ export default function CategoryScreen(props) {
               >
                 <Product product={product}></Product>
               </View>
-            ))}
+            })}
           </View>
         </View>
       </ScrollView>
