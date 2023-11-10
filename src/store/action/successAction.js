@@ -97,3 +97,31 @@ export const SuccessGetBasket = (data) => {
         data
     }
 }
+
+export const SuccessValidOrder = (data) => {
+    return {
+        type: "SuccessValidOrder",
+        data
+    }
+}
+
+export const SuccessGetCityes = (data) => {
+    return {
+        type: "SuccessGetCityes",
+        data
+    }
+}
+
+export const SuccessDelivery = (data) => {
+    return {
+        type: 'SuccessDelivery',
+        data
+    }
+}
+
+export const SuccessPaymentType = (data) => {
+    return {
+        type: 'SuccessPaymentType',
+        data
+    }
+}

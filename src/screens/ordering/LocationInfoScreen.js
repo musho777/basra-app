@@ -12,11 +12,18 @@ import InputPrimary from "../../components/InputPrimary";
 import { useState } from "react";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import RadioPrimary from "../../components/RadioPrimary";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 export default function LocationInfoScreen(props) {
-  const [deliveryMethod, setDeliveryMethod] = useState("courier");
+  const [deliveryMethod, setDeliveryMethod] = useState(1);
+  const [deliveryType, setDeliveryType] = useState([])
   const navigation = useNavigation();
-
+  const getCityes = useSelector((st) => st.getCityes)
+  const getDelivery = useSelector((st) => st.getDelivery)
+  useEffect(() => {
+    setDeliveryType(getDelivery.data)
+  }, [getDelivery.data])
   return (
     <View>
       <ScrollView style={styles.scroll}>
@@ -53,22 +60,17 @@ export default function LocationInfoScreen(props) {
             ></InputPrimary>
           </View>
           <Text style={styles.subtitlePrimary}>طريقة التوصيل</Text>
-          <View style={[styles.radio, { marginBottom: 15 }]}>
-            <RadioPrimary
-              title="ساعي"
-              text="التسليم في البصرة – 250 د.ع"
-              onPress={() => setDeliveryMethod("courier")}
-              active={deliveryMethod == "courier"}
-            ></RadioPrimary>
-          </View>
-          <View style={styles.radio}>
-            <RadioPrimary
-              title="يلتقط"
-              text="الاستلام من متجرنا في البصرة - مجانا"
-              onPress={() => setDeliveryMethod("pickup")}
-              active={deliveryMethod == "pickup"}
-            ></RadioPrimary>
-          </View>
+          {deliveryType?.map((elm, i) => {
+
+            return <View key={i} style={[styles.radio, { marginBottom: 15 }]}>
+              <RadioPrimary
+                title={elm.name}
+                text="التسليم في البصرة – 250 د.ع"
+                onPress={() => setDeliveryMethod(elm.id)}
+                active={deliveryMethod == elm.id}
+              ></RadioPrimary>
+            </View>
+          })}
           <View style={styles.btn}>
             <ButtonPrimary onPress={() => navigation.navigate("AddressInfo")}>
               إضافي

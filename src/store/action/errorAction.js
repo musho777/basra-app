@@ -82,3 +82,28 @@ export const ErrorGetBasket = () => {
         type: 'ErrorGetBasket'
     }
 }
+
+export const ErrorValidOrder = (error) => {
+    return {
+        type: 'ErrorValidOrder',
+        error
+    }
+}
+
+export const ErrorGetCityes = () => {
+    return {
+        type: 'ErrorGetCityes'
+    }
+}
+
+export const ErrorDelivery = () => {
+    return {
+        type: 'ErrorDelivery'
+    }
+}
+
+export const ErrorPaymentType = () => {
+    return {
+        type: 'ErrorPaymentType'
+    }
+}

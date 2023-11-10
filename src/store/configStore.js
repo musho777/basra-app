@@ -14,6 +14,10 @@ import { GetProductByCategoryReducer } from './reducer/GetProductByCategoryReduc
 import { GetSinglProductReduer } from './reducer/getSinglPorductReducer';
 import { GetAllFavoritesReducer } from './reducer/GetFavoritesReducer';
 import { GetBasketReducer } from './reducer/GetBasketReducer';
+import { ValidOrderReducer } from './reducer/ValidOrderReducer';
+import { GetCityesReducer } from './reducer/getCityesReducer';
+import { GetDeliveryReducer } from './reducer/getDeliveryReducer';
+import { GetPaymentTypeReducer } from './reducer/getPaymentTypeReducer';
 
 const rootReducer = combineReducers({
     login: AutReducer,
@@ -30,6 +34,11 @@ const rootReducer = combineReducers({
     getSinglProduct: GetSinglProductReduer,
     getFavorites: GetAllFavoritesReducer,
     getBasket: GetBasketReducer,
+    validOrder: ValidOrderReducer,
+    getCityes: GetCityesReducer,
+    getDelivery: GetDeliveryReducer,
+    getPaymentType: GetPaymentTypeReducer
 });
+
 
 export const store = createStore(rootReducer, applyMiddleware(thunk));

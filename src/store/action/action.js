@@ -1,9 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ErrorConfirmCode, ErrorGetBaners, ErrorGetBasket, ErrorGetFavorites, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetSinglPorduct, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorUpdateUser, ErrorUpdateUserAvatar } from "./errorAction";
-import { StartConfrimCode, StartGetBaners, StartGetBasket, StartGetFavorites, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetSinglProduct, StartGetStoryes, StartGetUser, StartLogin, StartUpdateProfil, StartUpdateUserAvatar } from "./startAction";
-import { SetToken, SuccessConfirmCode, SuccessGetBaners, SuccessGetBasket, SuccessGetFavorites, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetSinglProduct, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessUpdateUser, SuccessUpdateUserAvatar } from "./successAction";
+import { ErrorConfirmCode, ErrorDelivery, ErrorGetBaners, ErrorGetBasket, ErrorGetCityes, ErrorGetFavorites, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetSinglPorduct, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorPaymentType, ErrorUpdateUser, ErrorUpdateUserAvatar, ErrorValidOrder } from "./errorAction";
+import { StartConfrimCode, StartDelivery, StartGetBaners, StartGetBasket, StartGetCityes, StartGetFavorites, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetSinglProduct, StartGetStoryes, StartGetUser, StartLogin, StartPaymentType, StartUpdateProfil, StartUpdateUserAvatar, StartValidOrder } from "./startAction";
+import { SetToken, SuccessConfirmCode, SuccessDelivery, SuccessGetBaners, SuccessGetBasket, SuccessGetCityes, SuccessGetFavorites, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetSinglProduct, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessPaymentType, SuccessUpdateUser, SuccessUpdateUserAvatar, SuccessValidOrder } from "./successAction";
 
 let api = 'https://basrabackend.justcode.am/api/app'
+let api2 = 'https://basrabackend.justcode.am/api'
+
 export const LoginAction = (data) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -440,6 +442,7 @@ export const GetBasketAction = (token, page = 1) => {
             .then((r) => r.json())
             .then(r => {
                 if (r.status) {
+
                     dispatch(SuccessGetBasket(r))
                 }
                 else {
@@ -469,4 +472,123 @@ export const MinusFromBassket = (data, token) => {
             .catch(error => {
             });
     }
+}
+
+export const ValidORderAction = (token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Authorization', `Bearer ${token}`);
+
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+    };
+    return (dispatch) => {
+        dispatch(StartValidOrder())
+        fetch(`${api}/validation_product_in_basket`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessValidOrder(r))
+                }
+                else {
+                    dispatch(ErrorValidOrder())
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+                dispatch(ErrorValidOrder())
+            });
+    }
+}
+
+export const ClearValidOrder = () => {
+    return {
+        type: 'ClearValidOrder'
+    }
+}
+
+export const GetCityes = (token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    // myHeaders.append('Authorization', `Bearer ${token}`);
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+    };
+    return (dispatch) => {
+        dispatch(StartGetCityes())
+        fetch(`https://basrabackend.justcode.am/api/get_cities`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessGetCityes(r.data))
+                }
+                else {
+                    dispatch(ErrorGetCityes())
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+                dispatch(ErrorGetCityes())
+            });
+    }
+}
+
+export const DeliveryType = (token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    // myHeaders.append('Authorization', `Bearer ${token}`);
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+    };
+    return (dispatch) => {
+        dispatch(StartDelivery())
+        fetch(`${api2}/get_delivery_type`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessDelivery(r.data))
+                }
+                else {
+                    dispatch(ErrorDelivery())
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+                dispatch(ErrorDelivery())
+            });
+    }
+}
+
+export const GetPaymentType = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+    };
+    return (dispatch) => {
+        dispatch(StartPaymentType())
+        fetch(`${api2}/get_payment_type`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    console.log(r)
+                    dispatch(SuccessPaymentType(r.data))
+                }
+                else {
+                    dispatch(ErrorPaymentType())
+                }
+            })
+            .catch((error) => {
+                console.log('error', error)
+                dispatch(ErrorPaymentType())
+            });
+    }
+
 }

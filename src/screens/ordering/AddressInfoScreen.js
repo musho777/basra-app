@@ -13,7 +13,6 @@ import ButtonPrimary from "../../components/ButtonPrimary";
 
 export default function AddressInfoScreen(props) {
   const navigation = useNavigation();
-
   return (
     <View>
       <ScrollView style={styles.scroll}>

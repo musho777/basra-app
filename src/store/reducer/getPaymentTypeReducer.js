@@ -4,22 +4,22 @@ const initialState = {
     loading: true,
     error: ""
 };
-export const GetBasketReducer = (state = initialState, action) => {
+export const GetPaymentTypeReducer = (state = initialState, action) => {
     let temp = { ...state }
     switch (action.type) {
-        case 'StartGetBasket':
+        case 'StartPaymentType':
             temp.data = []
             temp.status = false
             temp.loading = true
             temp.error = ''
             break;
-        case 'SuccessGetBasket':
+        case 'SuccessPaymentType':
             temp.data = action.data
             temp.status = true
             temp.loading = false
             temp.error = ''
             break
-        case 'ErrorGetBasket':
+        case 'ErrorPaymentType':
             temp.data = ''
             temp.status = false
             temp.loading = false

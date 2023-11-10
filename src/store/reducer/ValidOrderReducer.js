@@ -1,29 +1,35 @@
 const initialState = {
     data: [],
     status: false,
-    loading: true,
+    loading: false,
     error: ""
 };
-export const GetBasketReducer = (state = initialState, action) => {
+export const ValidOrderReducer = (state = initialState, action) => {
     let temp = { ...state }
     switch (action.type) {
-        case 'StartGetBasket':
+        case 'StartValidOrder':
             temp.data = []
             temp.status = false
             temp.loading = true
             temp.error = ''
             break;
-        case 'SuccessGetBasket':
+        case 'SuccessValidOrder':
             temp.data = action.data
             temp.status = true
             temp.loading = false
             temp.error = ''
             break
-        case 'ErrorGetBasket':
+        case 'ErrorValidOrder':
             temp.data = ''
             temp.status = false
             temp.loading = false
             temp.error = 'error'
+            break
+        case 'ClearValidOrder':
+            temp.data = ''
+            temp.status = false
+            temp.loading = false
+            temp.error = ''
             break
         default:
             return temp;

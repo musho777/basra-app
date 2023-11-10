@@ -13,10 +13,21 @@ import { useState } from "react";
 import RadioPrimary from "../../components/RadioPrimary";
 import ProductImage from "../../../assets/images/product.png";
 import ButtonPrimary from "../../components/ButtonPrimary";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 export default function PaymentScreen(props) {
-  const [paymentMethod, setPaymentMethod] = useState("online");
+  const [paymentMethod, setPaymentMethod] = useState(2);
   const navigation = useNavigation();
+
+  const getPaymentType = useSelector((st) => st.getPaymentType)
+
+  const [paymentData, setPaymentData] = useState([])
+
+  useEffect(() => {
+    setPaymentData(getPaymentType?.data)
+  }, [getPaymentType.data])
+
 
   return (
     <View>
@@ -44,25 +55,18 @@ export default function PaymentScreen(props) {
             </TouchableOpacity>
           </View>
           <Text style={styles.subtitlePrimary}>اختر طريقة الدفع</Text>
-          <View style={[styles.radio, { marginBottom: 15 }]}>
-            <RadioPrimary
-              title="عن طريق البطاقة المصرفية ، عبر الإنترنت"
-              titleSize={16}
-              text="ادفع مقابل طلبك في غضون 30 دقيقة بعد ذلك
-              التصميم."
-              active={paymentMethod == "online"}
-              onPress={() => setPaymentMethod("online")}
-            ></RadioPrimary>
-          </View>
-          <View style={[styles.radio, { marginBottom: 50 }]}>
-            <RadioPrimary
-              title="الدفع عند الاستلام"
-              titleSize={16}
-              text="يمكنك دفع ثمن الطلب نقدًا إلى شركة الشحن."
-              active={paymentMethod == "cash"}
-              onPress={() => setPaymentMethod("cash")}
-            ></RadioPrimary>
-          </View>
+          {paymentData?.map((elm, i) => {
+
+            return <View key={i} style={[styles.radio, { marginBottom: 50 }]}>
+              <RadioPrimary
+                title={elm.name}
+                titleSize={16}
+                text="يمكنك دفع ثمن الطلب نقدًا إلى شركة الشحن."
+                active={paymentMethod == elm.id}
+                onPress={() => setPaymentMethod(elm.id)}
+              ></RadioPrimary>
+            </View>
+          })}
           <Text style={styles.subtitlePrimary}>تحقق من تفاصيل الطلب:</Text>
           <View style={[styles.orderInfo, { marginBottom: 50 }]}>
             <View style={styles.orderInfoBlock}>

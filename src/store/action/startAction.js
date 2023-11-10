@@ -74,3 +74,26 @@ export const StartGetBasket = () => {
         type: 'StartGetBasket'
     }
 }
+
+export const StartValidOrder = () => {
+    return {
+        type: 'StartValidOrder'
+    }
+}
+
+export const StartGetCityes = () => {
+    return {
+        type: "StartGetCityes"
+    }
+}
+export const StartDelivery = () => {
+    return {
+        type: "StartDelivery"
+    }
+}
+
+export const StartPaymentType = () => {
+    return {
+        type: 'StartPaymentType'
+    }
+}

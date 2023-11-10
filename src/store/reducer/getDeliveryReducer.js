@@ -4,22 +4,22 @@ const initialState = {
     loading: true,
     error: ""
 };
-export const GetBasketReducer = (state = initialState, action) => {
+export const GetDeliveryReducer = (state = initialState, action) => {
     let temp = { ...state }
     switch (action.type) {
-        case 'StartGetBasket':
+        case 'StartDelivery':
             temp.data = []
             temp.status = false
             temp.loading = true
             temp.error = ''
             break;
-        case 'SuccessGetBasket':
+        case 'SuccessDelivery':
             temp.data = action.data
             temp.status = true
             temp.loading = false
             temp.error = ''
             break
-        case 'ErrorGetBasket':
+        case 'ErrorDelivery':
             temp.data = ''
             temp.status = false
             temp.loading = false

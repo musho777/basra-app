@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import EmptyOrders from "../icons/EmptyOrders";
 import { useCartStore } from "../store/cartStore";
 import { useDispatch, useSelector } from "react-redux";
-import { AddToBasketAction, GetBasketAction, MinusFromBassket, RemoveFromBasketAction } from '../store/action/action'
+import { AddToBasketAction, ClearValidOrder, GetBasketAction, MinusFromBassket, RemoveFromBasketAction, ValidORderAction } from '../store/action/action'
 
 export default function CartScreen(props) {
   const navigation = useNavigation();
@@ -23,6 +23,7 @@ export default function CartScreen(props) {
   const { token } = useSelector((st) => st.static)
   const getBasket = useSelector((st) => st.getBasket)
   const [basket, setBasket] = useState({})
+  const validOrder = useSelector((st) => st.validOrder)
   function totalCost() {
     let sum = 0;
     basket?.data.forEach((product) => {
@@ -37,7 +38,9 @@ export default function CartScreen(props) {
   const addProductCount = (id) => {
     let item = { ...basket }
     let index = item.data.findIndex((elm) => elm.product.id === id)
-    item.data[index].product_count = +item.data[index].product_count + 1
+    if (item.data[index].product.product_count - 1 >= item.data[index].product_count) {
+      item.data[index].product_count = +item.data[index].product_count + 1
+    }
     dispatch(AddToBasketAction({ product_id: id }, token))
     setBasket(item)
   }
@@ -67,7 +70,7 @@ export default function CartScreen(props) {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', async () => {
       dispatch(GetBasketAction(token))
-
+      dispatch(ClearValidOrder())
     });
     return unsubscribe;
   }, [navigation]);
@@ -79,6 +82,16 @@ export default function CartScreen(props) {
     }
   }, [getBasket])
 
+  const ValidOrder = () => {
+    dispatch(ValidORderAction(token))
+  }
+
+
+  useEffect(() => {
+    if (validOrder.status) {
+      navigation.navigate("GeneralInfo")
+    }
+  }, [validOrder])
 
   if (getBasket.loading) {
     return <View style={styles.loading}>
@@ -119,8 +132,7 @@ export default function CartScreen(props) {
                 <Text style={styles.btmText}>سعر الطلب</Text>
               </View>
               <View style={styles.btmBtn}>
-                <ButtonPrimary
-                  onPress={() => navigation.navigate("GeneralInfo")}
+                <ButtonPrimary onPress={() => ValidOrder()}
                 >
                   الدفع
                 </ButtonPrimary>

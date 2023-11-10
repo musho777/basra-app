@@ -10,10 +10,18 @@ import BackIcon from "../../icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
 import InputPrimary from "../../components/InputPrimary";
 import ButtonPrimary from "../../components/ButtonPrimary";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { DeliveryType, GetCityes, GetPaymentType } from "../../store/action/action";
 
 export default function GeneralInfoScreen(props) {
   const navigation = useNavigation();
-
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(GetCityes())
+    dispatch(DeliveryType())
+    dispatch(GetPaymentType())
+  }, [dispatch])
   return (
     <View>
       <ScrollView style={styles.scroll}>
