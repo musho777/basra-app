@@ -2,7 +2,8 @@ import { Modal, StyleSheet, View, Text, ScrollView, ActivityIndicator, Touchable
 import { useSelector } from "react-redux"
 
 export const CityModal = ({ visible, close, onPress }) => {
-    const getCitys = useSelector((st) => st.getCitys)
+    const getCityes = useSelector((st) => st.getCityes)
+
     return <View style={styles.centeredView}>
         <Modal
             animationType="slide"
@@ -14,13 +15,13 @@ export const CityModal = ({ visible, close, onPress }) => {
                 onPress={() => close()}
                 style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    {getCitys.loading ?
+                    {getCityes.loading ?
                         <View style={styles.loading}>
                             <ActivityIndicator color={'black'} />
                         </View > :
 
                         <ScrollView showsVerticalScrollIndicator={false}>
-                            {getCitys.data?.map((elm, i) => (
+                            {getCityes.data?.map((elm, i) => (
                                 <TouchableOpacity key={i} onPress={() => {
                                     onPress({ name: elm.name, id: elm.id })
                                     close()

@@ -16,7 +16,7 @@ import NavigationBottom from "../components/NavigationBottom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { GetAuthUser, UpdateUserAvatar } from "../store/action/action";
+import { GetAuthUser, LogoutAction, UpdateUserAvatar } from "../store/action/action";
 import * as ImagePicker from 'expo-image-picker';
 
 export default function ProfileScreen(props) {
@@ -73,7 +73,10 @@ export default function ProfileScreen(props) {
           التفويض باستخدام رقم هاتفك
         </Text>
         <View style={styles.logoutBtns}>
-          <TouchableOpacity style={styles.logoutBtnBrown}>
+          <TouchableOpacity onPress={() => {
+            dispatch(LogoutAction(token))
+            props.navigation.navigate('Register')
+          }} style={styles.logoutBtnBrown}>
             <Text style={styles.logoutTextBrown}>يلغي</Text>
           </TouchableOpacity>
           <TouchableOpacity

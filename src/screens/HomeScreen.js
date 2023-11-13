@@ -18,7 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Video, } from "expo-av";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { GetBaners, GetStoryes } from "../store/action/action";
+import { ClearToken, GetBaners, GetStoryes } from "../store/action/action";
 
 
 export default function HomeScreen(props) {
@@ -32,6 +32,7 @@ export default function HomeScreen(props) {
         dispatch(GetBaners('first', token))
         dispatch(GetBaners('last', token))
         dispatch(GetStoryes(token))
+        // dispatch(ClearToken())
     }, []);
     const getBaner = useSelector((st) => st.getBaner)
     return (

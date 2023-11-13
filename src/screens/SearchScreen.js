@@ -53,6 +53,9 @@ export default function SearchScreen(props) {
     }
     setSearchData(combinedArray)
   }, [getSearchHistory])
+
+
+
   return (
     <View>
       <View style={styles.navBtm}>

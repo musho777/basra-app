@@ -8,19 +8,20 @@ import {
 } from "react-native";
 import BackIcon from "../../icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
-import InputPrimary from "../../components/InputPrimary";
 import { useState } from "react";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import RadioPrimary from "../../components/RadioPrimary";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { CityModal } from "../../components/CityModal";
 
 export default function LocationInfoScreen(props) {
   const [deliveryMethod, setDeliveryMethod] = useState(1);
   const [deliveryType, setDeliveryType] = useState([])
   const navigation = useNavigation();
-  const getCityes = useSelector((st) => st.getCityes)
   const getDelivery = useSelector((st) => st.getDelivery)
+  const [openModal, setOpenModal] = useState(false)
+  const [selectedCity, setSelectedCity] = useState({})
   useEffect(() => {
     setDeliveryType(getDelivery.data)
   }, [getDelivery.data])
@@ -52,16 +53,11 @@ export default function LocationInfoScreen(props) {
             </TouchableOpacity>
           </View>
           <Text style={styles.subtitlePrimary}>المنطقة</Text>
-          <View style={[styles.input, { marginBottom: 48 }]}>
-            <InputPrimary
-              placeholder="البصرة"
-              backgroundColor="#F2F2F4"
-              textAlign="right"
-            ></InputPrimary>
-          </View>
+          <TouchableOpacity onPress={() => { setOpenModal(true) }} style={[styles.input, { marginBottom: 48 }]} >
+            <Text style={styles.inputText}> {selectedCity.name ? selectedCity.name : 'مدن'}</Text>
+          </TouchableOpacity>
           <Text style={styles.subtitlePrimary}>طريقة التوصيل</Text>
           {deliveryType?.map((elm, i) => {
-
             return <View key={i} style={[styles.radio, { marginBottom: 15 }]}>
               <RadioPrimary
                 title={elm.name}
@@ -77,6 +73,7 @@ export default function LocationInfoScreen(props) {
             </ButtonPrimary>
           </View>
         </View>
+        <CityModal onPress={(e) => setSelectedCity(e)} close={() => setOpenModal(false)} visible={openModal} />
       </ScrollView>
     </View>
   );
@@ -92,6 +89,8 @@ const styles = StyleSheet.create({
   },
   input: {
     width: "100%",
+    height: 40,
+    borderWidth: 1,
   },
   subtitlePrimary: {
     fontFamily: theme.fontBold,
@@ -171,4 +170,20 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
   },
+  input: {
+    height: 56,
+    borderColor: "rgba(31, 32, 36, 0.15)",
+    borderWidth: 1,
+    width: "100%",
+    borderRadius: 15,
+    fontSize: 16,
+    paddingLeft: 20,
+    paddingRight: 20,
+    fontFamily: "ShabnamLight",
+    backgroundColor: "#F2F2F4",
+    justifyContent: 'center'
+  },
+  inputText: {
+    textAlign: 'right',
+  }
 });

@@ -24,21 +24,23 @@ export default function InputPrimary(props) {
       onPress={props.onPress}
       onFocus={handleFocused}
       onBlur={handleBlur}
+      editable={props.editable ? false : props.editable}
       ref={props.innerRef}
       value={props.value}
       multiline={props.multiline}
       textAlignVertical={props.align}
-      style={[
-        styles.input,
-        {
-          backgroundColor: props.backgroundColor,
-          textAlign: props.textAlign,
-          borderColor,
-          height: props.height ? props.height : 56,
-          paddingTop: props.paddingTop,
-        },
-      ]}
-    ></TextInput>
+      style={
+        [
+          styles.input,
+          {
+            backgroundColor: props.backgroundColor,
+            textAlign: props.textAlign,
+            borderColor,
+            height: props.height ? props.height : 56,
+            paddingTop: props.paddingTop,
+          },
+        ]}
+    ></TextInput >
   );
 }
 const styles = StyleSheet.create({

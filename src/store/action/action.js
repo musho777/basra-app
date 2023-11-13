@@ -592,3 +592,41 @@ export const GetPaymentType = () => {
     }
 
 }
+
+export const creatHistorySearch = (data) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        fetch(`${api}/create_history_search`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+            })
+            .catch(error => {
+            });
+    }
+}
+
+export const LogoutAction = (token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+    };
+    return (dispatch) => {
+        fetch(`${api}/logout`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+                AsyncStorage.removeItem('token')
+            })
+            .catch(error => {
+            });
+    }
+}
