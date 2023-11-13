@@ -11,6 +11,8 @@ export default function SearchInput(props) {
         returnKeyType="search"
         onSubmitEditing={props.onSubmitEditing}
         autoFocus={true}
+        onChangeText={(e) => props.onChange(e)}
+        value={props.value}
       ></TextInput>
       <SearchIcon style={styles.icon}></SearchIcon>
     </View>

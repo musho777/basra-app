@@ -10,7 +10,6 @@ import NavigationBottom from "../components/NavigationBottom";
 import SearchButton from "../components/SearchButton";
 import Category from "../components/Category";
 import StoryIcon from "../components/Stories/Icon";
-import StoryScreen from "../components/Stories/StoryScreen";
 
 import Swiper from "react-native-swiper";
 
@@ -18,7 +17,8 @@ import { useNavigation } from "@react-navigation/native";
 import { Video, } from "expo-av";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ClearToken, GetBaners, GetStoryes } from "../store/action/action";
+import { GetBaners, GetStoryes } from "../store/action/action";
+import StoryScreen from "../components/Stories/StoryScreen";
 
 
 export default function HomeScreen(props) {
@@ -28,15 +28,32 @@ export default function HomeScreen(props) {
     const dispatch = useDispatch()
     const { token } = useSelector((st) => st.static)
     const getStorys = useSelector((st) => st.getStoryes)
+    const [storiesVisible, setStoriesVisible] = useState(false);
+    const [showStoryes, setShowStoryes] = useState([])
     useEffect(() => {
         dispatch(GetBaners('first', token))
         dispatch(GetBaners('last', token))
         dispatch(GetStoryes(token))
-        // dispatch(ClearToken())
     }, []);
-    const getBaner = useSelector((st) => st.getBaner)
+
+    const ShowStory = (i) => {
+        // let item = [...showStoryes]
+        setStoriesVisible(true)
+        setShowStoryes(getStorys.data.data[i])
+    }
+    // const getBaner = useSelector((st) => st.getBaner)
     return (
         <View>
+            {storiesVisible && (
+                <StoryScreen
+                    storiesCount={showStoryes.file.length}
+                    data={showStoryes}
+                    hideStories={() => {
+                        setStoriesVisible(false);
+                    }}
+                ></StoryScreen>
+            )}
+
             <View style={styles.navBtm}>
                 <NavigationBottom active="home"></NavigationBottom>
             </View>
@@ -79,7 +96,7 @@ export default function HomeScreen(props) {
                                 key={i}
                                 image={`https://basrabackend.justcode.am/uploads/${elm.photo}`}
                                 onPress={() => {
-                                    props.showStories();
+                                    ShowStory(i)
                                 }}
                                 text={elm.name}
                             ></StoryIcon>

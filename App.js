@@ -5,9 +5,6 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useFavoriteStore } from "./src/store/favoriteStore";
-import { useCartStore } from "./src/store/cartStore";
-import { fetchCollection } from "./src/utils/asyncStorage";
 
 import * as SplashScreen from "expo-splash-screen";
 
@@ -20,11 +17,8 @@ import CartTab from "./src/tabs/CartTab";
 import ChatScreen from "./src/components/Chat/ChatScreen";
 
 import ChatIcon from "./src/icons/ChatIcon";
-import StoryScreen from "./src/components/Stories/StoryScreen";
-import { fetchCurrentUser } from "./src/api";
-import { useUserStore } from "./src/store/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Provider, useDispatch } from 'react-redux';
+import { Provider, } from 'react-redux';
 import { store } from "./src/store/configStore";
 
 SplashScreen.preventAutoHideAsync();
@@ -45,11 +39,8 @@ export default function App() {
   // const [initialScreen, setInitialScreen] = useState("Home");
   const [chatVisible, setChatVisible] = useState(false);
   const [storiesVisible, setStoriesVisible] = useState(false);
-  const [isUserLoaded, setUserLoaded] = useState(false);
 
-  const userStore = useUserStore();
-  const favoritesStore = useFavoriteStore();
-  const cartStore = useCartStore();
+
 
   useEffect(() => {
     GetUser()
@@ -131,14 +122,14 @@ export default function App() {
             </NavigationContainer>
           </View>
 
-          {storiesVisible && (
+          {/* {storiesVisible && (
             <StoryScreen
               storiesCount={3}
               hideStories={() => {
                 setStoriesVisible(false);
               }}
             ></StoryScreen>
-          )}
+          )} */}
 
           <TouchableOpacity
             style={styles.chatIcon}

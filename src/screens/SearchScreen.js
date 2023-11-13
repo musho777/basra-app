@@ -4,7 +4,6 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  ImageBackground,
 } from "react-native";
 import NavigationBottom from "../components/NavigationBottom";
 import BackIcon from "../icons/BackIcon";
@@ -22,6 +21,7 @@ export default function SearchScreen(props) {
   const getSearchHistory = useSelector((st) => st.getSearchHistory)
   const [page, setPage] = useState(1)
   const [searchData, setSearchData] = useState([])
+  const [searchValue, setSearchValue] = useState(props.route.params?.searchValue)
 
 
   const handleScroll = (event) => {
@@ -78,7 +78,16 @@ export default function SearchScreen(props) {
           </View>
           <View style={styles.search}>
             <SearchInput
-              onSubmitEditing={() => navigation.navigate("SearchResult")}
+              value={searchValue}
+              onChange={(e) => {
+
+                setSearchValue(e)
+              }}
+              onSubmitEditing={() => navigation.navigate("Category", {
+                categoryId: props.route.params.categoryId,
+                categoryName: props.route.params.categoryName,
+                search: searchValue
+              })}
             ></SearchInput>
           </View>
           {searchData.map((elm, i) => {

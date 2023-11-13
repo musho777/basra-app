@@ -24,9 +24,11 @@ export default function CategoryScreen(props) {
 
   const categoryId = props.route.params.categoryId;
   const categoryName = props.route.params.categoryName;
+  const search = props.route.params?.search
+
   const { token } = useSelector((st) => st.static)
   const getPorduct = useSelector((st) => st.getPorductByCategoy)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
 
 
 
@@ -49,14 +51,22 @@ export default function CategoryScreen(props) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', async () => {
-      if (page == 1) {
-        setProducts([])
-        dispatch(GetProductsByCategory({ category_id: categoryId }, token, 1))
-      }
+      // if (page == 1) {
+      setPage(1)
+
+      setProducts([])
+      // dispatch(GetProductsByCategory({ category_id: categoryId, search: search }, token, 1))
+      // }
     });
     return unsubscribe;
   }, [navigation]);
 
+  useEffect(() => {
+    if (page > 0) {
+      dispatch(GetProductsByCategory({ category_id: categoryId, search: search }, token, page))
+    }
+
+  }, [page, search])
 
   useEffect(() => {
     if (getPorduct.data.data) {
@@ -84,7 +94,11 @@ export default function CategoryScreen(props) {
         onScroll={handleScroll}>
         <View style={styles.container}>
           <View style={styles.top}>
-            <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+            <TouchableOpacity onPress={() => navigation.navigate("Search", {
+              categoryId,
+              categoryName,
+              searchValue: search
+            })}>
               <SearchIconCategory></SearchIconCategory>
             </TouchableOpacity>
             <View>

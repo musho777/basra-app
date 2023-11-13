@@ -3,9 +3,19 @@ import Swiper from "react-native-swiper";
 import StoryCloseIcon from "../../icons/StoryCloseIcon";
 import StorySlide from "./StorySlide";
 import { useRef, useState } from "react";
+import { useEffect } from "react";
+import { baseUrl } from "../../api";
 
 export default function StoryScreen(props) {
   const swiper = useRef();
+  const [image, setImage] = useState([])
+  useEffect(() => {
+    let item = [...image]
+    props?.data?.file?.map((elm, i) => {
+      item.push(`${baseUrl}${elm.file}`)
+    })
+    setImage(item)
+  }, [props.data])
 
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
 
@@ -21,6 +31,7 @@ export default function StoryScreen(props) {
     }
   }
 
+
   return (
     <View style={styles.container}>
       <Swiper
@@ -29,12 +40,9 @@ export default function StoryScreen(props) {
         ref={swiper}
         onIndexChanged={setActiveSlideIndex}
       >
+
         <StorySlide
-          images={[
-            "https://img1.akspic.ru/previews/7/4/7/9/6/169747/169747-ikanvas-art-pechat_na_holste-poster-oblako-500x.jpg",
-            "https://wallpapershome.ru/images/pages/pic_v/21485.jpg",
-            "https://i.pinimg.com/originals/25/90/a1/2590a1a6759841581e6e1ed7fc91376d.jpg",
-          ]}
+          images={image}
           onPrevScreen={() => {
             prevSlide();
           }}
@@ -42,32 +50,6 @@ export default function StoryScreen(props) {
             nextSlide();
           }}
           active={activeSlideIndex == 0}
-        ></StorySlide>
-        <StorySlide
-          images={[
-            "https://images.wallpapershq.com/wallpapers/3213/thumbnail_350x622.jpg",
-            "https://kartinkin.net/uploads/posts/2022-02/1645728640_42-kartinkin-net-p-letnie-kartinki-na-telefon-46.jpg",
-          ]}
-          onPrevScreen={() => {
-            prevSlide();
-          }}
-          onNextScreen={() => {
-            nextSlide();
-          }}
-          active={activeSlideIndex == 1}
-        ></StorySlide>
-        <StorySlide
-          images={[
-            "https://klike.net/uploads/posts/2019-11/1574514215_2.jpg",
-            "https://static3.tgstat.ru/channels/_0/26/2647150c2f9771a41145032b86b6c8a4.jpg",
-          ]}
-          onPrevScreen={() => {
-            prevSlide();
-          }}
-          onNextScreen={() => {
-            nextSlide();
-          }}
-          active={activeSlideIndex == 2}
         ></StorySlide>
       </Swiper>
       <TouchableOpacity

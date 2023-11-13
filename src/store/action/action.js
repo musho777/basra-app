@@ -578,7 +578,6 @@ export const GetPaymentType = () => {
             .then((r) => r.json())
             .then(r => {
                 if (r.status) {
-                    console.log(r)
                     dispatch(SuccessPaymentType(r.data))
                 }
                 else {
