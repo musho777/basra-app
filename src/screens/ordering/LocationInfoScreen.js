@@ -16,15 +16,63 @@ import { useEffect } from "react";
 import { CityModal } from "../../components/CityModal";
 
 export default function LocationInfoScreen(props) {
-  const [deliveryMethod, setDeliveryMethod] = useState(1);
+  const [deliveryMethod, setDeliveryMethod] = useState(0);
   const [deliveryType, setDeliveryType] = useState([])
   const navigation = useNavigation();
   const getDelivery = useSelector((st) => st.getDelivery)
   const [openModal, setOpenModal] = useState(false)
   const [selectedCity, setSelectedCity] = useState({})
+  const [data, setData] = useState(props.route?.params?.data)
+  const [error, setError] = useState('')
+  const [errorC, setErrorC] = useState('')
   useEffect(() => {
+    let item = { ...data }
+    item.city_id = ''
+    item.city_name = ''
+    item.delivery_id = 1
+    setData(item)
+  }, [])
+  useEffect(() => {
+    let item = { ...data }
     setDeliveryType(getDelivery.data)
+    item.delivery_id = 1
+    item.delevery_name = deliveryType[0]?.name
+    setData(item)
   }, [getDelivery.data])
+
+
+  useEffect(() => {
+    console.log(selectedCity)
+    let item = { ...data }
+    item.city_id = selectedCity.id
+    item.city_name = selectedCity.name
+    setData(item)
+  }, [selectedCity])
+
+  const HandelClick = () => {
+    let send = false
+    if (!data.city_id) {
+      setError('error')
+      send = false
+    }
+    else {
+      send = true
+      setError('')
+    }
+    if (!data.delivery_id) {
+      console.log('22')
+      send = false
+      setErrorC('error')
+    }
+    else {
+      send = true
+      setErrorC('')
+    }
+    if (send) {
+      navigation.navigate("AddressInfo", { data })
+    }
+  }
+
   return (
     <View>
       <ScrollView style={styles.scroll}>
@@ -53,22 +101,27 @@ export default function LocationInfoScreen(props) {
             </TouchableOpacity>
           </View>
           <Text style={styles.subtitlePrimary}>المنطقة</Text>
-          <TouchableOpacity onPress={() => { setOpenModal(true) }} style={[styles.input, { marginBottom: 48 }]} >
+          <TouchableOpacity onPress={() => { setOpenModal(true) }} style={[styles.input, { marginBottom: 48, borderColor: error ? 'red' : 'rgba(31, 32, 36, 0.15)' }]} >
             <Text style={styles.inputText}> {selectedCity.name ? selectedCity.name : 'مدن'}</Text>
           </TouchableOpacity>
           <Text style={styles.subtitlePrimary}>طريقة التوصيل</Text>
           {deliveryType?.map((elm, i) => {
-            return <View key={i} style={[styles.radio, { marginBottom: 15 }]}>
+            return <View key={i} style={[styles.radio, { marginBottom: 15, borderColor: errorC ? 'red' : 'rgba(31, 32, 36, 0.15)' }]}>
               <RadioPrimary
+                error={errorC != ''}
                 title={elm.name}
                 text="التسليم في البصرة – 250 د.ع"
-                onPress={() => setDeliveryMethod(elm.id)}
+                onPress={() => {
+                  setDeliveryMethod(elm.id)
+                  setData({ ...data, delevery_name: elm.name, delivery_id: elm.id })
+
+                }}
                 active={deliveryMethod == elm.id}
               ></RadioPrimary>
             </View>
           })}
           <View style={styles.btn}>
-            <ButtonPrimary onPress={() => navigation.navigate("AddressInfo")}>
+            <ButtonPrimary onPress={() => HandelClick()}>
               إضافي
             </ButtonPrimary>
           </View>

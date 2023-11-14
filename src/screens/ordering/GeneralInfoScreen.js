@@ -12,7 +12,8 @@ import InputPrimary from "../../components/InputPrimary";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { DeliveryType, GetCityes, GetPaymentType } from "../../store/action/action";
+import { BuyerInfo, DeliveryType, GetCityes, GetPaymentType } from "../../store/action/action";
+import { useState } from "react";
 
 export default function GeneralInfoScreen(props) {
   const navigation = useNavigation();
@@ -22,6 +23,68 @@ export default function GeneralInfoScreen(props) {
     dispatch(DeliveryType())
     dispatch(GetPaymentType())
   }, [dispatch])
+  const [data, setData] = useState({
+    name: '',
+    surname: '',
+    email: '',
+    date: ''
+  })
+
+  const [error, setEorrr] = useState({
+    name: '',
+    surname: "",
+    email: '',
+    date: ''
+  })
+
+  function ValidateEmail(mail) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+      return (true)
+    }
+    return (false)
+  }
+
+  const HandelChange = (e, name) => {
+    let item = { ...data }
+    item[name] = e
+    setData(item)
+  }
+
+  const HandelPress = () => {
+    let send = true
+    let item = { ...error }
+    if (data.name == '') {
+      item.name = 'error'
+      send = false
+    }
+    else {
+      item.name = ''
+      send = true
+    }
+
+    if (data.surname == '') {
+      item.surname = 'error'
+      send = false
+    }
+    else {
+      item.surname = ''
+      send = true
+    }
+
+    if (!ValidateEmail(data.email)) {
+      item.email = 'error'
+      send = false
+    }
+    else {
+      item.email = ''
+      send = true
+    }
+    if (send) {
+      navigation.navigate("LocationInfo", { data })
+    }
+    setEorrr(item)
+  }
+
   return (
     <View>
       <ScrollView style={styles.scroll}>
@@ -55,6 +118,8 @@ export default function GeneralInfoScreen(props) {
               backgroundColor="#F2F2F4"
               placeholder="اسم"
               textAlign="right"
+              borderColor={error.name != '' && 'red'}
+              onChangeText={(e) => HandelChange(e, 'name')}
             ></InputPrimary>
           </View>
           <View style={styles.inputPrimary}>
@@ -62,6 +127,8 @@ export default function GeneralInfoScreen(props) {
               backgroundColor="#F2F2F4"
               placeholder="اسم العائلة"
               textAlign="right"
+              borderColor={error.surname != '' && 'red'}
+              onChangeText={(e) => HandelChange(e, 'surname')}
             ></InputPrimary>
           </View>
           <View style={styles.inputPrimary}>
@@ -69,6 +136,9 @@ export default function GeneralInfoScreen(props) {
               backgroundColor="#F2F2F4"
               placeholder="بريد إلكتروني"
               textAlign="right"
+              borderColor={error.email != '' && 'red'}
+              onChangeText={(e) => HandelChange(e, 'email')}
+              value={data.email}
             ></InputPrimary>
           </View>
           <View style={styles.inputPrimary}>
@@ -76,10 +146,12 @@ export default function GeneralInfoScreen(props) {
               backgroundColor="#F2F2F4"
               placeholder="هاتف"
               textAlign="right"
+              onChangeText={(e) => HandelChange(e, 'date')}
+
             ></InputPrimary>
           </View>
           <View style={styles.buttonBtm}>
-            <ButtonPrimary onPress={() => navigation.navigate("LocationInfo")}>
+            <ButtonPrimary onPress={() => HandelPress()}>
               اختر طريقة الشحن
             </ButtonPrimary>
           </View>

@@ -107,3 +107,9 @@ export const ErrorPaymentType = () => {
         type: 'ErrorPaymentType'
     }
 }
+
+export const ErrorNewOrder = () => {
+    return {
+        type: "ErrorNewOrder"
+    }
+}

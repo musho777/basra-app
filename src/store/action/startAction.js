@@ -97,3 +97,9 @@ export const StartPaymentType = () => {
         type: 'StartPaymentType'
     }
 }
+
+export const StartNewOrder = () => {
+    return {
+        type: 'StartNewOrder'
+    }
+}

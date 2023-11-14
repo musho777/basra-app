@@ -1,23 +1,24 @@
 import {
   StyleSheet,
   View,
-  ScrollView,
   Text,
   TouchableOpacity,
-  Image,
 } from "react-native";
 import NavigationBottom from "../components/NavigationBottom";
-import BackIcon from "../icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
 import ButtonPrimary from "../components/ButtonPrimary";
-import ProductCart from "../components/ProductCart";
-import { useState } from "react";
 import SuccessIcon from "../icons/SuccessIcon";
 import WelcomeClose from "../icons/WelcomeClose";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { ClearOrderStatus } from "../store/action/action";
 
 export default function SuccessScreen(props) {
   const navigation = useNavigation();
-
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(ClearOrderStatus())
+  }, [])
   return (
     <View>
       <View style={styles.navBtm}>

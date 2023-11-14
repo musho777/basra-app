@@ -13,20 +13,61 @@ import { useState } from "react";
 import RadioPrimary from "../../components/RadioPrimary";
 import ProductImage from "../../../assets/images/product.png";
 import ButtonPrimary from "../../components/ButtonPrimary";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { AddNewOrder, ClearValidOrder } from "../../store/action/action";
+import { baseUrl } from "../../api";
 
 export default function PaymentScreen(props) {
   const [paymentMethod, setPaymentMethod] = useState(2);
   const navigation = useNavigation();
+  const dispatch = useDispatch()
+  const getUser = useSelector((st) => st.getUser)
+  console.log(getUser.data.user?.phone)
+
+  const addNewOrder = useSelector((st) => st.addNewOrder)
 
   const getPaymentType = useSelector((st) => st.getPaymentType)
+  const getBasket = useSelector((st) => st.getBasket)
+  const { token } = useSelector((st) => st.static)
+
+
 
   const [paymentData, setPaymentData] = useState([])
 
   useEffect(() => {
+    dispatch(ClearValidOrder())
+  }, [])
+
+  useEffect(() => {
     setPaymentData(getPaymentType?.data)
   }, [getPaymentType.data])
+
+  const [data, setData] = useState(props.route?.params?.data)
+
+
+  useEffect(() => {
+    let item = { ...data }
+    item.payment_id = 1
+    setData(item)
+  }, [])
+
+  // AddNewOrder
+
+  const handelPress = () => {
+    let item = { ...data }
+    item.payment_id = 2
+    item.platform_id = 1
+    item.phone = getUser.data.user?.phone
+    dispatch(AddNewOrder(item, token))
+    // navigation.navigate("Success")
+  }
+
+  useEffect(() => {
+    if (addNewOrder.status) {
+      navigation.navigate("Success")
+    }
+  }, [addNewOrder])
 
 
   return (
@@ -71,22 +112,22 @@ export default function PaymentScreen(props) {
           <View style={[styles.orderInfo, { marginBottom: 50 }]}>
             <View style={styles.orderInfoBlock}>
               <Text style={styles.orderInfoTitle}>متلقي</Text>
-              <Text style={styles.orderInfoText}>مريم عبد</Text>
-              <Text style={styles.orderInfoText}>+964 751 547 7820</Text>
+              <Text style={styles.orderInfoText}> {data.name}</Text>
+              <Text style={styles.orderInfoText}>{getUser.data.user?.phone}</Text>
               <Text style={[styles.orderInfoText, styles.orderInfoTextLast]}>
-                Mariam.Abdel@gmail.com
+                {data.email}
               </Text>
             </View>
             <View style={styles.orderInfoBlock}>
               <Text style={styles.orderInfoTitle}>طريقة التوصيل</Text>
               <Text style={[styles.orderInfoText, styles.orderInfoTextLast]}>
-                تسليم البريد السريع
+                {data.delevery_name}
               </Text>
             </View>
             <View style={styles.orderInfoBlock}>
               <Text style={styles.orderInfoTitle}>عنوان التسليم</Text>
               <Text style={[styles.orderInfoText, styles.orderInfoTextLast]}>
-                طريق الطيران ، منطقة مناوي باشا ، البصرة
+                {data.address} {data.home_office} {data.city_name}
               </Text>
             </View>
             <View style={[styles.orderInfoBlock, styles.orderInfoBlockLast]}>
@@ -126,31 +167,37 @@ export default function PaymentScreen(props) {
             </View>
           </View>
           <Text style={styles.subtitlePrimary}>بضائع</Text>
-          {[1, 1, 1, 1, 1].map((item, index) => (
-            <View style={styles.product} key={index}>
+          {getBasket.data?.data?.map((item, index) => {
+            console.log(item.product.photos[0].photo)
+            return <View style={styles.product} key={index}>
               <View style={styles.productLeft}>
                 <View style={{ flexGrow: 1 }}>
                   <Text style={styles.productName}>
-                    Serie Expert{"\n"}Vitamino Color
+                    {item.product.name}
+
                   </Text>
-                  <Text style={styles.productSubtitle}>جيل الإستحمام</Text>
+                  <Text style={styles.productSubtitle}>{item.product.characteristics}</Text>
+                  <Text style={styles.productPrice}> قطعة{item.product_count} </Text>
                 </View>
                 <View style={styles.productPrices}>
-                  <Text style={styles.productPrice}>378 د.ع</Text>
-                  <Text style={styles.productPriceOld}>420 د.ع</Text>
+                  <Text style={styles.productPrice}>{item.product.price} د.ع</Text>
+                  <Text style={styles.productPriceOld}>{item.products_counts_price} د.ع</Text>
                 </View>
               </View>
               <View style={styles.productRight}>
                 <Image
-                  source={ProductImage}
+                  source={{ uri: baseUrl + item.product.photos[0].photo }}
+
                   style={styles.productImage}
                   width={50}
                 ></Image>
               </View>
             </View>
-          ))}
+          })}
           <View style={styles.btn}>
-            <ButtonPrimary onPress={() => navigation.navigate("Success")}>
+            <ButtonPrimary onPress={() =>
+              handelPress()
+            }>
               الدفع
             </ButtonPrimary>
           </View>

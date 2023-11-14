@@ -1,15 +1,22 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import { TextInput, StyleSheet } from "react-native";
 
 export default function InputPrimary(props) {
-  const [borderColor, setBorderColor] = useState("rgba(31, 32, 36, 0.15)");
-
+  const [borderColor, setBorderColor] = useState(props.borderColor ? props.borderColor : "rgba(31, 32, 36, 0.15)");
   function handleFocused() {
     setBorderColor("#E0C18F");
     props.onFocus ? props.onFocus() : "";
   }
 
+  useEffect(() => {
+    if (props.borderColor) {
+      setBorderColor(props.borderColor)
+    }
+  }, [props.borderColor, props.value])
+
   function handleBlur() {
+
     setBorderColor("rgba(31, 32, 36, 0.15)");
   }
 

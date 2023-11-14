@@ -18,6 +18,8 @@ import { ValidOrderReducer } from './reducer/ValidOrderReducer';
 import { GetCityesReducer } from './reducer/getCityesReducer';
 import { GetDeliveryReducer } from './reducer/getDeliveryReducer';
 import { GetPaymentTypeReducer } from './reducer/getPaymentTypeReducer';
+import { AddInfoReducer } from './reducer/AddInfoReducer';
+import { AddNewOrderReducer } from './reducer/AddNewOrderReducer';
 
 const rootReducer = combineReducers({
     login: AutReducer,
@@ -37,7 +39,9 @@ const rootReducer = combineReducers({
     validOrder: ValidOrderReducer,
     getCityes: GetCityesReducer,
     getDelivery: GetDeliveryReducer,
-    getPaymentType: GetPaymentTypeReducer
+    getPaymentType: GetPaymentTypeReducer,
+    addInfo: AddInfoReducer,
+    addNewOrder: AddNewOrderReducer,
 });
 
 

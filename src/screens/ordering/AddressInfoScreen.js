@@ -10,9 +10,54 @@ import BackIcon from "../../icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
 import InputPrimary from "../../components/InputPrimary";
 import ButtonPrimary from "../../components/ButtonPrimary";
+import { useState } from "react";
+import { useEffect } from "react";
 
 export default function AddressInfoScreen(props) {
   const navigation = useNavigation();
+  const [data, setData] = useState(props.route?.params?.data)
+  const [error, setError] = useState({ address: "", home: "" })
+  useEffect(() => {
+    let item = { ...data }
+    item.address = ''
+    item.home_office = ''
+    item.description = ''
+    setData(item)
+  }, [])
+
+
+  const HandelChange = (e, name) => {
+    let item = { ...data }
+    item[name] = e
+    setData(item)
+  }
+  console.log(data)
+
+  const handelClick = () => {
+    let send = true
+    let item = { ...error }
+    if (!data.address) {
+      item.address = 'error'
+      send = false
+    }
+    else {
+      item.address = ''
+      send = true
+    }
+    if (!data.home_office) {
+      item.home = 'error'
+      send = false
+    }
+    else {
+      item.home = ''
+      send = true
+    }
+    if (send) {
+      navigation.navigate("Payment", { data })
+    }
+    setError(item)
+  }
+
   return (
     <View>
       <ScrollView style={styles.scroll}>
@@ -46,6 +91,8 @@ export default function AddressInfoScreen(props) {
               placeholder="بيت الشارع"
               backgroundColor="#F2F2F4"
               textAlign="right"
+              onChangeText={(e) => HandelChange(e, 'address')}
+              borderColor={error.address && 'red'}
             ></InputPrimary>
           </View>
           <View style={styles.input}>
@@ -53,6 +100,9 @@ export default function AddressInfoScreen(props) {
               backgroundColor="#F2F2F4"
               placeholder="شقة / مكتب"
               textAlign="right"
+              onChangeText={(e) => HandelChange(e, 'home_office')}
+              borderColor={error.home && 'red'}
+
             ></InputPrimary>
           </View>
           <View style={[styles.input, { marginBottom: 0 }]}>
@@ -65,10 +115,12 @@ export default function AddressInfoScreen(props) {
               height={116}
               align="top"
               paddingTop={18}
+              onChangeText={(e) => HandelChange(e, 'description')}
+
             ></InputPrimary>
           </View>
           <View style={styles.btn}>
-            <ButtonPrimary onPress={() => navigation.navigate("Payment")}>
+            <ButtonPrimary onPress={() => handelClick()}>
               اختر وسيلة الدفع
             </ButtonPrimary>
           </View>

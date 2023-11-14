@@ -125,3 +125,10 @@ export const SuccessPaymentType = (data) => {
         data
     }
 }
+
+export const SuccessNewOrder = (data) => {
+    return {
+        type: "SuccessNewOrder",
+        data
+    }
+}

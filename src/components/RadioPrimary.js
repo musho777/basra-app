@@ -2,8 +2,13 @@ import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import theme from "../theme";
 
 export default function RadioPrimary(props) {
+  console.log(props.error)
   return (
-    <TouchableOpacity onPress={props.onPress} style={styles.deliveryMethod}>
+    <TouchableOpacity onPress={props.onPress} style={
+      [styles.deliveryMethod, {
+        borderColor: props.error ? "red" : 'rgba(31, 32, 36, 0.25)'
+      }]
+    }>
       <View style={styles.deliveryMethodTop}>
         <Text
           style={[
