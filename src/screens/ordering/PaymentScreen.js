@@ -23,7 +23,6 @@ export default function PaymentScreen(props) {
   const navigation = useNavigation();
   const dispatch = useDispatch()
   const getUser = useSelector((st) => st.getUser)
-  console.log(getUser.data.user?.phone)
 
   const addNewOrder = useSelector((st) => st.addNewOrder)
 
@@ -168,7 +167,6 @@ export default function PaymentScreen(props) {
           </View>
           <Text style={styles.subtitlePrimary}>بضائع</Text>
           {getBasket.data?.data?.map((item, index) => {
-            console.log(item.product.photos[0].photo)
             return <View style={styles.product} key={index}>
               <View style={styles.productLeft}>
                 <View style={{ flexGrow: 1 }}>

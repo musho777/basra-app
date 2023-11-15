@@ -1,21 +1,23 @@
 import { ScrollView, View, Text, StyleSheet } from "react-native";
 import { useState, useEffect } from "react";
 import Product from "./Product";
-import { fetchProductsSelection, baseUrl } from "../api";
+import { useDispatch, useSelector } from "react-redux";
+import { GetPadborkiforBodborkiId } from "../store/action/action";
 
 export default function Category(props) {
   const [products, setProducts] = useState([]);
+  const { token } = useSelector((st) => st.static)
+  const dispatch = useDispatch()
+  const getPadborkiId = useSelector((st) => st.getPadborkiId)
+  useEffect(() => {
+    dispatch(GetPadborkiforBodborkiId({ podborka_id: props.compilationId }, token))
+  }, []);
 
   useEffect(() => {
-    async function fetchData() {
-      const data = await fetchProductsSelection(
-        "compilation",
-        props.compilationId
-      );
-      setProducts(data);
+    if (getPadborkiId.data?.data?.length) {
+      setProducts(getPadborkiId.data?.data)
     }
-    fetchData();
-  }, []);
+  }, [getPadborkiId])
 
   return (
     !!products.length && (
@@ -32,8 +34,8 @@ export default function Category(props) {
             paddingRight: 0,
           }}
         >
-          {products.map((product) => (
-            <View style={styles.product} key={product._id}>
+          {products.map((product, i) => (
+            <View style={styles.product} key={i}>
               <Product product={product}></Product>
             </View>
           ))}

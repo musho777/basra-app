@@ -21,6 +21,8 @@ import { GetPaymentTypeReducer } from './reducer/getPaymentTypeReducer';
 import { AddInfoReducer } from './reducer/AddInfoReducer';
 import { AddNewOrderReducer } from './reducer/AddNewOrderReducer';
 import { SinglChatReducer } from './reducer/SinglChatReducer';
+import { getPadborkiWhiteProduct } from './reducer/getPadborkiWhiteProduct';
+import { getPadborkiIdReducer } from './reducer/getPadborkiIdReducer';
 
 const rootReducer = combineReducers({
     login: AutReducer,
@@ -44,6 +46,8 @@ const rootReducer = combineReducers({
     addInfo: AddInfoReducer,
     addNewOrder: AddNewOrderReducer,
     singlChat: SinglChatReducer,
+    getPadborki: getPadborkiWhiteProduct,
+    getPadborkiId: getPadborkiIdReducer
 });
 
 

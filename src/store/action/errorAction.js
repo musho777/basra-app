@@ -119,3 +119,15 @@ export const ErrorGetSinglChat = () => {
         type: 'ErrorGetSinglChat'
     }
 }
+
+export const ErrorGetPadborkiwhteProducts = () => {
+    return {
+        type: 'ErrorGetPadborkiwhteProducts'
+    }
+}
+
+export const ErrorGetPadborkiId = () => {
+    return {
+        type: 'ErrorGetPadborkiId'
+    }
+}

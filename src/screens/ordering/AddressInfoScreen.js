@@ -31,7 +31,6 @@ export default function AddressInfoScreen(props) {
     item[name] = e
     setData(item)
   }
-  console.log(data)
 
   const handelClick = () => {
     let send = true

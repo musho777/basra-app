@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ErrorConfirmCode, ErrorDelivery, ErrorGetBaners, ErrorGetBasket, ErrorGetCityes, ErrorGetFavorites, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetSinglChat, ErrorGetSinglPorduct, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorNewOrder, ErrorPaymentType, ErrorUpdateUser, ErrorUpdateUserAvatar, ErrorValidOrder } from "./errorAction";
-import { StartConfrimCode, StartDelivery, StartGetBaners, StartGetBasket, StartGetCityes, StartGetFavorites, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetSinglChat, StartGetSinglProduct, StartGetStoryes, StartGetUser, StartLogin, StartNewOrder, StartPaymentType, StartUpdateProfil, StartUpdateUserAvatar, StartValidOrder } from "./startAction";
-import { SetToken, SuccessConfirmCode, SuccessDelivery, SuccessGetBaners, SuccessGetBasket, SuccessGetCityes, SuccessGetFavorites, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetSinglCaht, SuccessGetSinglProduct, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessNewOrder, SuccessPaymentType, SuccessUpdateUser, SuccessUpdateUserAvatar, SuccessValidOrder } from "./successAction";
+import { ErrorConfirmCode, ErrorDelivery, ErrorGetBaners, ErrorGetBasket, ErrorGetCityes, ErrorGetFavorites, ErrorGetPadborkiId, ErrorGetPadborkiwhteProducts, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetSinglChat, ErrorGetSinglPorduct, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorNewOrder, ErrorPaymentType, ErrorUpdateUser, ErrorUpdateUserAvatar, ErrorValidOrder } from "./errorAction";
+import { StartConfrimCode, StartDelivery, StartGetBaners, StartGetBasket, StartGetCityes, StartGetFavorites, StartGetPadborkiId, StartGetPadborkiWhiteProducts, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetSinglChat, StartGetSinglProduct, StartGetStoryes, StartGetUser, StartLogin, StartNewOrder, StartPaymentType, StartUpdateProfil, StartUpdateUserAvatar, StartValidOrder } from "./startAction";
+import { SetToken, SuccessConfirmCode, SuccessDelivery, SuccessGetBaners, SuccessGetBasket, SuccessGetCityes, SuccessGetFavorites, SuccessGetFirstBaners, SuccessGetPadborkiId, SuccessGetPadborkiWhiteProducts, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetSinglCaht, SuccessGetSinglProduct, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessNewOrder, SuccessPaymentType, SuccessUpdateUser, SuccessUpdateUserAvatar, SuccessValidOrder } from "./successAction";
 
 let api = 'https://basrabackend.justcode.am/api/app'
 let api2 = 'https://basrabackend.justcode.am/api'
@@ -678,10 +678,9 @@ export const GetChatAction = (data, token) => {
     };
     return (dispatch) => {
         dispatch(StartGetSinglChat())
-        fetch(`${api}/single_page_chat`, requestOptions)
+        fetch(`${api}/single_page_chat?page=1`, requestOptions)
             .then(response => response.json())
             .then(r => {
-                console.log(r, 'rrrrrrr')
                 if (r.status) {
                     dispatch(SuccessGetSinglCaht(r.data))
                 }
@@ -722,4 +721,58 @@ export const SendMsgAction = (data, token) => {
             });
     }
 
+}
+
+export const GetPadborkiWhiteProducts = (token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        // body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        dispatch(StartGetPadborkiWhiteProducts())
+        fetch(`${api}/get_podborki_with_products`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessGetPadborkiWhiteProducts(r.data))
+                }
+                else {
+                    dispatch(ErrorGetPadborkiwhteProducts())
+                }
+            })
+            .catch(error => {
+                dispatch(ErrorGetPadborkiwhteProducts())
+            });
+    }
+}
+
+export const GetPadborkiforBodborkiId = (data, token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        dispatch(StartGetPadborkiId())
+        fetch(`${api}/get_product_for_podborka_id`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessGetPadborkiId(r.data))
+                }
+                else {
+                    dispatch(ErrorGetPadborkiId())
+                }
+            })
+            .catch(error => {
+                dispatch(ErrorGetPadborkiId())
+            });
+    }
 }

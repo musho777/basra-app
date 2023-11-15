@@ -17,8 +17,9 @@ import { useNavigation } from "@react-navigation/native";
 import { Video, } from "expo-av";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { GetBaners, GetStoryes } from "../store/action/action";
+import { GetBaners, GetPadborkiWhiteProducts, GetStoryes } from "../store/action/action";
 import StoryScreen from "../components/Stories/StoryScreen";
+import { baseUrl } from "../api";
 
 
 export default function HomeScreen(props) {
@@ -29,11 +30,13 @@ export default function HomeScreen(props) {
     const { token } = useSelector((st) => st.static)
     const getStorys = useSelector((st) => st.getStoryes)
     const [storiesVisible, setStoriesVisible] = useState(false);
+    const [firstBanner, setFirstBanner] = useState([])
     const [showStoryes, setShowStoryes] = useState([])
     useEffect(() => {
         dispatch(GetBaners('first', token))
         dispatch(GetBaners('last', token))
         dispatch(GetStoryes(token))
+        dispatch(GetPadborkiWhiteProducts(token))
     }, []);
 
     const ShowStory = (i) => {
@@ -41,7 +44,15 @@ export default function HomeScreen(props) {
         setStoriesVisible(true)
         setShowStoryes(getStorys.data.data[i])
     }
-    // const getBaner = useSelector((st) => st.getBaner)
+    const getBaner = useSelector((st) => st.getBaner)
+    const getPadborki = useSelector((st) => st.getPadborki)
+
+    useEffect(() => {
+        setCompilations(getPadborki.data)
+    }, [getPadborki.data])
+    useEffect(() => {
+        setFirstBanner(getBaner.firstData.data)
+    }, [getBaner.firstData.data])
     return (
         <View>
             {storiesVisible && (
@@ -115,17 +126,17 @@ export default function HomeScreen(props) {
                     }}
                 >
                     <View style={styles.compilations}>
-                        {compilations.map((compilation) => (
-                            <View style={styles.category} key={compilation._id}>
+                        {compilations.map((compilation, i) => {
+                            return <View style={styles.category} key={i}>
                                 <Category
-                                    compilationId={compilation._id}
-                                    name="المخزون"
+                                    compilationId={compilation.id}
+                                    name={compilation.name}
                                 ></Category>
                             </View>
-                        ))}
+                        })}
                     </View>
                     <View style={{ paddingHorizontal: 15, height: 190 }}>
-                        <Swiper
+                        {firstBanner?.length > 0 && <Swiper
                             height={130}
                             style={styles.bannerSwiper}
                             showsPagination={true}
@@ -152,67 +163,25 @@ export default function HomeScreen(props) {
                                 ></View>
                             }
                         >
-                            <TouchableOpacity
-                                style={styles.slide}
-                                onPress={() =>
-                                    navigation.navigate("CatalogTab", { screen: "Category" })
+                            {firstBanner?.map((elm, i) => {
+                                if (elm.type == 'png') {
+                                    return <TouchableOpacity
+                                        key={i}
+                                        style={styles.slide}
+                                        onPress={() => { }
+                                            // navigation.navigate("CatalogTab", { screen: "Category" })
+                                        }
+                                    >
+                                        <Image
+                                            style={styles.slideImg}
+                                            source={{ uri: baseUrl + elm.file }}
+                                            height={130}
+                                        ></Image>
+                                    </TouchableOpacity>
                                 }
-                            >
-                                <Image
-                                    style={styles.slideImg}
-                                    source={require("../../assets/images/home-swiper.png")}
-                                    height={130}
-                                ></Image>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.slide}
-                                onPress={() =>
-                                    navigation.navigate("CatalogTab", { screen: "Category" })
-                                }
-                            >
-                                <Image
-                                    style={styles.slideImg}
-                                    source={require("../../assets/images/home-swiper.png")}
-                                    height={130}
-                                ></Image>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.slide}
-                                onPress={() =>
-                                    navigation.navigate("CatalogTab", { screen: "Category" })
-                                }
-                            >
-                                <Image
-                                    style={styles.slideImg}
-                                    source={require("../../assets/images/home-swiper.png")}
-                                    height={130}
-                                ></Image>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.slide}
-                                onPress={() =>
-                                    navigation.navigate("CatalogTab", { screen: "Category" })
-                                }
-                            >
-                                <Image
-                                    style={styles.slideImg}
-                                    source={require("../../assets/images/home-swiper.png")}
-                                    height={130}
-                                ></Image>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.slide}
-                                onPress={() =>
-                                    navigation.navigate("CatalogTab", { screen: "Category" })
-                                }
-                            >
-                                <Image
-                                    style={styles.slideImg}
-                                    source={require("../../assets/images/home-swiper.png")}
-                                    height={130}
-                                ></Image>
-                            </TouchableOpacity>
-                        </Swiper>
+                            })}
+
+                        </Swiper>}
                     </View>
                 </View>
             </ScrollView>

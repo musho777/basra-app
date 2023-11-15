@@ -97,7 +97,6 @@ export default function SearchScreen(props) {
             ></SearchInput>
           </View>
           {searchData.map((elm, i) => {
-            console.log(searchData, 'searchData')
             return <Text key={i} style={styles.searchItem}>{elm.text}</Text>
           })}
         </View>

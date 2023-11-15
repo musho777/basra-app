@@ -109,3 +109,15 @@ export const StartGetSinglChat = () => {
         type: 'StartGetSinglChat'
     }
 }
+
+export const StartGetPadborkiWhiteProducts = () => {
+    return {
+        type: 'StartGetPadborkiWhiteProducts'
+    }
+}
+
+export const StartGetPadborkiId = () => {
+    return {
+        type: 'StartGetPadborkiId'
+    }
+} 

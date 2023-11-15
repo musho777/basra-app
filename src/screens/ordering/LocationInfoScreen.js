@@ -42,7 +42,6 @@ export default function LocationInfoScreen(props) {
 
 
   useEffect(() => {
-    console.log(selectedCity)
     let item = { ...data }
     item.city_id = selectedCity.id
     item.city_name = selectedCity.name
@@ -60,7 +59,6 @@ export default function LocationInfoScreen(props) {
       setError('')
     }
     if (!data.delivery_id) {
-      console.log('22')
       send = false
       setErrorC('error')
     }

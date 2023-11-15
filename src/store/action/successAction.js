@@ -139,3 +139,17 @@ export const SuccessGetSinglCaht = (data) => {
         data
     }
 }
+
+export const SuccessGetPadborkiWhiteProducts = (data) => {
+    return {
+        type: "SuccessGetPadborkiWhiteProducts",
+        data
+    }
+}
+
+export const SuccessGetPadborkiId = (data) => {
+    return {
+        type: 'SuccessGetPadborkiId',
+        data
+    }
+}

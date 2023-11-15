@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  FlatList,
 } from "react-native";
 import WelcomeClose from "../../icons/WelcomeClose";
 import TgIcon from "../../icons/TgIcon";
@@ -26,8 +25,7 @@ export default function ChatScreen(props) {
   const dispatch = useDispatch()
   useEffect(() => {
     if (getUser.data?.user?.id) {
-      console.log(getUser.data?.user?.id, 'id')
-      dispatch(GetChatAction({ receiver_id: getUser.data?.user?.id }, token))
+      dispatch(GetChatAction({ receiver_id: 3 }, token))
     }
   }, [getUser.data?.user?.id])
 
@@ -61,7 +59,7 @@ export default function ChatScreen(props) {
       <ScrollView style={styles.chatBody}>
         {data?.data?.map((elm, i) => {
           if (elm.sender_id == getUser.data?.user?.id) {
-            return <View style={styles.messageRight}>
+            return <View key={i} style={styles.messageRight}>
               <View style={styles.messageCircleRight}></View>
               <Text style={styles.messageTextRight}>
                 مساء الخير سنكون سعداء للمساعدة. ما هو سؤالك؟
