@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ErrorConfirmCode, ErrorDelivery, ErrorGetBaners, ErrorGetBasket, ErrorGetCityes, ErrorGetFavorites, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetSinglPorduct, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorNewOrder, ErrorPaymentType, ErrorUpdateUser, ErrorUpdateUserAvatar, ErrorValidOrder } from "./errorAction";
-import { StartConfrimCode, StartDelivery, StartGetBaners, StartGetBasket, StartGetCityes, StartGetFavorites, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetSinglProduct, StartGetStoryes, StartGetUser, StartLogin, StartNewOrder, StartPaymentType, StartUpdateProfil, StartUpdateUserAvatar, StartValidOrder } from "./startAction";
-import { SetToken, SuccessConfirmCode, SuccessDelivery, SuccessGetBaners, SuccessGetBasket, SuccessGetCityes, SuccessGetFavorites, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetSinglProduct, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessNewOrder, SuccessPaymentType, SuccessUpdateUser, SuccessUpdateUserAvatar, SuccessValidOrder } from "./successAction";
+import { ErrorConfirmCode, ErrorDelivery, ErrorGetBaners, ErrorGetBasket, ErrorGetCityes, ErrorGetFavorites, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetSinglChat, ErrorGetSinglPorduct, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorNewOrder, ErrorPaymentType, ErrorUpdateUser, ErrorUpdateUserAvatar, ErrorValidOrder } from "./errorAction";
+import { StartConfrimCode, StartDelivery, StartGetBaners, StartGetBasket, StartGetCityes, StartGetFavorites, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetSinglChat, StartGetSinglProduct, StartGetStoryes, StartGetUser, StartLogin, StartNewOrder, StartPaymentType, StartUpdateProfil, StartUpdateUserAvatar, StartValidOrder } from "./startAction";
+import { SetToken, SuccessConfirmCode, SuccessDelivery, SuccessGetBaners, SuccessGetBasket, SuccessGetCityes, SuccessGetFavorites, SuccessGetFirstBaners, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetSinglCaht, SuccessGetSinglProduct, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessNewOrder, SuccessPaymentType, SuccessUpdateUser, SuccessUpdateUserAvatar, SuccessValidOrder } from "./successAction";
 
 let api = 'https://basrabackend.justcode.am/api/app'
 let api2 = 'https://basrabackend.justcode.am/api'
@@ -496,7 +496,6 @@ export const ValidORderAction = (token) => {
                 }
             })
             .catch((error) => {
-                console.log(error)
                 dispatch(ErrorValidOrder())
             });
     }
@@ -530,7 +529,6 @@ export const GetCityes = (token) => {
                 }
             })
             .catch((error) => {
-                console.log(error)
                 dispatch(ErrorGetCityes())
             });
     }
@@ -558,7 +556,6 @@ export const DeliveryType = (token) => {
                 }
             })
             .catch((error) => {
-                console.log(error)
                 dispatch(ErrorDelivery())
             });
     }
@@ -585,14 +582,13 @@ export const GetPaymentType = () => {
                 }
             })
             .catch((error) => {
-                console.log('error', error)
                 dispatch(ErrorPaymentType())
             });
     }
 
 }
 
-export const creatHistorySearch = (data) => {
+export const creatHistorySearch = (data, token) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", `Bearer ${token}`);
@@ -638,7 +634,6 @@ export const BuyerInfo = (data) => {
 }
 
 export const AddNewOrder = (data, token) => {
-    console.log(data.payment_id)
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", `Bearer ${token}`);
@@ -652,7 +647,6 @@ export const AddNewOrder = (data, token) => {
         fetch(`${api}/add_new_order`, requestOptions)
             .then(response => response.json())
             .then(r => {
-                console.log(r, '22')
                 if (r.status) {
                     dispatch(SuccessNewOrder(r.data))
                 }
@@ -661,7 +655,6 @@ export const AddNewOrder = (data, token) => {
                 }
             })
             .catch(error => {
-                console.log(error, 'error')
                 dispatch(ErrorNewOrder())
             });
     }
@@ -672,4 +665,61 @@ export const ClearOrderStatus = () => {
     return {
         type: 'ClearOrderStatus'
     }
+}
+
+export const GetChatAction = (data, token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        dispatch(StartGetSinglChat())
+        fetch(`${api}/single_page_chat`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+                console.log(r, 'rrrrrrr')
+                if (r.status) {
+                    dispatch(SuccessGetSinglCaht(r.data))
+                }
+                else {
+                    dispatch(ErrorGetSinglChat())
+                }
+            })
+            .catch(error => {
+                dispatch(ErrorGetSinglChat())
+            });
+    }
+}
+
+export const SendMsgAction = (data, token) => {
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        dispatch(StartGetSinglChat())
+        fetch(`${api}/new_message`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+                if (r.status) {
+                    // dispatch(SuccessGetSinglCaht(r.data))
+                }
+                else {
+                    // dispatch(ErrorGetSinglChat())
+                }
+            })
+            .catch(error => {
+                // dispatch(ErrorGetSinglChat())
+            });
+    }
+
 }

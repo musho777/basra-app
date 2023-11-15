@@ -5,11 +5,42 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  FlatList,
 } from "react-native";
 import WelcomeClose from "../../icons/WelcomeClose";
 import TgIcon from "../../icons/TgIcon";
+import { useDispatch, useSelector } from "react-redux";
+import { baseUrl } from "../../api";
+import InputPrimary from "../InputPrimary";
+import { useEffect } from "react";
+import { GetChatAction, SendMsgAction } from "../../store/action/action";
+import { useState } from "react";
+
 
 export default function ChatScreen(props) {
+  const getUser = useSelector((st) => st.getUser)
+  const singlChat = useSelector((st) => st.singlChat)
+  const { token } = useSelector((st) => st.static)
+  const [data, setData] = useState([])
+  const [msg, setMsg] = useState('')
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (getUser.data?.user?.id) {
+      console.log(getUser.data?.user?.id, 'id')
+      dispatch(GetChatAction({ receiver_id: getUser.data?.user?.id }, token))
+    }
+  }, [getUser.data?.user?.id])
+
+  const SendMsg = () => {
+    if (msg) {
+      dispatch(SendMsgAction({ message: msg, receiver_id: 3 }, token))
+      setMsg('')
+    }
+  }
+
+  useEffect(() => {
+    setData(singlChat.data)
+  }, [singlChat])
   return (
     <View style={styles.chat}>
       <View style={styles.chatTop}>
@@ -24,30 +55,52 @@ export default function ChatScreen(props) {
         <Text style={styles.chatTitle}>تحدث مع استشاري</Text>
         <View style={{ width: 32, height: 32 }}></View>
       </View>
-      <View style={styles.chatBody}>
-        <View style={styles.messageRight}>
-          <View style={styles.messageCircleRight}></View>
-          <Text style={styles.messageTextRight}>
-            مساء الخير سنكون سعداء للمساعدة. ما هو سؤالك؟
-          </Text>
-        </View>
-        <View style={styles.messageLeft}>
-          <Text style={styles.messageTextLeft}>
-            مرحبًا! هل لديك واقي من الشمس؟
-          </Text>
-          <View style={styles.messageCircleLeft}></View>
-        </View>
-      </View>
+
+
+
+      <ScrollView style={styles.chatBody}>
+        {data?.data?.map((elm, i) => {
+          if (elm.sender_id == getUser.data?.user?.id) {
+            return <View style={styles.messageRight}>
+              <View style={styles.messageCircleRight}></View>
+              <Text style={styles.messageTextRight}>
+                مساء الخير سنكون سعداء للمساعدة. ما هو سؤالك؟
+              </Text>
+            </View>
+          }
+          else {
+            return <View style={styles.messageLeft}>
+              <Text style={styles.messageTextLeft}>
+                مرحبًا! هل لديك واقي من الشمس؟
+              </Text>
+              <View style={styles.messageCircleLeft}></View>
+            </View>
+          }
+        })
+        }
+      </ScrollView>
+
+
       <View style={styles.chatAvatar}>
         <Image
-          source={require("../../../assets/images/chat-avatar.png")}
+          source={{ uri: baseUrl + getUser.data?.user?.avatar }}
+
           style={styles.chatAvatarImage}
         ></Image>
       </View>
       <View style={styles.chatBottom}>
-        <TouchableOpacity style={styles.chatSend}>
+        <TouchableOpacity onPress={() => SendMsg()}>
           <TgIcon></TgIcon>
         </TouchableOpacity>
+        <View style={{ width: '70%' }}>
+          <InputPrimary
+            backgroundColor="#F2F2F4"
+            placeholder="تاريخ الولادة"
+            textAlign="right"
+            value={msg}
+            onChangeText={(text) => setMsg(text)}
+          ></InputPrimary>
+        </View>
       </View>
     </View>
   );
@@ -57,6 +110,7 @@ const styles = StyleSheet.create({
   chatAvatarImage: {
     width: 100,
     height: 100,
+    borderRadius: 100,
   },
   chatBottom: {
     paddingBottom: 20,
@@ -64,13 +118,12 @@ const styles = StyleSheet.create({
     borderTopColor: "#C1C1C1",
     borderTopWidth: 1,
     borderStyle: "solid",
+    flexDirection: 'row',
+    justifyContent: 'space-around'
   },
   chatAvatar: {
     paddingBottom: 15,
     paddingLeft: 15,
-  },
-  chatSend: {
-    marginLeft: 15,
   },
   messageCircleRight: {
     width: 8,
@@ -116,6 +169,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     flexGrow: 1,
+    // height: 100
   },
   chatTitle: {
     color: "#1F2024",

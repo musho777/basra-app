@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import SearchInput from "../components/SearchInput";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { GetSearchHistory } from "../store/action/action";
+import { GetSearchHistory, creatHistorySearch } from "../store/action/action";
 import { useState } from "react";
 
 export default function SearchScreen(props) {
@@ -46,10 +46,12 @@ export default function SearchScreen(props) {
   }, [page])
 
   useEffect(() => {
-    let item = [...searchData]
+
+    let item = []
+
     let combinedArray = item
     if (getSearchHistory.data?.data?.data.length) {
-      combinedArray = item.concat(getSearchHistory.data?.data?.data.length);
+      combinedArray = item.concat(getSearchHistory.data?.data?.data);
     }
     setSearchData(combinedArray)
   }, [getSearchHistory])
@@ -83,14 +85,19 @@ export default function SearchScreen(props) {
 
                 setSearchValue(e)
               }}
-              onSubmitEditing={() => navigation.navigate("Category", {
-                categoryId: props.route.params.categoryId,
-                categoryName: props.route.params.categoryName,
-                search: searchValue
-              })}
+              onSubmitEditing={() => {
+
+                navigation.navigate("Category", {
+                  categoryId: props.route.params.categoryId,
+                  categoryName: props.route.params.categoryName,
+                  search: searchValue
+                })
+                dispatch(creatHistorySearch({ text: searchValue, }, token))
+              }}
             ></SearchInput>
           </View>
           {searchData.map((elm, i) => {
+            console.log(searchData, 'searchData')
             return <Text key={i} style={styles.searchItem}>{elm.text}</Text>
           })}
         </View>

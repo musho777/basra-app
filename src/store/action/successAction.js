@@ -132,3 +132,10 @@ export const SuccessNewOrder = (data) => {
         data
     }
 }
+
+export const SuccessGetSinglCaht = (data) => {
+    return {
+        type: "SuccessGetSinglCaht",
+        data
+    }
+}

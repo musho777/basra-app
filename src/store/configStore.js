@@ -20,6 +20,7 @@ import { GetDeliveryReducer } from './reducer/getDeliveryReducer';
 import { GetPaymentTypeReducer } from './reducer/getPaymentTypeReducer';
 import { AddInfoReducer } from './reducer/AddInfoReducer';
 import { AddNewOrderReducer } from './reducer/AddNewOrderReducer';
+import { SinglChatReducer } from './reducer/SinglChatReducer';
 
 const rootReducer = combineReducers({
     login: AutReducer,
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
     getPaymentType: GetPaymentTypeReducer,
     addInfo: AddInfoReducer,
     addNewOrder: AddNewOrderReducer,
+    singlChat: SinglChatReducer,
 });
 
 

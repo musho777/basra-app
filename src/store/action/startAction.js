@@ -103,3 +103,9 @@ export const StartNewOrder = () => {
         type: 'StartNewOrder'
     }
 }
+
+export const StartGetSinglChat = () => {
+    return {
+        type: 'StartGetSinglChat'
+    }
+}

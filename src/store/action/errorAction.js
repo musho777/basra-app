@@ -113,3 +113,9 @@ export const ErrorNewOrder = () => {
         type: "ErrorNewOrder"
     }
 }
+
+export const ErrorGetSinglChat = () => {
+    return {
+        type: 'ErrorGetSinglChat'
+    }
+}

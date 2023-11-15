@@ -20,7 +20,14 @@ import ChatIcon from "./src/icons/ChatIcon";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Provider, } from 'react-redux';
 import { store } from "./src/store/configStore";
-
+// import Pusher from 'pusher-js/react-native';
+// import {
+//   Pusher,
+//   PusherMember,
+//   PusherChannel,
+//   PusherEvent,
+// } from '@pusher/pusher-websocket-react-native';
+// const pusher = Pusher.getInstance();
 SplashScreen.preventAutoHideAsync();
 
 const Tab = createBottomTabNavigator();
@@ -73,6 +80,27 @@ export default function App() {
         <SafeAreaView edges={["top", "right", "left"]}>
           <View onLayout={onLayoutRootView} style={styles.container}>
             <NavigationContainer theme={{ colors: { background: "white" } }}>
+
+
+              {
+
+              }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               <Tab.Navigator
                 screenOptions={{
                   headerShown: false,
