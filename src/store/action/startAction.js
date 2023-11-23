@@ -120,4 +120,10 @@ export const StartGetPadborkiId = () => {
     return {
         type: 'StartGetPadborkiId'
     }
-} 
+}
+
+export const StartGetMyOrder = () => {
+    return {
+        type: 'StartGetMyOrder'
+    }
+}

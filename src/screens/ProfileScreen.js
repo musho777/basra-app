@@ -232,12 +232,13 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "rgba(31, 32, 36, 0.8)",
     zIndex: 10,
+
   },
   navBtm: {
     position: "absolute",
     width: "100%",
     left: 0,
-    bottom: 0,
+    bottom: -15,
     zIndex: 2,
     paddingHorizontal: 0,
   },

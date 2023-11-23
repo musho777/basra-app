@@ -5,6 +5,7 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
+    ActivityIndicator
 } from "react-native";
 import NavigationBottom from "../components/NavigationBottom";
 import SearchButton from "../components/SearchButton";
@@ -53,6 +54,12 @@ export default function HomeScreen(props) {
     useEffect(() => {
         setFirstBanner(getBaner.firstData.data)
     }, [getBaner.firstData.data])
+
+    if (getPadborki.loading) {
+        return <View style={styles.loading}>
+            <ActivityIndicator color={'black'} />
+        </View >
+    }
     return (
         <View>
             {storiesVisible && (
@@ -69,10 +76,10 @@ export default function HomeScreen(props) {
                 <NavigationBottom active="home"></NavigationBottom>
             </View>
             <ScrollView style={styles.scroll}>
-                <TouchableOpacity
-                    onPress={() =>
-                        navigation.navigate("CatalogTab", { screen: "Category" })
-                    }
+                <View
+                // onPress={() =>
+                //     navigation.navigate("CatalogTab", { screen: "Category" })
+                // }
                 >
                     <Video
                         ref={video}
@@ -82,7 +89,7 @@ export default function HomeScreen(props) {
                         isMuted={true}
                         isLooping={true}
                     ></Video>
-                </TouchableOpacity>
+                </View>
                 <View style={styles.container}>
                     <View style={styles.search}>
                         <SearchButton
@@ -102,7 +109,6 @@ export default function HomeScreen(props) {
                         }}
                     >
                         {getStorys.data.data?.map((elm, i) => {
-
                             return <StoryIcon
                                 key={i}
                                 image={`https://basrabackend.justcode.am/uploads/${elm.photo}`}
@@ -243,4 +249,9 @@ const styles = StyleSheet.create({
         // paddingLeft: 20,
         // paddingRight: 20,
     },
+    loading: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 });

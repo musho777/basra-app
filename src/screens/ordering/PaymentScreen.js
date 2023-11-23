@@ -11,7 +11,6 @@ import BackIcon from "../../icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import RadioPrimary from "../../components/RadioPrimary";
-import ProductImage from "../../../assets/images/product.png";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -23,14 +22,13 @@ export default function PaymentScreen(props) {
   const navigation = useNavigation();
   const dispatch = useDispatch()
   const getUser = useSelector((st) => st.getUser)
+  const getMyOrder = useSelector((st) => st.getMyOrder)
 
   const addNewOrder = useSelector((st) => st.addNewOrder)
 
   const getPaymentType = useSelector((st) => st.getPaymentType)
   const getBasket = useSelector((st) => st.getBasket)
   const { token } = useSelector((st) => st.static)
-
-
 
   const [paymentData, setPaymentData] = useState([])
 
@@ -131,38 +129,16 @@ export default function PaymentScreen(props) {
             </View>
             <View style={[styles.orderInfoBlock, styles.orderInfoBlockLast]}>
               <Text style={styles.orderInfoTitle}>قسط</Text>
-              <View style={styles.orderInfoRow}>
-                <Text style={[styles.orderInfoText, styles.orderInfoTextLast]}>
-                  2
-                </Text>
-                <Text style={[styles.orderInfoText, styles.orderInfoTextLast]}>
-                  العناصر لكل طلب
-                </Text>
-              </View>
-              <View style={styles.orderInfoRow}>
-                <Text style={[styles.orderInfoText, styles.orderInfoTextLast]}>
-                  678 د.ع
-                </Text>
-                <Text style={[styles.orderInfoText, styles.orderInfoTextLast]}>
-                  مبلغ الشراء
-                </Text>
-              </View>
-              <View style={styles.orderInfoRow}>
-                <Text style={[styles.orderInfoText, styles.orderInfoTextLast]}>
-                  250 د.ع
-                </Text>
-                <Text style={[styles.orderInfoText, styles.orderInfoTextLast]}>
-                  توصيل
-                </Text>
-              </View>
-              <View style={[styles.orderInfoRow, styles.orderInfoRowLast]}>
-                <Text style={[styles.orderInfoText, styles.orderInfoTextLast]}>
-                  928 د.ع
-                </Text>
-                <Text style={[styles.orderInfoText, styles.orderInfoTextLast]}>
-                  مجموع
-                </Text>
-              </View>
+              {getMyOrder.data?.data?.map((elm, i) => {
+                return <View key={i} style={styles.orderInfoRow}>
+                  <Text style={[styles.orderInfoText, styles.orderInfoTextLast]}>
+                    {elm.products_count}
+                  </Text>
+                  <Text style={[styles.orderInfoText, styles.orderInfoTextLast]}>
+                    {elm.name}
+                  </Text>
+                </View>
+              })}
             </View>
           </View>
           <Text style={styles.subtitlePrimary}>بضائع</Text>

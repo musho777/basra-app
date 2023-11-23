@@ -131,3 +131,9 @@ export const ErrorGetPadborkiId = () => {
         type: 'ErrorGetPadborkiId'
     }
 }
+
+export const ErrorGetMyOrder = () => {
+    return {
+        type: 'ErrorGetMyOrder'
+    }
+}

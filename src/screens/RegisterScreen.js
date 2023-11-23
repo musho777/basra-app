@@ -22,15 +22,17 @@ export default function RegisterScreen(props) {
   const Login = () => {
     if (phone.length > 5) {
       dispatch(LoginAction({ phone }))
+      navigation.navigate('Sms', { phone })
     }
   }
 
 
-  useEffect(() => {
-    if (login.status) {
-      navigation.navigate('Sms', { phone })
-    }
-  }, [login])
+  // useEffect(() => {
+  //   if (login.status) {
+  //     console.log('1111111111')
+  //     navigation.navigate('Sms', { phone })
+  //   }
+  // }, [login])
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>

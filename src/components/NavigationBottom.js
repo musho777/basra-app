@@ -69,6 +69,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingTop: 6,
+    position: 'absolute',
+    bottom: 0,
   },
   tab: {
     width: "20%",
@@ -76,10 +78,5 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-  },
-  abs: {
-    position: "absolute",
-    left: 0,
-    bottom: 0,
   },
 });

@@ -7,7 +7,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import * as SplashScreen from "expo-splash-screen";
-
 import HomeScreen from "./src/screens/HomeScreen";
 import FavoriteScreen from "./src/screens/FavoriteScreen";
 import ProfileTab from "./src/tabs/ProfileTab";
@@ -56,7 +55,6 @@ export default function App() {
   const GetUser = async () => {
     let token = await AsyncStorage.getItem('token')
     if (token) {
-
       setInitialScreen('ProfileTab')
     }
   }

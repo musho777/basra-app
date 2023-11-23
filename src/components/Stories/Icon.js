@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 
 export default function StoryIcon(props) {
+  console.log(props.image)
   return (
     <TouchableOpacity style={styles.storyWrap} onPress={props.onPress}>
       <View style={styles.story}>

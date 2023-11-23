@@ -10,7 +10,7 @@ import ButtonPrimary from "../components/ButtonPrimary";
 import InputPrimary from "../components/InputPrimary";
 import { useUserStore } from "../store/user";
 import { useDispatch, useSelector } from "react-redux";
-import { ConfrimCode } from "../store/action/action";
+import { ClearLogin, ConfrimCode } from "../store/action/action";
 
 export default function SmsScreen(props) {
   const userStore = useUserStore();
@@ -38,11 +38,13 @@ export default function SmsScreen(props) {
       textCode = textCode + elm
     })
     dispatch(ConfrimCode({ phone: props?.route?.params?.phone, code: textCode }))
+    // props.navigation.navigate("Welcome");
   }
 
   useEffect(() => {
     if (confirmCode.status) {
-      props.navigation.navigate("ProfileTab");
+      dispatch(ClearLogin())
+      props.navigation.navigate("Welcome");
     }
 
   }, [confirmCode])

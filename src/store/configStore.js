@@ -23,6 +23,7 @@ import { AddNewOrderReducer } from './reducer/AddNewOrderReducer';
 import { SinglChatReducer } from './reducer/SinglChatReducer';
 import { getPadborkiWhiteProduct } from './reducer/getPadborkiWhiteProduct';
 import { getPadborkiIdReducer } from './reducer/getPadborkiIdReducer';
+import { GetMyOrderReducer } from './reducer/GetMyOrderReducer';
 
 const rootReducer = combineReducers({
     login: AutReducer,
@@ -47,7 +48,8 @@ const rootReducer = combineReducers({
     addNewOrder: AddNewOrderReducer,
     singlChat: SinglChatReducer,
     getPadborki: getPadborkiWhiteProduct,
-    getPadborkiId: getPadborkiIdReducer
+    getPadborkiId: getPadborkiIdReducer,
+    getMyOrder: GetMyOrderReducer,
 });
 
 

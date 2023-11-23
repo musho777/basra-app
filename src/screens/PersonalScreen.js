@@ -67,9 +67,6 @@ export default function PersonalScreen(props) {
     }
   }
 
-
-
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View>
@@ -200,4 +197,10 @@ const styles = StyleSheet.create({
     width: "100%",
     flexGrow: 1,
   },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });
+

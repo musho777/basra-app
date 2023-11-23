@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ErrorConfirmCode, ErrorDelivery, ErrorGetBaners, ErrorGetBasket, ErrorGetCityes, ErrorGetFavorites, ErrorGetPadborkiId, ErrorGetPadborkiwhteProducts, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetSinglChat, ErrorGetSinglPorduct, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorNewOrder, ErrorPaymentType, ErrorUpdateUser, ErrorUpdateUserAvatar, ErrorValidOrder } from "./errorAction";
-import { StartConfrimCode, StartDelivery, StartGetBaners, StartGetBasket, StartGetCityes, StartGetFavorites, StartGetPadborkiId, StartGetPadborkiWhiteProducts, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetSinglChat, StartGetSinglProduct, StartGetStoryes, StartGetUser, StartLogin, StartNewOrder, StartPaymentType, StartUpdateProfil, StartUpdateUserAvatar, StartValidOrder } from "./startAction";
-import { SetToken, SuccessConfirmCode, SuccessDelivery, SuccessGetBaners, SuccessGetBasket, SuccessGetCityes, SuccessGetFavorites, SuccessGetFirstBaners, SuccessGetPadborkiId, SuccessGetPadborkiWhiteProducts, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetSinglCaht, SuccessGetSinglProduct, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessNewOrder, SuccessPaymentType, SuccessUpdateUser, SuccessUpdateUserAvatar, SuccessValidOrder } from "./successAction";
+import { ErrorConfirmCode, ErrorDelivery, ErrorGetBaners, ErrorGetBasket, ErrorGetCityes, ErrorGetFavorites, ErrorGetMyOrder, ErrorGetPadborkiId, ErrorGetPadborkiwhteProducts, ErrorGetProductByCategory, ErrorGetProducts, ErrorGetSearchHistory, ErrorGetSinglChat, ErrorGetSinglPorduct, ErrorGetUser, ErrorGetstoryes, ErrorLogin, ErrorNewOrder, ErrorPaymentType, ErrorUpdateUser, ErrorUpdateUserAvatar, ErrorValidOrder } from "./errorAction";
+import { StartConfrimCode, StartDelivery, StartGetBaners, StartGetBasket, StartGetCityes, StartGetFavorites, StartGetMyOrder, StartGetPadborkiId, StartGetPadborkiWhiteProducts, StartGetProducets, StartGetProductByCategory, StartGetSearchHistory, StartGetSinglChat, StartGetSinglProduct, StartGetStoryes, StartGetUser, StartLogin, StartNewOrder, StartPaymentType, StartUpdateProfil, StartUpdateUserAvatar, StartValidOrder } from "./startAction";
+import { SetToken, SuccessConfirmCode, SuccessDelivery, SuccessGetBaners, SuccessGetBasket, SuccessGetCityes, SuccessGetFavorites, SuccessGetFirstBaners, SuccessGetMyOrder, SuccessGetPadborkiId, SuccessGetPadborkiWhiteProducts, SuccessGetProducets, SuccessGetProductByCateogy, SuccessGetSearchHistory, SuccessGetSinglCaht, SuccessGetSinglProduct, SuccessGetStoryes, SuccessGetUser, SuccessLogin, SuccessNewOrder, SuccessPaymentType, SuccessUpdateUser, SuccessUpdateUserAvatar, SuccessValidOrder } from "./successAction";
 
 let api = 'https://basrabackend.justcode.am/api/app'
 let api2 = 'https://basrabackend.justcode.am/api'
@@ -774,5 +774,37 @@ export const GetPadborkiforBodborkiId = (data, token) => {
             .catch(error => {
                 dispatch(ErrorGetPadborkiId())
             });
+    }
+}
+
+export const GetMyOrderAction = (token) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+    };
+    return (dispatch) => {
+        dispatch(StartGetMyOrder())
+        fetch(`${api}/get_my_orders`, requestOptions)
+            .then(response => response.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessGetMyOrder(r.data))
+                }
+                else {
+                    dispatch(ErrorGetMyOrder())
+                }
+            })
+            .catch(error => {
+                dispatch(ErrorGetMyOrder())
+            });
+    }
+}
+
+export const ClearLogin = () => {
+    return {
+        type: 'ClearLogin'
     }
 }

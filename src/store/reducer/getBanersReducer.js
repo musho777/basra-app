@@ -1,7 +1,7 @@
 const initialState = {
     data: [],
     status: false,
-    loading: false,
+    loading: true,
     error: "",
     firstData: []
 };

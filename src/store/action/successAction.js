@@ -153,3 +153,10 @@ export const SuccessGetPadborkiId = (data) => {
         data
     }
 }
+
+export const SuccessGetMyOrder = (data) => {
+    return {
+        type: 'SuccessGetMyOrder',
+        data
+    }
+}

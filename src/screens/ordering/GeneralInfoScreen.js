@@ -10,18 +10,20 @@ import BackIcon from "../../icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
 import InputPrimary from "../../components/InputPrimary";
 import ButtonPrimary from "../../components/ButtonPrimary";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { BuyerInfo, DeliveryType, GetCityes, GetPaymentType } from "../../store/action/action";
+import { BuyerInfo, DeliveryType, GetCityes, GetMyOrderAction, GetPaymentType } from "../../store/action/action";
 import { useState } from "react";
 
 export default function GeneralInfoScreen(props) {
   const navigation = useNavigation();
   const dispatch = useDispatch()
+  const { token } = useSelector((st) => st.static)
   useEffect(() => {
     dispatch(GetCityes())
     dispatch(DeliveryType())
     dispatch(GetPaymentType())
+    dispatch(GetMyOrderAction(token))
   }, [dispatch])
   const [data, setData] = useState({
     name: '',
