@@ -4,6 +4,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import NavigationBottom from "../components/NavigationBottom";
 import BackIcon from "../icons/BackIcon";
@@ -22,6 +23,8 @@ export default function SearchScreen(props) {
   const [page, setPage] = useState(1)
   const [searchData, setSearchData] = useState([])
   const [searchValue, setSearchValue] = useState(props.route.params?.searchValue)
+  const [close, setClose] = useState(false)
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
 
   const handleScroll = (event) => {
@@ -56,13 +59,36 @@ export default function SearchScreen(props) {
     setSearchData(combinedArray)
   }, [getSearchHistory])
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setIsKeyboardOpen(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardOpen(false);
+      }
+    );
 
+    // Clean up listeners when the component is unmounted
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+
+  }, [])
 
   return (
     <View>
-      <View style={styles.navBtm}>
+      {!isKeyboardOpen && <View style={styles.navBtm}>
         <NavigationBottom active="catalog"></NavigationBottom>
-      </View>
+      </View>}
       <ScrollView
         onScroll={handleScroll}
         scrollEventThrottle={16}

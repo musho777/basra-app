@@ -14,6 +14,7 @@ import { useUserStore } from "../store/user";
 import { useDispatch, useSelector } from "react-redux";
 import { UpdateData } from "../store/action/action";
 import { useEffect } from "react";
+import NavigationBottom from "../components/NavigationBottom";
 
 export default function PersonalScreen(props) {
   const userStore = useUserStore();
@@ -71,7 +72,7 @@ export default function PersonalScreen(props) {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View>
         <View style={styles.navBtm}>
-          {/* <NavigationBottom active="profile"></NavigationBottom> */}
+          <NavigationBottom active="profile"></NavigationBottom>
         </View>
         <View style={styles.container}>
           <View style={styles.main}>
@@ -163,6 +164,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: "100%",
     width: "100%",
+    marginTop: 2
   },
   phoneNumber: {
     fontFamily: "CircleExtraBold",

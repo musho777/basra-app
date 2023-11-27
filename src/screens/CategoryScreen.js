@@ -68,6 +68,7 @@ export default function CategoryScreen(props) {
 
   }, [page, search])
 
+
   useEffect(() => {
     if (getPorduct.data.data) {
       let item = [...products]

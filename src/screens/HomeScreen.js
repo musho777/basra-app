@@ -1,6 +1,5 @@
 import {
     View,
-    Text,
     Image,
     StyleSheet,
     ScrollView,
@@ -32,13 +31,21 @@ export default function HomeScreen(props) {
     const getStorys = useSelector((st) => st.getStoryes)
     const [storiesVisible, setStoriesVisible] = useState(false);
     const [firstBanner, setFirstBanner] = useState([])
+    const [secondBanner, setSecondBanner] = useState([])
+
     const [showStoryes, setShowStoryes] = useState([])
+    const [search, setSearch] = useState('')
+
+
     useEffect(() => {
-        dispatch(GetBaners('first', token))
-        dispatch(GetBaners('last', token))
-        dispatch(GetStoryes(token))
-        dispatch(GetPadborkiWhiteProducts(token))
-    }, []);
+        const unsubscribe = navigation.addListener('focus', async () => {
+            dispatch(GetBaners('first', token))
+            dispatch(GetBaners('last', token))
+            dispatch(GetStoryes(token))
+            dispatch(GetPadborkiWhiteProducts(token))
+        });
+        return unsubscribe;
+    }, [navigation]);
 
     const ShowStory = (i) => {
         // let item = [...showStoryes]
@@ -54,6 +61,11 @@ export default function HomeScreen(props) {
     useEffect(() => {
         setFirstBanner(getBaner.firstData.data)
     }, [getBaner.firstData.data])
+
+    useEffect(() => {
+        setSecondBanner(getBaner.data.data)
+    }, [getBaner.data])
+
 
     if (getPadborki.loading) {
         return <View style={styles.loading}>
@@ -76,25 +88,81 @@ export default function HomeScreen(props) {
                 <NavigationBottom active="home"></NavigationBottom>
             </View>
             <ScrollView style={styles.scroll}>
-                <View
-                // onPress={() =>
-                //     navigation.navigate("CatalogTab", { screen: "Category" })
-                // }
-                >
-                    <Video
+                <View>
+                    {firstBanner?.length > 0 && <Swiper
+                        height={300}
+                        style={styles.bannerSwiper}
+                        showsPagination={false}
+                        dot={
+                            <View
+                                style={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: 24,
+                                    backgroundColor: "rgba(224, 193, 143, 0.25)",
+                                    marginHorizontal: 6,
+                                }}
+                            ></View>
+                        }
+                        activeDot={
+                            <View
+                                style={{
+                                    width: 12,
+                                    height: 12,
+                                    backgroundColor: "#E0C18F",
+                                    borderRadius: 24,
+                                    marginHorizontal: 6,
+                                }}
+                            ></View>
+                        }
+                    >
+                        {firstBanner?.map((elm, i) => {
+                            if (elm.type == 'png' || elm.type == 'jpg') {
+                                return <TouchableOpacity
+                                    key={i}
+                                    style={styles.slide}
+                                    onPress={() => { }
+                                        // navigation.navigate("CatalogTab", { screen: "Category" })
+                                    }
+                                >
+                                    <Image
+                                        style={styles.slideImg}
+                                        source={{ uri: baseUrl + elm.file }}
+                                        height={130}
+                                    ></Image>
+                                </TouchableOpacity>
+                            }
+                            else {
+                                <Video
+                                    ref={video}
+                                    style={styles.video}
+                                    source={{ uri: baseUrl + props.file }}
+                                    resizeMode="cover"
+                                    isMuted={true}
+                                    isLooping={true}
+                                ></Video>
+                            }
+                        })}
+
+                    </Swiper>}
+                    {/* <Video
                         ref={video}
                         style={styles.video}
                         source={require("../../assets/images/video.mp4")}
                         resizeMode="cover"
                         isMuted={true}
                         isLooping={true}
-                    ></Video>
+                    ></Video> */}
                 </View>
                 <View style={styles.container}>
                     <View style={styles.search}>
                         <SearchButton
                             onPress={() =>
-                                navigation.navigate("CatalogTab", { screen: "Search" })
+                                navigation.navigate("CatalogTab", {
+                                    screen: "Search", params: {
+                                        searchValue: search,
+                                    },
+                                })
                             }
                         ></SearchButton>
                     </View>
@@ -111,7 +179,7 @@ export default function HomeScreen(props) {
                         {getStorys.data.data?.map((elm, i) => {
                             return <StoryIcon
                                 key={i}
-                                image={`https://basrabackend.justcode.am/uploads/${elm.photo}`}
+                                image={elm.photo}
                                 onPress={() => {
                                     ShowStory(i)
                                 }}
@@ -142,7 +210,7 @@ export default function HomeScreen(props) {
                         })}
                     </View>
                     <View style={{ paddingHorizontal: 15, height: 190 }}>
-                        {firstBanner?.length > 0 && <Swiper
+                        {secondBanner?.length > 0 && <Swiper
                             height={130}
                             style={styles.bannerSwiper}
                             showsPagination={true}
@@ -169,8 +237,8 @@ export default function HomeScreen(props) {
                                 ></View>
                             }
                         >
-                            {firstBanner?.map((elm, i) => {
-                                if (elm.type == 'png') {
+                            {secondBanner?.map((elm, i) => {
+                                if (elm.type == 'png' || elm.type == 'jpg') {
                                     return <TouchableOpacity
                                         key={i}
                                         style={styles.slide}
@@ -184,6 +252,16 @@ export default function HomeScreen(props) {
                                             height={130}
                                         ></Image>
                                     </TouchableOpacity>
+                                }
+                                else {
+                                    <Video
+                                        ref={video}
+                                        style={styles.video}
+                                        source={{ uri: baseUrl + props.file }}
+                                        resizeMode="cover"
+                                        isMuted={true}
+                                        isLooping={true}
+                                    ></Video>
                                 }
                             })}
 

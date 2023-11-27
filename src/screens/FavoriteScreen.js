@@ -26,6 +26,7 @@ export default function FavoriteScreen(props) {
   const dispatch = useDispatch()
   const { token } = useSelector((st) => st.static)
   const [page, setPage] = useState(1)
+  const [search, setSearch] = useState('')
 
 
   useEffect(() => {
@@ -86,7 +87,16 @@ export default function FavoriteScreen(props) {
         style={styles.scroll}>
         <View style={styles.container}>
           <View style={styles.top}>
-            <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+            <TouchableOpacity
+
+              onPress={() =>
+                navigation.navigate("CatalogTab", {
+                  screen: "Search", params: {
+                    searchValue: search,
+                  },
+                })
+
+              }>
               <SearchIconCategory></SearchIconCategory>
             </TouchableOpacity>
             <View>

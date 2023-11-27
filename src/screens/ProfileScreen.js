@@ -95,13 +95,17 @@ export default function ProfileScreen(props) {
           <Text style={styles.title}>حساب تعريفي</Text>
           {!updatePhoto.loading ?
 
-            <TouchableOpacity onPress={() => changeImg()}>
+            <TouchableOpacity style={{ width: 100, height: 100, borderRadius: 100 }} onPress={() => changeImg()}>
               <Image style={{ width: 100, height: 100, borderRadius: 100 }} source={{ uri: `https://basrabackend.justcode.am/uploads/${getUser.data.user?.avatar}` }} />
             </TouchableOpacity> :
             <ActivityIndicator style={{ width: 100, height: 100 }} color={'red'} />
           }
           <Text style={styles.phoneNumber}>{getUser.data.user?.phone}</Text>
           <Text style={styles.fio}>مريم عبد</Text>
+
+
+
+
           <View style={styles.profileItems}>
             <ProfileItem
               onPress={() => props.navigation.navigate("Personal")}
@@ -267,6 +271,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#1F2024",
     marginBottom: 2,
+    height: 27
   },
   fio: {
     fontSize: 16,

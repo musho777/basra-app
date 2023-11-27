@@ -172,28 +172,33 @@ export const GetStoryes = (token) => {
                 }
             })
             .catch((error) => {
+                console.log('error')
                 dispatch(ErrorGetstoryes())
             });
     }
 }
 
 export const GetBaners = (type, token) => {
-
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
 
+
     var formdata = new FormData();
+    formdata.append("slider", type);
+    formdata.append("platform_id", "2");
+
     var requestOptions = {
         method: 'POST',
         headers: myHeaders,
+        redirect: 'follow',
         body: formdata,
-        redirect: 'follow'
     };
     return (dispatch) => {
         dispatch(StartGetBaners())
-        fetch(`https://basrabackend.justcode.am/api/app/get_banner?slider=${type}`, requestOptions)
+        fetch(`https://basrabackend.justcode.am/api/app/get_banner`, requestOptions)
             .then(response => response.json())
             .then(r => {
+                console.log(r, '22')
                 if (r.status) {
                     if (type === 'first') {
                         dispatch(SuccessGetFirstBaners(r))
@@ -207,6 +212,7 @@ export const GetBaners = (type, token) => {
                 }
             })
             .catch(error => {
+                console.log('error', error)
                 dispatch(ErrorGetBaners())
             });
     }
@@ -220,7 +226,7 @@ export const GetProducts = (data, token) => {
     var requestOptions = {
         method: 'GET',
         headers: myHeaders,
-        // body: JSON.stringify(data),
+        body: JSON.stringify(data),
     };
     return (dispatch) => {
         dispatch(StartGetProducets())
@@ -667,7 +673,7 @@ export const ClearOrderStatus = () => {
     }
 }
 
-export const GetChatAction = (data, token) => {
+export const GetChatAction = (data, token, page) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", `Bearer ${token}`);
@@ -678,7 +684,7 @@ export const GetChatAction = (data, token) => {
     };
     return (dispatch) => {
         dispatch(StartGetSinglChat())
-        fetch(`${api}/single_page_chat?page=1`, requestOptions)
+        fetch(`${api}/single_page_chat?page=${page}`, requestOptions)
             .then(response => response.json())
             .then(r => {
                 if (r.status) {

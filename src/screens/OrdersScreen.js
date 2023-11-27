@@ -147,6 +147,8 @@ const styles = StyleSheet.create({
   },
   scroll: {
     minHeight: "100%",
+    // borderWidth: 1,
+    marginTop: 2
   },
   navBtm: {
     position: "absolute",

@@ -12,7 +12,6 @@ import NavigationBottom from "../components/NavigationBottom";
 import SearchButton from "../components/SearchButton";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { baseUrl } from "../api";
 import { useDispatch, useSelector } from "react-redux";
 import { GetProducts } from "../store/action/action";
 
@@ -21,6 +20,7 @@ export default function CatalogScreen(props) {
   const dispatch = useDispatch()
   const { token } = useSelector((st) => st.static)
   const getProducets = useSelector((st) => st.getProducets)
+  const [search, setSearch] = useState('')
   useEffect(() => {
     dispatch(GetProducts({}, token))
   }, []);
@@ -30,6 +30,9 @@ export default function CatalogScreen(props) {
       setCategories(getProducets.data)
     }
   }, [getProducets])
+
+
+  console.log('22')
 
   const navigation = useNavigation();
   if (getProducets.loading) {
@@ -47,7 +50,10 @@ export default function CatalogScreen(props) {
         <View style={styles.container}>
           <View style={styles.search}>
             <SearchButton
-              onPress={() => navigation.navigate("Search")}
+              onPress={() => navigation.navigate("Search", {
+                searchValue: search
+              }
+              )}
             ></SearchButton>
           </View>
           <Text style={styles.catalogTitle}>فهرس</Text>

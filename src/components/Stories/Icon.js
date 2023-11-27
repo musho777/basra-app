@@ -1,11 +1,11 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { baseUrl } from "../../api";
 
 export default function StoryIcon(props) {
-  console.log(props.image)
   return (
     <TouchableOpacity style={styles.storyWrap} onPress={props.onPress}>
       <View style={styles.story}>
-        <Image style={styles.storyImg} source={{ url: props.image }}></Image>
+        <Image style={styles.storyImg} source={{ uri: baseUrl + props.image }} />
       </View>
       <Text style={styles.storyText}>{props.text}</Text>
     </TouchableOpacity>
@@ -38,11 +38,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   storyImg: {
-    width: 62,
-    height: 62,
+    width: 70,
+    height: 70,
     // marginRight: 1,
     // marginBottom: 1,
-    borderRadius: 63
+    borderRadius: 63,
+    borderWidth: 1,
   },
   stories: {
     flex: 1,

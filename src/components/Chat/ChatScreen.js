@@ -11,7 +11,7 @@ import TgIcon from "../../icons/TgIcon";
 import { useDispatch, useSelector } from "react-redux";
 import { baseUrl } from "../../api";
 import InputPrimary from "../InputPrimary";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { GetChatAction, SendMsgAction } from "../../store/action/action";
 import { useState } from "react";
 
@@ -23,22 +23,51 @@ export default function ChatScreen(props) {
   const [data, setData] = useState([])
   const [msg, setMsg] = useState('')
   const dispatch = useDispatch()
+  const [page, setPage] = useState(1)
+  const scrollViewRef = useRef();
+
+  const scrollToBottom = () => {
+    scrollViewRef.current.scrollToEnd({ animated: true });
+  };
+
   useEffect(() => {
     if (getUser.data?.user?.id) {
-      dispatch(GetChatAction({ receiver_id: 3 }, token))
+      dispatch(GetChatAction({ receiver_id: 1 }, token, page))
+      scrollToBottom()
+
     }
   }, [getUser.data?.user?.id])
 
   const SendMsg = () => {
     if (msg) {
-      dispatch(SendMsgAction({ message: msg, receiver_id: 3 }, token))
+      scrollToBottom()
+      let item = [...data]
+      dispatch(SendMsgAction({ message: msg, receiver_id: 1 }, token))
+      item.push({
+        message: msg,
+        sender_id: getUser.data?.user?.id,
+      })
+      setData(item)
       setMsg('')
     }
   }
 
   useEffect(() => {
-    setData(singlChat.data)
+    if (singlChat.data.data?.length) {
+      setData(singlChat.data.data.reverse())
+    }
   }, [singlChat])
+
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      dispatch(GetChatAction({ receiver_id: 1 }, token, page))
+      scrollToBottom()
+    }, 4000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <View style={styles.chat}>
       <View style={styles.chatTop}>
@@ -56,20 +85,21 @@ export default function ChatScreen(props) {
 
 
 
-      <ScrollView style={styles.chatBody}>
-        {data?.data?.map((elm, i) => {
+      <ScrollView ref={scrollViewRef} style={styles.chatBody}>
+        {data?.map((elm, i) => {
           if (elm.sender_id == getUser.data?.user?.id) {
             return <View key={i} style={styles.messageRight}>
               <View style={styles.messageCircleRight}></View>
               <Text style={styles.messageTextRight}>
-                مساء الخير سنكون سعداء للمساعدة. ما هو سؤالك؟
+                {elm.message}
               </Text>
             </View>
           }
           else {
+            console.log('1111')
             return <View style={styles.messageLeft}>
               <Text style={styles.messageTextLeft}>
-                مرحبًا! هل لديك واقي من الشمس؟
+                {elm.message}
               </Text>
               <View style={styles.messageCircleLeft}></View>
             </View>
