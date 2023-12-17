@@ -172,7 +172,6 @@ export const GetStoryes = (token) => {
                 }
             })
             .catch((error) => {
-                console.log('error')
                 dispatch(ErrorGetstoryes())
             });
     }
@@ -198,7 +197,7 @@ export const GetBaners = (type, token) => {
         fetch(`https://basrabackend.justcode.am/api/app/get_banner`, requestOptions)
             .then(response => response.json())
             .then(r => {
-                console.log(r, '22')
+                console.log(r)
                 if (r.status) {
                     if (type === 'first') {
                         dispatch(SuccessGetFirstBaners(r))
@@ -212,25 +211,23 @@ export const GetBaners = (type, token) => {
                 }
             })
             .catch(error => {
-                console.log('error', error)
                 dispatch(ErrorGetBaners())
             });
     }
 }
 
 export const GetProducts = (data, token) => {
-
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", `Bearer ${token}`);
     var requestOptions = {
         method: 'GET',
         headers: myHeaders,
-        body: JSON.stringify(data),
     };
     return (dispatch) => {
+
         dispatch(StartGetProducets())
-        fetch(`${api}/get_category`, requestOptions)
+        fetch(`${api}/get_category?platform_id=2`, requestOptions)
             .then(response => response.json())
             .then(r => {
                 if (r.status) {
@@ -654,7 +651,7 @@ export const AddNewOrder = (data, token) => {
             .then(response => response.json())
             .then(r => {
                 if (r.status) {
-                    dispatch(SuccessNewOrder(r.data))
+                    dispatch(SuccessNewOrder(r))
                 }
                 else {
                     dispatch(ErrorNewOrder())
@@ -687,6 +684,7 @@ export const GetChatAction = (data, token, page) => {
         fetch(`${api}/single_page_chat?page=${page}`, requestOptions)
             .then(response => response.json())
             .then(r => {
+                // console.log(r)
                 if (r.status) {
                     dispatch(SuccessGetSinglCaht(r.data))
                 }
@@ -814,3 +812,14 @@ export const ClearLogin = () => {
         type: 'ClearLogin'
     }
 }
+
+export const OpenChat = () => {
+    return {
+        type: "OpenChat"
+    }
+}
+
+export const closeChat = () => {
+
+}
+

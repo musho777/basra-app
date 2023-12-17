@@ -18,22 +18,18 @@ export default function RegisterScreen(props) {
   const dispatch = useDispatch()
   const login = useSelector((st) => st.login)
   const navigation = useNavigation();
+  const [error, setError] = useState(false)
 
   const Login = () => {
     if (phone.length > 5) {
+      setError(false)
       dispatch(LoginAction({ phone }))
       navigation.navigate('Sms', { phone })
     }
+    else {
+      setError(true)
+    }
   }
-
-
-  // useEffect(() => {
-  //   if (login.status) {
-  //     console.log('1111111111')
-  //     navigation.navigate('Sms', { phone })
-  //   }
-  // }, [login])
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.registerContainer}>
@@ -53,9 +49,11 @@ export default function RegisterScreen(props) {
               }}
             ></InputPrimary>
           </View>
+          {error && <Text style={{ marginVertical: 20, color: 'red' }}>
+            يجب أن يكون الرقم أكثر من 6 أحرف
+          </Text>}
           <View style={styles.button}>
             <ButtonPrimary
-              disabled={phone.length < 5}
               onPress={() => { Login() }}
               loading={login.loading}
             >

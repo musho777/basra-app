@@ -9,16 +9,24 @@ import { useNavigation } from "@react-navigation/native";
 import ButtonPrimary from "../components/ButtonPrimary";
 import SuccessIcon from "../icons/SuccessIcon";
 import WelcomeClose from "../icons/WelcomeClose";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { ClearOrderStatus } from "../store/action/action";
 
 export default function SuccessScreen(props) {
   const navigation = useNavigation();
   const dispatch = useDispatch()
+  const addNewOrder = useSelector((st) => st.addNewOrder)
+
   useEffect(() => {
-    dispatch(ClearOrderStatus())
-  }, [])
+    const unsubscribe = navigation.addListener('focus', async () => {
+      if (!addNewOrder.status) {
+        navigation.navigate("CartTab", { screen: "Cart" })
+      }
+    });
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <View>
       <View style={styles.navBtm}>
@@ -38,7 +46,7 @@ export default function SuccessScreen(props) {
               سيتصل بك مديرنا قريبًا لتأكيد الطلب
             </Text>
             <View style={styles.box}>
-              <Text style={styles.orderNumber}>0097746</Text>
+              <Text style={styles.orderNumber}>{addNewOrder?.data?.order_id}</Text>
               <Text style={styles.boxText}>رقم الأمر</Text>
             </View>
           </View>

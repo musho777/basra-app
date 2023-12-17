@@ -24,6 +24,7 @@ import { SinglChatReducer } from './reducer/SinglChatReducer';
 import { getPadborkiWhiteProduct } from './reducer/getPadborkiWhiteProduct';
 import { getPadborkiIdReducer } from './reducer/getPadborkiIdReducer';
 import { GetMyOrderReducer } from './reducer/GetMyOrderReducer';
+import { OpenChatREDUCER } from './reducer/openChatREDUCER.JS';
 
 const rootReducer = combineReducers({
     login: AutReducer,
@@ -50,6 +51,7 @@ const rootReducer = combineReducers({
     getPadborki: getPadborkiWhiteProduct,
     getPadborkiId: getPadborkiIdReducer,
     getMyOrder: GetMyOrderReducer,
+    openChat: OpenChatREDUCER,
 });
 
 

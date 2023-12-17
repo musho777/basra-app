@@ -15,7 +15,10 @@ import { useEffect, useState } from "react";
 import EmptyOrders from "../icons/EmptyOrders";
 import { useCartStore } from "../store/cartStore";
 import { useDispatch, useSelector } from "react-redux";
+// import ChatScreen from "./src/components/Chat/ChatScreen";
 import { AddToBasketAction, ClearValidOrder, GetBasketAction, MinusFromBassket, RemoveFromBasketAction, ValidORderAction } from '../store/action/action'
+import ChatIcon from "../icons/ChatIcon";
+import ChatScreen from "../components/Chat/ChatScreen";
 
 export default function CartScreen(props) {
   const navigation = useNavigation();
@@ -24,6 +27,7 @@ export default function CartScreen(props) {
   const getBasket = useSelector((st) => st.getBasket)
   const [basket, setBasket] = useState({})
   const validOrder = useSelector((st) => st.validOrder)
+  const [chatVisible, setChatVisible] = useState(false);
   function totalCost() {
     let sum = 0;
     basket?.data.forEach((product) => {
@@ -101,6 +105,21 @@ export default function CartScreen(props) {
 
   return (
     <View>
+      {<TouchableOpacity
+        style={styles.chatIcon}
+        onPress={() => {
+          setChatVisible(true);
+        }}
+      >
+        <ChatIcon></ChatIcon>
+      </TouchableOpacity>}
+      {chatVisible && (
+        <ChatScreen
+          onClose={() => {
+            setChatVisible(false);
+          }}
+        ></ChatScreen>
+      )}
       <View style={styles.navBtm}>
         <NavigationBottom active="cart"></NavigationBottom>
       </View>
@@ -246,5 +265,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-  }
+  },
+  chatIcon: {
+    position: "absolute",
+    width: 85,
+    height: 85,
+    bottom: 100,
+    left: 15,
+    zIndex: 100,
+  },
 });

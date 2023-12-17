@@ -16,7 +16,7 @@ import { useEffect } from "react";
 export default function AddressInfoScreen(props) {
   const navigation = useNavigation();
   const [data, setData] = useState(props.route?.params?.data)
-  const [error, setError] = useState({ address: "", home: "" })
+  const [error, setError] = useState({ address: "", home: "", description: '' })
   useEffect(() => {
     let item = { ...data }
     item.address = ''
@@ -51,7 +51,15 @@ export default function AddressInfoScreen(props) {
       item.home = ''
       send = true
     }
-    if (send) {
+    if (!data.description) {
+      item.description = 'error'
+      send = false
+    }
+    else {
+      item.description = ''
+      send = true
+    }
+    if (!item.address && !item.home && !item.description) {
       navigation.navigate("Payment", { data })
     }
     setError(item)
@@ -115,7 +123,7 @@ export default function AddressInfoScreen(props) {
               align="top"
               paddingTop={18}
               onChangeText={(e) => HandelChange(e, 'description')}
-
+              borderColor={error.description && 'red'}
             ></InputPrimary>
           </View>
           <View style={styles.btn}>

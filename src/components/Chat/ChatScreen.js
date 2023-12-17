@@ -12,29 +12,65 @@ import { useDispatch, useSelector } from "react-redux";
 import { baseUrl } from "../../api";
 import InputPrimary from "../InputPrimary";
 import { useEffect, useRef } from "react";
-import { GetChatAction, SendMsgAction } from "../../store/action/action";
+import { GetAuthUser, GetChatAction, SendMsgAction } from "../../store/action/action";
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function ChatScreen(props) {
+
   const getUser = useSelector((st) => st.getUser)
   const singlChat = useSelector((st) => st.singlChat)
-  const { token } = useSelector((st) => st.static)
+  // const { token } = useSelector((st) => st.static)
+  const [token, setToken] = useState('')
   const [data, setData] = useState([])
   const [msg, setMsg] = useState('')
   const dispatch = useDispatch()
   const [page, setPage] = useState(1)
   const scrollViewRef = useRef();
+  const navigation = useNavigation();
+
+
+  useEffect(() => {
+    setData([])
+    GetUser()
+  }, [])
 
   const scrollToBottom = () => {
-    scrollViewRef.current.scrollToEnd({ animated: true });
+    // scrollViewRef.current.scrollToEnd({ animated: true });
+    // scrollViewRef.current.scrollToEnd({ animated: true });
+    scrollViewRef.current.scrollTo({ y: 0, animated: true });
   };
+  const GetUser = async () => {
+    let token = await AsyncStorage.getItem('token')
+    if (token) {
+      setToken(token)
+    }
+  }
+
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', async () => {
+      GetUser()
+      dispatch(GetChatAction({ receiver_id: 1 }, token, page))
+      setData([])
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+
+  useEffect(() => {
+    if (token) {
+      dispatch(GetAuthUser(token))
+    }
+  }, [token])
+
 
   useEffect(() => {
     if (getUser.data?.user?.id) {
       dispatch(GetChatAction({ receiver_id: 1 }, token, page))
       scrollToBottom()
-
     }
   }, [getUser.data?.user?.id])
 
@@ -43,7 +79,7 @@ export default function ChatScreen(props) {
       scrollToBottom()
       let item = [...data]
       dispatch(SendMsgAction({ message: msg, receiver_id: 1 }, token))
-      item.push({
+      item.unshift({
         message: msg,
         sender_id: getUser.data?.user?.id,
       })
@@ -53,20 +89,22 @@ export default function ChatScreen(props) {
   }
 
   useEffect(() => {
+    console.log(singlChat.data.data?.length)
     if (singlChat.data.data?.length) {
-      setData(singlChat.data.data.reverse())
+      setData(singlChat?.data?.data)
     }
-  }, [singlChat])
+  }, [singlChat.data.data])
 
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      dispatch(GetChatAction({ receiver_id: 1 }, token, page))
-      scrollToBottom()
-    }, 4000);
+      if (token) {
+        dispatch(GetChatAction({ receiver_id: 1 }, token, page))
+      }
+    }, 3000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [token]);
 
   return (
     <View style={styles.chat}>
@@ -87,21 +125,22 @@ export default function ChatScreen(props) {
 
       <ScrollView ref={scrollViewRef} style={styles.chatBody}>
         {data?.map((elm, i) => {
-          if (elm.sender_id == getUser.data?.user?.id) {
+          if (elm.sender_id != getUser.data?.user?.id) {
             return <View key={i} style={styles.messageRight}>
-              <View style={styles.messageCircleRight}></View>
+              {/* <View style={styles.messageCircleRight}></View> */}
               <Text style={styles.messageTextRight}>
                 {elm.message}
               </Text>
+              <View style={styles.messageCircleLeft}></View>
             </View>
           }
           else {
-            console.log('1111')
-            return <View style={styles.messageLeft}>
+            return <View key={i} style={styles.messageLeft}>
+              <View style={styles.messageCircleRight}></View>
               <Text style={styles.messageTextLeft}>
                 {elm.message}
               </Text>
-              <View style={styles.messageCircleLeft}></View>
+              {/* <View style={styles.messageCircleLeft}></View> */}
             </View>
           }
         })
@@ -139,6 +178,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 100,
+    zIndex: 999
   },
   chatBottom: {
     paddingBottom: 20,
@@ -152,6 +192,7 @@ const styles = StyleSheet.create({
   chatAvatar: {
     paddingBottom: 15,
     paddingLeft: 15,
+    zIndex: 999
   },
   messageCircleRight: {
     width: 8,
@@ -184,19 +225,24 @@ const styles = StyleSheet.create({
   messageTextRight: {
     fontSize: 16,
     color: "rgba(31, 32, 36, 0.5)",
-    textAlign: "right",
+    textAlign: 'left',
     fontFamily: "Shabnam",
     maxWidth: 180,
+    transform: [{ rotate: '180deg' }],
   },
   messageTextLeft: {
     fontSize: 16,
     fontFamily: "Shabnam",
     maxWidth: 180,
+    textAlign: 'left',
+    transform: [{ rotate: '180deg' }],
+
   },
   chatBody: {
     paddingLeft: 15,
     paddingRight: 15,
     flexGrow: 1,
+    transform: [{ rotate: '180deg' }],
     // height: 100
   },
   chatTitle: {
@@ -226,5 +272,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     paddingTop: 20,
+    zIndex: 999,
   },
 });

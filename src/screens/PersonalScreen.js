@@ -12,12 +12,13 @@ import BackIcon from "../icons/BackIcon";
 import { useState } from "react";
 import { useUserStore } from "../store/user";
 import { useDispatch, useSelector } from "react-redux";
-import { UpdateData } from "../store/action/action";
+import { ClearOrderStatus, UpdateData } from "../store/action/action";
 import { useEffect } from "react";
 import NavigationBottom from "../components/NavigationBottom";
 
 export default function PersonalScreen(props) {
   const userStore = useUserStore();
+  const [chatVisible, setChatVisible] = useState(false);
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -30,14 +31,19 @@ export default function PersonalScreen(props) {
   const dispatch = useDispatch()
   const [error, setError] = useState('')
 
-
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', async () => {
+      dispatch(ClearOrderStatus())
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
-    setName(getUser.data.user.name)
-    setEmail(getUser.data.user.email)
-    setSurname(getUser.data.user.surname)
-    setBirthday(getUser.data.user.date_of_birth)
-  }, [getUser.data.user])
+    setName(getUser.data?.user?.name)
+    setEmail(getUser.data?.user?.email)
+    setSurname(getUser.data?.user?.surname)
+    setBirthday(getUser.data?.user?.date_of_birth)
+  }, [getUser?.data?.user])
 
 
   function ValidateEmail(mail) {
@@ -71,6 +77,24 @@ export default function PersonalScreen(props) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View>
+        {<TouchableOpacity
+          style={styles.chatIcon}
+          onPress={() => {
+            setChatVisible(true);
+          }}
+        >
+          <ChatIcon></ChatIcon>
+        </TouchableOpacity>}
+
+
+
+        {chatVisible && (
+          <ChatScreen
+            onClose={() => {
+              setChatVisible(false);
+            }}
+          ></ChatScreen>
+        )}
         <View style={styles.navBtm}>
           <NavigationBottom active="profile"></NavigationBottom>
         </View>
@@ -79,7 +103,7 @@ export default function PersonalScreen(props) {
             <View style={styles.top}>
               <BackIcon style={{ opacity: 0 }}></BackIcon>
               <Text style={styles.title}>بيانات شخصية</Text>
-              <TouchableOpacity onPress={() => props.navigation.goBack()}>
+              <TouchableOpacity onPress={() => props.navigation.navigate('Profile')}>
                 <BackIcon></BackIcon>
               </TouchableOpacity>
             </View>
@@ -203,6 +227,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-  }
+  },
+  chatIcon: {
+    position: "absolute",
+    width: 85,
+    height: 85,
+    bottom: 100,
+    left: 15,
+    zIndex: 100,
+  },
 });
 

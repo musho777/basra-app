@@ -13,7 +13,10 @@ import SearchButton from "../components/SearchButton";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { GetProducts } from "../store/action/action";
+import { ClearOrderStatus, GetProducts } from "../store/action/action";
+import ChatIcon from "../icons/ChatIcon";
+import ChatScreen from "../components/Chat/ChatScreen";
+
 
 export default function CatalogScreen(props) {
   const [categories, setCategories] = useState([]);
@@ -21,6 +24,13 @@ export default function CatalogScreen(props) {
   const { token } = useSelector((st) => st.static)
   const getProducets = useSelector((st) => st.getProducets)
   const [search, setSearch] = useState('')
+  const [chatVisible, setChatVisible] = useState(false);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', async () => {
+      dispatch(ClearOrderStatus())
+    });
+    return unsubscribe;
+  }, [navigation]);
   useEffect(() => {
     dispatch(GetProducts({}, token))
   }, []);
@@ -31,9 +41,6 @@ export default function CatalogScreen(props) {
     }
   }, [getProducets])
 
-
-  console.log('22')
-
   const navigation = useNavigation();
   if (getProducets.loading) {
     return <View style={styles.loading}>
@@ -43,6 +50,22 @@ export default function CatalogScreen(props) {
 
   return (
     <View>
+      {<TouchableOpacity
+        style={styles.chatIcon}
+        onPress={() => {
+          setChatVisible(true);
+        }}
+      >
+        <ChatIcon></ChatIcon>
+      </TouchableOpacity>}
+      {chatVisible && (
+        <ChatScreen
+          onClose={() => {
+            setChatVisible(false);
+          }}
+        ></ChatScreen>
+      )}
+
       <View style={styles.navBtm}>
         <NavigationBottom active="catalog"></NavigationBottom>
       </View>
@@ -62,10 +85,15 @@ export default function CatalogScreen(props) {
               return <TouchableOpacity
                 key={index}
                 onPress={() =>
-                  navigation.navigate("Category", {
+                  navigation.navigate("SubCategory", {
                     categoryId: item.id,
+                    sub: item.category,
                     categoryName: item.name,
                   })
+                  // navigation.navigate("Category", {
+                  //   categoryId: item.id,
+                  //   categoryName: item.name,
+                  // })
                 }
                 style={[
                   styles.catlaogItem,
@@ -175,5 +203,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-  }
+  },
+  chatIcon: {
+    position: "absolute",
+    width: 85,
+    height: 85,
+    bottom: 100,
+    left: 15,
+    zIndex: 100,
+  },
 });

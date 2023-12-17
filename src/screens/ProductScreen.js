@@ -168,7 +168,7 @@ export default function ProductScreen(props) {
                 )}
               </TouchableOpacity>
               {!!shownSpecs && (
-                <Text style={styles.blockText}>{product.specs}</Text>
+                <Text style={styles.blockText}>{product?.characteristics}</Text>
               )}
             </View>
             <View style={styles.block}>
@@ -183,7 +183,7 @@ export default function ProductScreen(props) {
                 )}
               </TouchableOpacity>
               {!!shownComposition && (
-                <Text style={styles.blockText}>{product.composition}</Text>
+                <Text style={styles.blockText}>{product?.compound}</Text>
               )}
             </View>
             <View style={styles.btn}>
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     lineHeight: 26,
     fontFamily: "ShabnamBold",
-    fontWeight: 700,
+    // fontWeight: 700,
     color: "#1F2024",
     marginRight: 12,
   },

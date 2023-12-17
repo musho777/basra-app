@@ -1,5 +1,4 @@
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // export const baseUrl = "https://www.dicaficu.beget.app";
 export const baseUrl = "https://basrabackend.justcode.am/uploads/";

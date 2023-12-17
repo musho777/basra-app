@@ -8,17 +8,22 @@ import {
   Text,
   Animated,
 } from "react-native";
+import { Video } from "expo-av";
+import { baseUrl } from "../../api";
+
 
 export default function StorySlide(props) {
   const [animation, setAnimation] = useState(new Animated.Value(0));
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-
+  const [isPaused, setIsPaused] = useState(false);
+  const [image, setImage] = useState(props.images)
   const startAnimation = () => {
     Animated.timing(animation, {
       toValue: 1,
       duration: 5000,
       useNativeDriver: false,
     }).start();
+
   };
 
   let widthInterpolate = animation.interpolate({
@@ -31,18 +36,30 @@ export default function StorySlide(props) {
   useEffect(() => {
     if (props.active) {
       setAnimation(new Animated.Value(0));
-      startAnimation();
     }
   }, [activeImageIndex, props.active]);
 
-  function nextSlide() {
+  useEffect(() => {
+    if (props.images.length) {
+      const listenerId = animation?.addListener((event) => {
+        if (event.value == 1) {
+          nextSlide()
+          animation.removeListener(listenerId);
+        }
+      });
+    }
+  }, [animation, props.images])
+  const nextSlide = () => {
     if (activeImageIndex + 1 < props.images.length) {
       setActiveImageIndex(activeImageIndex + 1);
-    } else {
-      props.onNextScreen();
+    }
+
+    else {
+      props.nextStory()
+      setActiveImageIndex(0)
+      setAnimation(new Animated.Value(0));
     }
   }
-
   function prevSlide() {
     if (activeImageIndex > 0) {
       setActiveImageIndex(activeImageIndex - 1);
@@ -51,22 +68,58 @@ export default function StorySlide(props) {
     }
   }
 
+
+  const pauseAnimation = () => {
+    animation.stopAnimation();
+    setIsPaused(true);
+  };
+
+  const resumeAnimation = () => {
+    setIsPaused(false);
+    startAnimation();
+  };
+
+  const handlePress = () => {
+    pauseAnimation();
+  };
+  const handlePress1 = () => {
+    resumeAnimation();
+  };
+
+
   return (
-    <View>
+    <View >
       <View style={styles.preloaderWrap}>
-        <Image source={require("../../../assets/images/loader.gif")}></Image>
+        {/* <Image source={require("../../../assets/images/loader.gif")}></Image> */}
       </View>
-      <Image
-        source={{
-          uri: props.images[activeImageIndex],
-        }}
-        style={styles.image}
-      ></Image>
+      {
+        props.images[activeImageIndex]?.type == 'mp4' &&
+        <TouchableOpacity style={{ width: '100%', height: '70%' }} activeOpacity={1} onPressIn={() => handlePress1()} onPressOut={() => handlePress()}>
+          <Video
+            style={styles.vidio}
+            source={{ uri: props.images[activeImageIndex]?.img }}
+            resizeMode="contain"
+            isMuted={true}
+            shouldPlay={true}
+            isLooping={true}
+          />
+        </TouchableOpacity>
+
+      }
+      <TouchableOpacity activeOpacity={1} onPressIn={() => handlePress1()} onPressOut={() => handlePress()}>
+        <Image
+          source={{
+            uri: props.images[activeImageIndex]?.img,
+          }}
+          style={styles.image}
+        ></Image>
+      </TouchableOpacity>
       <View style={styles.storyAuthor}>
-        <Text style={styles.storyAuthorText}>متجرنا</Text>
+        <Text style={styles.storyAuthorText}>{props.title}</Text>
         <View style={styles.storyAuthorAvatar}>
           <Image
-            source={require("../../../assets/images/storyAuthor.png")}
+            // source={require("../../../assets/images/storyAuthor.png")}
+            source={{ uri: baseUrl + props.photo }}
             style={styles.storyAuthorImage}
           ></Image>
         </View>
@@ -147,6 +200,7 @@ const styles = StyleSheet.create({
     height: 44,
     marginBottom: 1,
     marginRight: 1,
+    borderRadius: 44,
   },
   storyLines: {
     position: "absolute",
@@ -195,6 +249,12 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
+    transform: [{ scaleX: -1 }],
+  },
+  vidio: {
+    width: "100%",
+    height: "85%",
+    transform: [{ scaleX: -1 }],
   },
   shadow: {
     position: "absolute",

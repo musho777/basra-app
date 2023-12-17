@@ -18,13 +18,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { GetAuthUser, LogoutAction, UpdateUserAvatar } from "../store/action/action";
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ChatIcon from "../icons/ChatIcon";
+import ChatScreen from "../components/Chat/ChatScreen";
 
 export default function ProfileScreen(props) {
   const [logoutShown, setLogoutShown] = useState(false);
   const getUser = useSelector((st) => st.getUser)
-  const { token } = useSelector((st) => st.static)
+  // const { token } = useSelector((st) => st.static)
+  const [chatVisible, setChatVisible] = useState(false);
+
+  let [token, setToken] = useState('')
   const dispatch = useDispatch()
   const updatePhoto = useSelector((st) => st.updatePhoto)
+  const GetUser = async () => {
+    let token = await AsyncStorage.getItem('token')
+    if (token) {
+      setToken(token)
+    }
+  }
 
   const changeImg = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -46,6 +58,8 @@ export default function ProfileScreen(props) {
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', async () => {
+      setLogoutShown(false)
+      GetUser()
       if (token) {
         dispatch(GetAuthUser(token))
       }
@@ -55,6 +69,24 @@ export default function ProfileScreen(props) {
 
   return (
     <View>
+      {<TouchableOpacity
+        style={styles.chatIcon}
+        onPress={() => {
+          setChatVisible(true);
+        }}
+      >
+        <ChatIcon></ChatIcon>
+      </TouchableOpacity>}
+
+
+
+      {chatVisible && (
+        <ChatScreen
+          onClose={() => {
+            setChatVisible(false);
+          }}
+        ></ChatScreen>
+      )}
       <View
         style={[
           styles.logoutOverlay,
@@ -75,7 +107,10 @@ export default function ProfileScreen(props) {
         <View style={styles.logoutBtns}>
           <TouchableOpacity onPress={() => {
             dispatch(LogoutAction(token))
-            props.navigation.navigate('Register')
+            AsyncStorage.removeItem('token')
+            props.navigation.navigate('RegisterTab', {
+              screen: 'Register'
+            })
           }} style={styles.logoutBtnBrown}>
             <Text style={styles.logoutTextBrown}>يلغي</Text>
           </TouchableOpacity>
@@ -102,10 +137,6 @@ export default function ProfileScreen(props) {
           }
           <Text style={styles.phoneNumber}>{getUser.data.user?.phone}</Text>
           <Text style={styles.fio}>مريم عبد</Text>
-
-
-
-
           <View style={styles.profileItems}>
             <ProfileItem
               onPress={() => props.navigation.navigate("Personal")}
@@ -333,5 +364,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 20,
     fontFamily: "ShabnamBold",
+  },
+  chatIcon: {
+    position: "absolute",
+    width: 85,
+    height: 85,
+    bottom: 100,
+    left: 15,
+    zIndex: 100,
   },
 });

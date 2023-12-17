@@ -1,36 +1,35 @@
 const initialState = {
     data: [],
     status: false,
-    loading: true,
-    error: "",
-    firstData: []
+    loading: false,
+    error: ""
 };
-export const GetBanersReducer = (state = initialState, action) => {
+export const OpenChatREDUCER = (state = initialState, action) => {
     let temp = { ...state }
     switch (action.type) {
-        case 'StartGetBaners':
-            // temp.data = []
-            temp.firstData = []
+        case 'StartLogin':
+            temp.data = []
             temp.status = false
             temp.loading = true
             temp.error = ''
             break;
-        case 'SuccessGetFirstBaners':
-            temp.firstData = action.data
-            temp.status = true
-            temp.loading = false
-            temp.error = ''
-            break
-        case 'SuccessGetBaners':
+        case 'SuccessLogin':
             temp.data = action.data
             temp.status = true
             temp.loading = false
             temp.error = ''
-        case 'ErrorGetBaners':
-            // temp.data = []
+            break
+        case 'ErrorLogin':
+            temp.data = ''
             temp.status = false
             temp.loading = false
             temp.error = 'error'
+            break
+        case 'ClearLogin':
+            temp.data = ''
+            temp.status = false
+            temp.loading = false
+            temp.error = ''
             break
         default:
             return temp;

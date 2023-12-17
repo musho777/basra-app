@@ -13,7 +13,10 @@ import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import Product from "../components/Product";
 import { useDispatch, useSelector } from "react-redux";
-import { GetProductsByCategory } from "../store/action/action";
+import { ClearOrderStatus, GetProductsByCategory } from "../store/action/action";
+import ChatScreen from "../components/Chat/ChatScreen";
+import ChatIcon from "../icons/ChatIcon";
+
 
 export default function CategoryScreen(props) {
   const navigation = useNavigation();
@@ -29,6 +32,8 @@ export default function CategoryScreen(props) {
   const { token } = useSelector((st) => st.static)
   const getPorduct = useSelector((st) => st.getPorductByCategoy)
   const [page, setPage] = useState(0)
+
+  const [chatVisible, setChatVisible] = useState(false);
 
 
 
@@ -51,12 +56,9 @@ export default function CategoryScreen(props) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', async () => {
-      // if (page == 1) {
       setPage(1)
-
+      dispatch(ClearOrderStatus())
       setProducts([])
-      // dispatch(GetProductsByCategory({ category_id: categoryId, search: search }, token, 1))
-      // }
     });
     return unsubscribe;
   }, [navigation]);
@@ -71,10 +73,10 @@ export default function CategoryScreen(props) {
 
   useEffect(() => {
     if (getPorduct.data.data) {
-      let item = [...products]
-      let combinedArray = item
-      combinedArray = item.concat(getPorduct.data.data);
-      setProducts(combinedArray)
+      // let item = [...products]
+      // let combinedArray = item
+      // combinedArray = item.concat(getPorduct.data.data);
+      setProducts(getPorduct.data.data)
     }
   }, [getPorduct])
 
@@ -85,6 +87,21 @@ export default function CategoryScreen(props) {
   }
   return (
     <View>
+      {<TouchableOpacity
+        style={styles.chatIcon}
+        onPress={() => {
+          setChatVisible(true);
+        }}
+      >
+        <ChatIcon></ChatIcon>
+      </TouchableOpacity>}
+      {chatVisible && (
+        <ChatScreen
+          onClose={() => {
+            setChatVisible(false);
+          }}
+        ></ChatScreen>
+      )}
       <View style={styles.navBtm}>
         <NavigationBottom active="catalog"></NavigationBottom>
       </View>
@@ -113,7 +130,7 @@ export default function CategoryScreen(props) {
             </TouchableOpacity>
           </View>
           <View style={styles.products}>
-            {products.map((product, index) => {
+            {products?.map((product, index) => {
               return <View
                 style={[
                   styles.product,
@@ -187,5 +204,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-  }
+  },
+  chatIcon: {
+    position: "absolute",
+    width: 85,
+    height: 85,
+    bottom: 100,
+    zIndex: 100,
+    left: 15,
+  },
 });

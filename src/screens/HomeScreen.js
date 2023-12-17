@@ -17,9 +17,12 @@ import { useNavigation } from "@react-navigation/native";
 import { Video, } from "expo-av";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { GetBaners, GetPadborkiWhiteProducts, GetStoryes } from "../store/action/action";
+import { ClearOrderStatus, GetBaners, GetPadborkiWhiteProducts, GetStoryes } from "../store/action/action";
 import StoryScreen from "../components/Stories/StoryScreen";
 import { baseUrl } from "../api";
+import ChatIcon from "../icons/ChatIcon";
+import ChatScreen from "../components/Chat/ChatScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function HomeScreen(props) {
@@ -27,7 +30,9 @@ export default function HomeScreen(props) {
     const video = useRef(null);
     const [compilations, setCompilations] = useState([]);
     const dispatch = useDispatch()
-    const { token } = useSelector((st) => st.static)
+    // const { token } = useSelector((st) => st.static)
+    const [chatVisible, setChatVisible] = useState(false);
+
     const getStorys = useSelector((st) => st.getStoryes)
     const [storiesVisible, setStoriesVisible] = useState(false);
     const [firstBanner, setFirstBanner] = useState([])
@@ -35,14 +40,19 @@ export default function HomeScreen(props) {
 
     const [showStoryes, setShowStoryes] = useState([])
     const [search, setSearch] = useState('')
+    const [activeStory, setActiveStory] = useState(0)
+    const [token, setToken] = useState('')
 
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
-            dispatch(GetBaners('first', token))
-            dispatch(GetBaners('last', token))
-            dispatch(GetStoryes(token))
-            dispatch(GetPadborkiWhiteProducts(token))
+            GetUser()
+            console.log(token, 'token')
+            // dispatch(GetBaners('first', token))
+            // dispatch(GetBaners('last', token))
+            // dispatch(GetStoryes(token))
+            // dispatch(GetPadborkiWhiteProducts(token))
+            // dispatch(ClearOrderStatus())
         });
         return unsubscribe;
     }, [navigation]);
@@ -51,6 +61,39 @@ export default function HomeScreen(props) {
         // let item = [...showStoryes]
         setStoriesVisible(true)
         setShowStoryes(getStorys.data.data[i])
+        setActiveStory(i)
+
+    }
+
+
+
+    const GetUser = async () => {
+        let token = await AsyncStorage.getItem('token')
+        console.log(token)
+        if (token) {
+            setToken(token)
+        }
+    }
+
+
+    useEffect(() => {
+        console.log(token, 'token')
+        dispatch(GetBaners('first', token))
+        dispatch(GetBaners('last', token))
+        dispatch(GetStoryes(token))
+        dispatch(GetPadborkiWhiteProducts(token))
+        dispatch(ClearOrderStatus())
+    }, [token])
+
+    const NextStory = () => {
+        if (getStorys.data.data.length - 2 > activeStory) {
+            // let item = activeStory + 1
+            setShowStoryes(getStorys.data.data[activeStory + 1])
+            setActiveStory(activeStory + 1)
+        }
+        else {
+            setStoriesVisible(false)
+        }
     }
     const getBaner = useSelector((st) => st.getBaner)
     const getPadborki = useSelector((st) => st.getPadborki)
@@ -74,10 +117,29 @@ export default function HomeScreen(props) {
     }
     return (
         <View>
+            {<TouchableOpacity
+                style={styles.chatIcon}
+                onPress={() => {
+                    setChatVisible(true);
+                }}
+            >
+                <ChatIcon></ChatIcon>
+            </TouchableOpacity>}
+
+
+
+            {chatVisible && (
+                <ChatScreen
+                    onClose={() => {
+                        setChatVisible(false);
+                    }}
+                ></ChatScreen>
+            )}
             {storiesVisible && (
                 <StoryScreen
                     storiesCount={showStoryes.file.length}
                     data={showStoryes}
+                    nextStory={() => NextStory()}
                     hideStories={() => {
                         setStoriesVisible(false);
                     }}
@@ -93,51 +155,27 @@ export default function HomeScreen(props) {
                         height={300}
                         style={styles.bannerSwiper}
                         showsPagination={false}
-                        dot={
-                            <View
-                                style={{
-                                    width: 8,
-                                    height: 8,
-                                    borderRadius: 24,
-                                    backgroundColor: "rgba(224, 193, 143, 0.25)",
-                                    marginHorizontal: 6,
-                                }}
-                            ></View>
-                        }
-                        activeDot={
-                            <View
-                                style={{
-                                    width: 12,
-                                    height: 12,
-                                    backgroundColor: "#E0C18F",
-                                    borderRadius: 24,
-                                    marginHorizontal: 6,
-                                }}
-                            ></View>
-                        }
                     >
                         {firstBanner?.map((elm, i) => {
                             if (elm.type == 'png' || elm.type == 'jpg') {
-                                return <TouchableOpacity
+                                return <View
                                     key={i}
-                                    style={styles.slide}
-                                    onPress={() => { }
-                                        // navigation.navigate("CatalogTab", { screen: "Category" })
-                                    }
+                                // style={styles.slide}
                                 >
                                     <Image
-                                        style={styles.slideImg}
+                                        style={styles.firstSlideImg}
                                         source={{ uri: baseUrl + elm.file }}
-                                        height={130}
                                     ></Image>
-                                </TouchableOpacity>
+                                </View>
                             }
                             else {
-                                <Video
+                                return <Video
+                                    key={i}
                                     ref={video}
                                     style={styles.video}
-                                    source={{ uri: baseUrl + props.file }}
+                                    source={{ uri: baseUrl + elm.file }}
                                     resizeMode="cover"
+                                    shouldPlay={true}
                                     isMuted={true}
                                     isLooping={true}
                                 ></Video>
@@ -145,14 +183,6 @@ export default function HomeScreen(props) {
                         })}
 
                     </Swiper>}
-                    {/* <Video
-                        ref={video}
-                        style={styles.video}
-                        source={require("../../assets/images/video.mp4")}
-                        resizeMode="cover"
-                        isMuted={true}
-                        isLooping={true}
-                    ></Video> */}
                 </View>
                 <View style={styles.container}>
                     <View style={styles.search}>
@@ -199,16 +229,16 @@ export default function HomeScreen(props) {
                         paddingHorizontal: 0,
                     }}
                 >
-                    <View style={styles.compilations}>
-                        {compilations.map((compilation, i) => {
+                    {compilations.length > 0 && <View style={styles.compilations}>
+                        {compilations?.map((compilation, i) => {
                             return <View style={styles.category} key={i}>
                                 <Category
-                                    compilationId={compilation.id}
-                                    name={compilation.name}
+                                    compilationId={compilation?.id}
+                                    name={compilation?.name}
                                 ></Category>
                             </View>
                         })}
-                    </View>
+                    </View>}
                     <View style={{ paddingHorizontal: 15, height: 190 }}>
                         {secondBanner?.length > 0 && <Swiper
                             height={130}
@@ -254,13 +284,14 @@ export default function HomeScreen(props) {
                                     </TouchableOpacity>
                                 }
                                 else {
-                                    <Video
+                                    return <Video
                                         ref={video}
                                         style={styles.video}
-                                        source={{ uri: baseUrl + props.file }}
+                                        source={{ uri: baseUrl + elm.file }}
                                         resizeMode="cover"
                                         isMuted={true}
                                         isLooping={true}
+                                        shouldPlay={true}
                                     ></Video>
                                 }
                             })}
@@ -279,7 +310,12 @@ const styles = StyleSheet.create({
     },
     bannerSwiper: {
         marginTop: 5,
-        height: 190,
+        // height: 190,
+    },
+    firstSlideImg: {
+        width: "100%",
+        height: 300,
+        borderRadius: 10,
     },
     slideImg: {
         width: "100%",
@@ -331,5 +367,13 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
-    }
+    },
+    chatIcon: {
+        position: "absolute",
+        width: 85,
+        height: 85,
+        bottom: 100,
+        left: 15,
+        zIndex: 100,
+    },
 });

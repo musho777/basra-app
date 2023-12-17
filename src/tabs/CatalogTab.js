@@ -4,6 +4,7 @@ import CategoryScreen from "../screens/CategoryScreen";
 import SearchScreen from "../screens/SearchScreen";
 import SearchResultScreen from "../screens/SearchResultScreen";
 import ProductScreen from "../screens/ProductScreen";
+import SubCategoryScreen from "../screens/SubCategoryScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,7 @@ export default function CatalogTab(props) {
       }
     >
       <Stack.Screen name="Catalog" component={CatalogScreen}></Stack.Screen>
+      <Stack.Screen name="SubCategory" component={SubCategoryScreen}></Stack.Screen>
       <Stack.Screen name="Category" component={CategoryScreen}></Stack.Screen>
       <Stack.Screen name="Search" component={SearchScreen}></Stack.Screen>
       <Stack.Screen

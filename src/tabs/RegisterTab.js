@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import RegisterScreen from "../screens/RegisterScreen";
 import SmsScreen from "../screens/SmsScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
+import ChatIcon from "../icons/ChatIcon";
 
 const Stack = createNativeStackNavigator();
 

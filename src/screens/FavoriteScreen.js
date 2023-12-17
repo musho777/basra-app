@@ -16,8 +16,10 @@ import ButtonPrimary from "../components/ButtonPrimary";
 import { useFavoriteStore } from "../store/favoriteStore";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { GetAllFavorites } from "../store/action/action";
+import { ClearOrderStatus, GetAllFavorites } from "../store/action/action";
 import { useState } from "react";
+import ChatScreen from "../components/Chat/ChatScreen";
+import ChatIcon from "../icons/ChatIcon";
 
 export default function FavoriteScreen(props) {
   const navigation = useNavigation();
@@ -27,6 +29,8 @@ export default function FavoriteScreen(props) {
   const { token } = useSelector((st) => st.static)
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
+  const [chatVisible, setChatVisible] = useState(false);
+
 
 
   useEffect(() => {
@@ -34,6 +38,7 @@ export default function FavoriteScreen(props) {
       if (page == 1) {
         setFavorites([])
         dispatch(GetAllFavorites(token, 1))
+        dispatch(ClearOrderStatus())
       }
     });
     return unsubscribe;
@@ -65,6 +70,7 @@ export default function FavoriteScreen(props) {
   };
 
 
+
   const loadMoreData = () => {
     if (getFavorites?.data?.next_page_url) {
       setPage(page + 1)
@@ -78,6 +84,21 @@ export default function FavoriteScreen(props) {
   }
   return (
     <View>
+      <TouchableOpacity
+        style={styles.chatIcon}
+        onPress={() => {
+          setChatVisible(true);
+        }}
+      >
+        <ChatIcon></ChatIcon>
+      </TouchableOpacity>
+      {chatVisible && (
+        <ChatScreen
+          onClose={() => {
+            setChatVisible(false);
+          }}
+        ></ChatScreen>
+      )}
       <View style={styles.navBtm}>
         <NavigationBottom active="favorite"></NavigationBottom>
       </View>
@@ -226,5 +247,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-  }
+  },
+  chatIcon: {
+    position: "absolute",
+    width: 85,
+    height: 85,
+    bottom: 100,
+    left: 15,
+    zIndex: 100,
+  },
 });

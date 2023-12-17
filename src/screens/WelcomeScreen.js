@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { View, StyleSheet, Text, BackHandler, Alert } from "react-native";
+import { View, StyleSheet, Text, BackHandler, Alert, TouchableOpacity } from "react-native";
 import ButtonPrimary from "../components/ButtonPrimary";
 import WelcomeClose from "../icons/WelcomeClose";
 import WelcomeCoin from "../icons/WelcomeCoin";
@@ -13,9 +13,12 @@ export default function WelcomeScreen(props) {
   }, [])
   return (
     <View style={styles.container}>
-      <View style={styles.top}>
+      <TouchableOpacity onPress={() => {
+
+        props.navigation.navigate("Home")
+      }} style={styles.top}>
         <WelcomeClose />
-      </View>
+      </TouchableOpacity>
       <View style={styles.main}>
         <WelcomeCoin />
         <Text style={styles.title}>شكرا لتسجيلك</Text>
@@ -24,7 +27,11 @@ export default function WelcomeScreen(props) {
         </Text>
       </View>
       <View style={styles.bottom}>
-        <ButtonPrimary onPress={() => props.navigation.navigate("ProfileTab")}>
+        <ButtonPrimary onPress={() =>
+          props.navigation.navigate("ProfileTab", {
+            screen: "Personal",
+          })
+        }>
           املأ المعلومات
         </ButtonPrimary>
         <Text style={styles.bottomText}>

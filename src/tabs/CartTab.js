@@ -29,6 +29,7 @@ export default function CartTab(props) {
       ></Stack.Screen>
       <Stack.Screen name="Payment" component={PaymentScreen}></Stack.Screen>
       <Stack.Screen name="Success" component={SuccessScreen}></Stack.Screen>
+
     </Stack.Navigator>
   );
 }

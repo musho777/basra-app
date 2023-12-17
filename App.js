@@ -17,7 +17,7 @@ import ChatScreen from "./src/components/Chat/ChatScreen";
 
 import ChatIcon from "./src/icons/ChatIcon";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Provider, } from 'react-redux';
+import { Provider, useSelector, } from 'react-redux';
 import { store } from "./src/store/configStore";
 SplashScreen.preventAutoHideAsync();
 
@@ -38,20 +38,23 @@ export default function App() {
   const [chatVisible, setChatVisible] = useState(false);
   const [storiesVisible, setStoriesVisible] = useState(false);
 
-
+  // const [token, setToken] = useState('')
 
   useEffect(() => {
     GetUser()
   }, []);
 
+
   const GetUser = async () => {
     let token = await AsyncStorage.getItem('token')
     if (token) {
+      // setToken(token)
       setInitialScreen('ProfileTab')
     }
   }
 
   const onLayoutRootView = useCallback(async () => {
+
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
     }
@@ -70,6 +73,9 @@ export default function App() {
         <SafeAreaView edges={["top", "right", "left"]}>
           <View onLayout={onLayoutRootView} style={styles.container}>
             <NavigationContainer theme={{ colors: { background: "white" } }}>
+              {
+
+              }
               <Tab.Navigator
                 screenOptions={{
                   headerShown: false,
@@ -88,7 +94,6 @@ export default function App() {
                       }}
                     ></HomeScreen>
                   )}
-                // component={HomeScreen}
                 ></Tab.Screen>
                 <Tab.Screen
                   options={{ tabBarStyle: { display: "none" } }}
@@ -128,21 +133,24 @@ export default function App() {
             ></StoryScreen>
           )} */}
 
-          <TouchableOpacity
+          {/* {<TouchableOpacity
             style={styles.chatIcon}
             onPress={() => {
               setChatVisible(true);
             }}
           >
             <ChatIcon></ChatIcon>
-          </TouchableOpacity>
-          {chatVisible && (
+          </TouchableOpacity>} */}
+
+
+
+          {/* {chatVisible && (
             <ChatScreen
               onClose={() => {
                 setChatVisible(false);
               }}
             ></ChatScreen>
-          )}
+          )} */}
         </SafeAreaView>
       </SafeAreaProvider>
     </Provider>
@@ -156,6 +164,7 @@ const styles = StyleSheet.create({
     height: 85,
     bottom: 100,
     left: 15,
+    zIndex: 100,
   },
   scroll: {
     display: "flex",

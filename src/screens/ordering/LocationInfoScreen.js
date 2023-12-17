@@ -49,13 +49,14 @@ export default function LocationInfoScreen(props) {
   }, [selectedCity])
 
   const HandelClick = () => {
+    let send1 = false
     let send = false
     if (!data.city_id) {
       setError('error')
-      send = false
+      send1 = false
     }
     else {
-      send = true
+      send1 = true
       setError('')
     }
     if (!data.delivery_id) {
@@ -66,7 +67,7 @@ export default function LocationInfoScreen(props) {
       send = true
       setErrorC('')
     }
-    if (send) {
+    if (send && send1) {
       navigation.navigate("AddressInfo", { data })
     }
   }
