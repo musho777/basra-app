@@ -56,7 +56,7 @@ export default function Product(props) {
           favorite ? "#1F2024" : "transparent"
         }
       ></ProductHeart>
-      {!!props.product.discount && (
+      {!!props.product.discount && props?.product?.discount != 0 && (
         <View style={styles.discount}>
           <Text style={styles.discountText}>{props.product.discount}%</Text>
         </View>

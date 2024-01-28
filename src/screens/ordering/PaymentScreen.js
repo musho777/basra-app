@@ -176,8 +176,8 @@ export default function PaymentScreen(props) {
             </ButtonPrimary>
           </View>
         </View>
-      </ScrollView>
-    </View>
+      </ScrollView >
+    </View >
   );
 }
 
@@ -218,6 +218,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     color: "#8F9098",
     fontFamily: "ShabnamLight",
+    width: 200,
   },
   productName: {
     fontFamily: "Circle",

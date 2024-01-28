@@ -17,7 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Video, } from "expo-av";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ClearOrderStatus, GetBaners, GetPadborkiWhiteProducts, GetStoryes } from "../store/action/action";
+import { ClearGetPadbord, ClearOrderStatus, GetBaners, GetPadborkiWhiteProducts, GetStoryes } from "../store/action/action";
 import StoryScreen from "../components/Stories/StoryScreen";
 import { baseUrl } from "../api";
 import ChatIcon from "../icons/ChatIcon";
@@ -47,43 +47,31 @@ export default function HomeScreen(props) {
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
             GetUser()
-            console.log(token, 'token')
-            // dispatch(GetBaners('first', token))
-            // dispatch(GetBaners('last', token))
-            // dispatch(GetStoryes(token))
-            // dispatch(GetPadborkiWhiteProducts(token))
-            // dispatch(ClearOrderStatus())
+            setCompilations([])
         });
         return unsubscribe;
     }, [navigation]);
 
     const ShowStory = (i) => {
-        // let item = [...showStoryes]
         setStoriesVisible(true)
         setShowStoryes(getStorys.data.data[i])
         setActiveStory(i)
-
     }
 
 
 
     const GetUser = async () => {
         let token = await AsyncStorage.getItem('token')
-        console.log(token)
         if (token) {
             setToken(token)
+            dispatch(GetBaners('first', token))
+            dispatch(GetBaners('last', token))
+            dispatch(GetStoryes(token))
+            dispatch(GetPadborkiWhiteProducts(token))
+            dispatch(ClearOrderStatus())
+            dispatch(ClearGetPadbord())
         }
     }
-
-
-    useEffect(() => {
-        console.log(token, 'token')
-        dispatch(GetBaners('first', token))
-        dispatch(GetBaners('last', token))
-        dispatch(GetStoryes(token))
-        dispatch(GetPadborkiWhiteProducts(token))
-        dispatch(ClearOrderStatus())
-    }, [token])
 
     const NextStory = () => {
         if (getStorys.data.data.length - 2 > activeStory) {
@@ -231,9 +219,12 @@ export default function HomeScreen(props) {
                 >
                     {compilations.length > 0 && <View style={styles.compilations}>
                         {compilations?.map((compilation, i) => {
+                            console.log(compilation)
                             return <View style={styles.category} key={i}>
                                 <Category
+                                    i={i}
                                     compilationId={compilation?.id}
+                                    product={compilation.products}
                                     name={compilation?.name}
                                 ></Category>
                             </View>

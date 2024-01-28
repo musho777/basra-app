@@ -197,7 +197,6 @@ export const GetBaners = (type, token) => {
         fetch(`https://basrabackend.justcode.am/api/app/get_banner`, requestOptions)
             .then(response => response.json())
             .then(r => {
-                console.log(r)
                 if (r.status) {
                     if (type === 'first') {
                         dispatch(SuccessGetFirstBaners(r))
@@ -741,6 +740,7 @@ export const GetPadborkiWhiteProducts = (token) => {
         fetch(`${api}/get_podborki_with_products`, requestOptions)
             .then(response => response.json())
             .then(r => {
+                // console.log(r)
                 if (r.status) {
                     dispatch(SuccessGetPadborkiWhiteProducts(r.data))
                 }
@@ -823,3 +823,10 @@ export const closeChat = () => {
 
 }
 
+
+
+export const ClearGetPadbord = () => {
+    return {
+        type: 'ClearGetPadbord'
+    }
+}

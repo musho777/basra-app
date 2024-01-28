@@ -13,7 +13,6 @@ import { useNavigation } from "@react-navigation/native";
 import Product from "../components/Product";
 import EmptyOrders from "../icons/EmptyOrders";
 import ButtonPrimary from "../components/ButtonPrimary";
-import { useFavoriteStore } from "../store/favoriteStore";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { ClearOrderStatus, GetAllFavorites } from "../store/action/action";
@@ -109,7 +108,6 @@ export default function FavoriteScreen(props) {
         <View style={styles.container}>
           <View style={styles.top}>
             <TouchableOpacity
-
               onPress={() =>
                 navigation.navigate("CatalogTab", {
                   screen: "Search", params: {
@@ -152,7 +150,10 @@ export default function FavoriteScreen(props) {
               <Text style={styles.emptyOrdersSubtitle}>
                 اذهب إلى الدليل وأضف أضف إلى سلة التسوق العناصر ذات الأهمية
               </Text>
-              <ButtonPrimary style={styles.emptyOrdersBtn}>
+              <ButtonPrimary
+                onPress={() =>
+                  navigation.navigate("CatalogTab")}
+                style={styles.emptyOrdersBtn}>
                 اذهب إلى الكتالوج
               </ButtonPrimary>
             </View>

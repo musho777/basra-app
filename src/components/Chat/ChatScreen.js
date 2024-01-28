@@ -46,6 +46,7 @@ export default function ChatScreen(props) {
     let token = await AsyncStorage.getItem('token')
     if (token) {
       setToken(token)
+      setData([])
     }
   }
 
@@ -89,7 +90,6 @@ export default function ChatScreen(props) {
   }
 
   useEffect(() => {
-    console.log(singlChat.data.data?.length)
     if (singlChat.data.data?.length) {
       setData(singlChat?.data?.data)
     }

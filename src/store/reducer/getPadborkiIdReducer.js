@@ -25,6 +25,12 @@ export const getPadborkiIdReducer = (state = initialState, action) => {
             temp.loading = false
             temp.error = 'error'
             break
+        case 'ClearGetPadbord':
+            temp.data = []
+            temp.status = false
+            temp.loading = false
+            temp.error = ''
+            break
         default:
             return temp;
     }

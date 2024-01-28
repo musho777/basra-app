@@ -1,26 +1,10 @@
 import { ScrollView, View, Text, StyleSheet } from "react-native";
-import { useState, useEffect } from "react";
 import Product from "./Product";
-import { useDispatch, useSelector } from "react-redux";
-import { GetPadborkiforBodborkiId } from "../store/action/action";
 
 export default function Category(props) {
-  const [products, setProducts] = useState([]);
-  const { token } = useSelector((st) => st.static)
-  const dispatch = useDispatch()
-  const getPadborkiId = useSelector((st) => st.getPadborkiId)
-  useEffect(() => {
-    dispatch(GetPadborkiforBodborkiId({ podborka_id: props.compilationId }, token))
-  }, []);
-
-  useEffect(() => {
-    if (getPadborkiId.data?.data?.length) {
-      setProducts(getPadborkiId.data?.data)
-    }
-  }, [getPadborkiId])
 
   return (
-    !!products.length && (
+    !!props.product?.length && (
       <View>
         <View style={styles.top}>
           <Text style={styles.topLeft}>اظهار الكل</Text>
@@ -34,11 +18,11 @@ export default function Category(props) {
             paddingRight: 0,
           }}
         >
-          {products.map((product, i) => (
-            <View style={styles.product} key={i}>
+          {props.product?.map((product, i) => {
+            return <View style={styles.product} key={i}>
               <Product product={product}></Product>
             </View>
-          ))}
+          })}
         </ScrollView>
       </View>
     )

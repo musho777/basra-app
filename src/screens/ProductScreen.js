@@ -17,11 +17,12 @@ import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import { fetchProduct, baseUrl } from "../api";
 import { useDispatch, useSelector } from "react-redux";
-import { AddDelateFavorite, GetSinglProduct } from "../store/action/action";
+import { AddDelateFavorite, AddToBasketAction, GetSinglProduct } from "../store/action/action";
 import ProductHeart from "../icons/ProductHeart";
 
 
 export default function ProductScreen(props) {
+
   const navigation = useNavigation();
   const [product, setProduct] = useState({});
   const [shownDescription, setShownDescription] = useState(false);
@@ -51,6 +52,17 @@ export default function ProductScreen(props) {
   const addFavorite = () => {
     setFavorite(!favorite)
     dispatch(AddDelateFavorite({ product_id: productId }, token))
+  }
+  const AddRevoeBasket = () => {
+    // if (basket) {
+    //   dispatch(RemoveFromBasketAction({ product_id: props.product.id }, token))
+    // }
+    // else {
+    dispatch(AddToBasketAction({ product_id: productId }, token))
+    navigation.navigate('CartTab')
+    // }
+    // setBasket(!basket)
+
   }
 
 
@@ -187,7 +199,10 @@ export default function ProductScreen(props) {
               )}
             </View>
             <View style={styles.btn}>
-              <ButtonPrimary style={styles.btnInner}>
+              <ButtonPrimary style={styles.btnInner}
+                onPress={() => AddRevoeBasket()}
+
+              >
                 {/* <View> */}
                 <Text>أضف الى الجديد</Text>
                 <Text>

@@ -166,7 +166,10 @@ export default function CartScreen(props) {
               <Text style={styles.emptyOrdersSubtitle}>
                 اذهب إلى الدليل وأضف أضف إلى سلة التسوق العناصر ذات الأهمية
               </Text>
-              <ButtonPrimary style={styles.emptyOrdersBtn}>
+              <ButtonPrimary
+                onPress={() =>
+                  navigation.navigate("CatalogTab")}
+                style={styles.emptyOrdersBtn}>
                 اذهب إلى الكتالوج
               </ButtonPrimary>
             </View>

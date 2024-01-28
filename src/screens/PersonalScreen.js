@@ -15,10 +15,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { ClearOrderStatus, UpdateData } from "../store/action/action";
 import { useEffect } from "react";
 import NavigationBottom from "../components/NavigationBottom";
+import { useNavigation } from "@react-navigation/native";
+import ChatIcon from "../icons/ChatIcon";
 
 export default function PersonalScreen(props) {
   const userStore = useUserStore();
   const [chatVisible, setChatVisible] = useState(false);
+  const navigation = useNavigation();
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
