@@ -73,9 +73,6 @@ export default function CategoryScreen(props) {
 
   useEffect(() => {
     if (getPorduct.data.data) {
-      // let item = [...products]
-      // let combinedArray = item
-      // combinedArray = item.concat(getPorduct.data.data);
       setProducts(getPorduct.data.data)
     }
   }, [getPorduct])

@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
+import { useEffect } from 'react'
 import BackIcon from "../../icons/BackIcon";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
@@ -61,7 +62,7 @@ export default function PaymentScreen(props) {
   }
 
   useEffect(() => {
-    if (addNewOrder.status) {
+    if (addNewOrder?.status) {
       navigation.navigate("Success")
     }
   }, [addNewOrder])
